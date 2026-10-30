@@ -1,0 +1,20 @@
+# Environment & Secrets
+.env
+*.env
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+
+# Temporary results / scratch
+*.log
+.pytest_cache/
