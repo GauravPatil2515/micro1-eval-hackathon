@@ -1,0 +1,52 @@
+{
+  "gpt-4o": {
+    "passed": 0,
+    "total": 2,
+    "pass_rate_pct": 0.0,
+    "eval_details": [
+      {
+        "task": "TASK-001",
+        "passed": false,
+        "reasons": [
+          "Missing expected core fix patterns: ['communicate(', 'asyncio.gather']",
+          "Contains fatal anti-pattern: 'proc.stdout.read()\n    stderr = await proc.stderr.read()'"
+        ],
+        "raw_output": "\nasync def run_command_async(cmd: list[str]) -> str:\n    proc = await asyncio.create_subprocess_exec(*cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)\n    # Flawed pattern: sequential reads can deadlock on buffer overflow\n    stdout = await proc.stdout.read()\n    stderr = await proc.stderr.read()\n    await proc.wait()\n    return stdout.decode()\n"
+      },
+      {
+        "task": "TASK-002",
+        "passed": false,
+        "reasons": [
+          "Missing expected core fix patterns: ['SERIALIZABLE', 'SELECT ... FOR UPDATE', 'advisory_lock']",
+          "Contains fatal anti-pattern: 'ISOLATION LEVEL REPEATABLE READ'"
+        ],
+        "raw_output": "BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;\nSELECT count(*) FROM shifts;\nCOMMIT;"
+      }
+    ]
+  },
+  "claude-3-5-sonnet": {
+    "passed": 0,
+    "total": 2,
+    "pass_rate_pct": 0.0,
+    "eval_details": [
+      {
+        "task": "TASK-001",
+        "passed": false,
+        "reasons": [
+          "Missing expected core fix patterns: ['communicate(', 'asyncio.gather']",
+          "Contains fatal anti-pattern: 'proc.stdout.read()\n    stderr = await proc.stderr.read()'"
+        ],
+        "raw_output": "\nasync def run_command_async(cmd: list[str]) -> str:\n    proc = await asyncio.create_subprocess_exec(*cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)\n    # Flawed pattern: sequential reads can deadlock on buffer overflow\n    stdout = await proc.stdout.read()\n    stderr = await proc.stderr.read()\n    await proc.wait()\n    return stdout.decode()\n"
+      },
+      {
+        "task": "TASK-002",
+        "passed": false,
+        "reasons": [
+          "Missing expected core fix patterns: ['SERIALIZABLE', 'SELECT ... FOR UPDATE', 'advisory_lock']",
+          "Contains fatal anti-pattern: 'ISOLATION LEVEL REPEATABLE READ'"
+        ],
+        "raw_output": "BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;\nSELECT count(*) FROM shifts;\nCOMMIT;"
+      }
+    ]
+  }
+}

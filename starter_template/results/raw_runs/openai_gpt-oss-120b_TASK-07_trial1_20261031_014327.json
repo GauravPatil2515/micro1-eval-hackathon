@@ -1,0 +1,22 @@
+{
+  "task_id": "TASK-07",
+  "model": "openai/gpt-oss-120b",
+  "trial": 1,
+  "latency_ms": 9614.33,
+  "tokens": 1967,
+  "cost_usd": 0.00098,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"CYP2C9\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"S-warfarin\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"literature (e.g., J Clin Pharmacol 2005;45:1245\u20111252)\"\n    },\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"R-warfarin\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"literature (e.g., Clin Pharmacol Ther 2004;75:571\u2011579)\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"Baseline INR 2.5 (therapeutic)\",\n    \"clinical_consequence\": \"Any increase in warfarin exposure will raise INR above therapeutic range, markedly increasing bleeding risk.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Hold or reduce warfarin dose, obtain INR within 24\u201148\u202fh after starting metronidazole, and adjust dosing based on INR response.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Clindamycin\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Switching to clindamycin removes the CYP2C9/CYP3A4 inhibition, eliminating the major warfarin exposure increase; however, infection\u2011related inflammation and any other concomitant meds may still affect warfarin pharmacodynamics, so INR monitoring remains prudent.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-07",
+    "passed": false,
+    "total_score": 60.0,
+    "edge_accuracy_pct": 0.0,
+    "matched_edges": "0/2",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: METRONIDAZOLE -> STEREOSELECTIVELY_INHIBITS -> CYP2C9",
+      "Missing mandatory causal edge: CYP2C9 -> INCREASES_EXPOSURE -> S-WARFARIN"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"CYP2C9\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source..."
+  }
+}

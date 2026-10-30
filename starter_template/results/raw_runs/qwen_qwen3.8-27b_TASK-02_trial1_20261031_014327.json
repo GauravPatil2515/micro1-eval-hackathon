@@ -1,0 +1,19 @@
+{
+  "task_id": "TASK-02",
+  "model": "qwen/qwen3.8-27b",
+  "trial": 1,
+  "latency_ms": 1811.37,
+  "tokens": 1253,
+  "cost_usd": 0.00063,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Omeprazole\",\n      \"target\": \"CYP2C19\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"CYP2C19\",\n      \"target\": \"Clopidogrel\",\n      \"relation\": \"BLOCKS_BIOACTIVATION\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Omeprazole\",\n      \"target\": \"Clopidogrel\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Clopidogrel\",\n      \"target\": \"P2Y12 Receptor\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"Literature (Clopidogrel active metabolite levels)\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"CYP2C19 genotype: UNKNOWN\",\n    \"clinical_consequence\": \"The unknown genotype precludes risk stratification for poor metabolizer status. However, the pharmacokinetic interaction between omeprazole and clopidogrel is independent of genotype; omeprazole inhibits CYP2C19-mediated bioactivation in all genotypes, leading to reduced active metabolite formation and diminished platelet inhibition, which is critical in a post-PCI patient with a drug-eluting stent.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Discontinue Omeprazole. Do not co-administer Omeprazole with Clopidogrel. Switch to a PPI with minimal CYP2C19 inhibition (e.g., Pantoprazole) or use an H2-receptor antagonist if acid suppression is required.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Pantoprazole\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": false,\n    \"residual_risk_explanation\": \"Pantoprazole is primarily metabolized by CYP2C19 but is a weak inhibitor of CYP2C19 compared to omeprazole. It does not significantly interfere with the bioactivation of clopidogrel to its active thiol metabolite. Therefore, switching to pantoprazole preserves the formation of the active metabolite and maintains therapeutic platelet inhibition, resolving the primary pharmacokinetic interaction risk.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-02",
+    "passed": true,
+    "total_score": 100.0,
+    "edge_accuracy_pct": 100.0,
+    "matched_edges": "2/2",
+    "fatal_error": false,
+    "reasons": [],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Omeprazole\",\n      \"target\": \"CYP2C19\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\":..."
+  }
+}

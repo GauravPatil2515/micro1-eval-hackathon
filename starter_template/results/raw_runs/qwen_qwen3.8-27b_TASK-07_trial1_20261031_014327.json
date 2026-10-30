@@ -1,0 +1,23 @@
+{
+  "task_id": "TASK-07",
+  "model": "qwen/qwen3.8-27b",
+  "trial": 1,
+  "latency_ms": 52797.1,
+  "tokens": 1366,
+  "cost_usd": 0.00068,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"CYP2C9\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label, Clinical Pharmacology literature\"\n    },\n    {\n      \"source\": \"CYP2C9\",\n      \"target\": \"S-Warfarin\",\n      \"relation\": \"METABOLIZES\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"S-Warfarin\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"Clinical Pharmacology literature\"\n    },\n    {\n      \"source\": \"S-Warfarin\",\n      \"target\": \"Vitamin K Epoxide Reductase (VKORC1)\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"CYP1A2\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"Literature (weak/moderate evidence)\"\n    },\n    {\n      \"source\": \"CYP1A2\",\n      \"target\": \"R-Warfarin\",\n      \"relation\": \"METABOLIZES\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"R-Warfarin\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"Literature (minor contribution)\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"Age 70, Stable INR 2.5, Normal Liver Function\",\n    \"clinical_consequence\": \"The patient is on a stable dose of warfarin. The addition of metronidazole will inhibit CYP2C9, the primary enzyme responsible for clearing the more potent S-enantiomer of warfarin. This leads to a disproportionate increase in S-warfarin plasma levels, resulting in a significant and rapid rise in INR and bleeding risk, despite normal baseline liver function.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Empirically reduce warfarin dose by 25-50% upon initiation of metronidazole. Monitor INR closely (every 2-3 days) during the first week of metronidazole therapy and after discontinuation to adjust warfarin dose back to baseline.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Clindamycin\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": false,\n    \"residual_risk_explanation\": \"Clindamycin is an alternative antibiotic for pelvic infections that does not significantly inhibit CYP2C9 or CYP1A2. Therefore, it does not cause the same degree of warfarin exposure increase and INR elevation, resolving the primary pharmacokinetic interaction.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-07",
+    "passed": false,
+    "total_score": 40.0,
+    "edge_accuracy_pct": 0.0,
+    "matched_edges": "0/2",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: METRONIDAZOLE -> STEREOSELECTIVELY_INHIBITS -> CYP2C9",
+      "Missing mandatory causal edge: CYP2C9 -> INCREASES_EXPOSURE -> S-WARFARIN",
+      "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"CYP2C9\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label, Clinical Pharmacology lite..."
+  }
+}

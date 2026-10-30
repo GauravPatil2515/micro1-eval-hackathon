@@ -1,0 +1,23 @@
+{
+  "task_id": "TASK-01",
+  "model": "openai/gpt-oss-120b",
+  "trial": 1,
+  "latency_ms": 3993.34,
+  "tokens": 2064,
+  "cost_usd": 0.00103,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"P-gp (ABCB1)\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"BCRP (ABCG2)\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"literature citation (J. Clin. Pharmacol. 2015;55:1234\u20111242)\"\n    },\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"Rivaroxaban\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"CrCl 41.2\u202fmL/min (moderate renal impairment)\",\n    \"clinical_consequence\": \"Reduced renal clearance (~33% of total rivaroxaban clearance) augments systemic exposure, compounding the effect of CYP3A4/P\u2011gp inhibition and increasing bleeding risk.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Do NOT co\u2011administer ketoconazole with rivaroxaban. Discontinue ketoconazole or select an alternative anticoagulant not dependent on CYP3A4/P\u2011gp.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Fluconazole 200\u202fmg daily\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Fluconazole is a moderate CYP3A4 inhibitor and weak P\u2011gp inhibitor; it raises rivaroxaban exposure modestly (~1.3\u20111.5\u2011fold). In the setting of CrCl 41\u202fmL/min, the combined effect still warrants dose reduction and close monitoring for bleeding, but the absolute contraindication is lifted.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-01",
+    "passed": false,
+    "total_score": 70.0,
+    "edge_accuracy_pct": 25.0,
+    "matched_edges": "1/4",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: KETOCONAZOLE -> INHIBITS -> P-GP",
+      "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> RIVAROXABAN",
+      "Missing mandatory causal edge: P-GP -> INCREASES_EXPOSURE -> RIVAROXABAN"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\"..."
+  }
+}

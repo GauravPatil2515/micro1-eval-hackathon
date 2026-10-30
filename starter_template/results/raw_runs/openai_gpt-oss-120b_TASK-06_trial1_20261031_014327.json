@@ -1,0 +1,22 @@
+{
+  "task_id": "TASK-06",
+  "model": "openai/gpt-oss-120b",
+  "trial": 1,
+  "latency_ms": 23077.63,
+  "tokens": 2098,
+  "cost_usd": 0.00105,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"ABCB1 (P-gp)\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"Tacrolimus\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"CYP3A5*3/*3 genotype (non\u2011expressor)\",\n    \"clinical_consequence\": \"Absence of CYP3A5 activity forces tacrolimus clearance to rely almost exclusively on CYP3A4, magnifying the impact of CYP3A4 inhibition by voriconazole and leading to a marked rise in tacrolimus blood concentrations.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Reduce tacrolimus starting dose by approximately 50% (e.g., from 4\u202fmg BID to 2\u202fmg BID) and obtain a trough level within 3\u20135\u202fdays after initiating voriconazole.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Liposomal amphotericin B\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"While amphotericin B does not inhibit CYP3A4 and therefore avoids the tacrolimus exposure surge, it introduces its own nephrotoxic potential, which may compound the existing renal graft considerations.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-06",
+    "passed": false,
+    "total_score": 73.33,
+    "edge_accuracy_pct": 33.3,
+    "matched_edges": "1/3",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: VORICONAZOLE -> INHIBITS -> CYP3A5",
+      "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> TACROLIMUS"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\"..."
+  }
+}

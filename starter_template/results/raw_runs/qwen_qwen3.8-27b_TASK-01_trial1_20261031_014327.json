@@ -1,0 +1,24 @@
+{
+  "task_id": "TASK-01",
+  "model": "qwen/qwen3.8-27b",
+  "trial": 1,
+  "latency_ms": 2029.96,
+  "tokens": 1255,
+  "cost_usd": 0.00063,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"P-glycoprotein (P-gp)\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"CYP3A4\",\n      \"target\": \"Rivaroxaban\",\n      \"relation\": \"METABOLIZES\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"P-glycoprotein (P-gp)\",\n      \"target\": \"Rivaroxaban\",\n      \"relation\": \"TRANSPORTS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"Rivaroxaban\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"CrCl 41.2 mL/min\",\n    \"clinical_consequence\": \"Moderate renal impairment reduces the renal clearance component of rivaroxaban elimination, compounding the exposure increase caused by CYP3A4/P-gp inhibition and elevating bleeding risk.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Do not co-administer rivaroxaban with strong CYP3A4 and P-gp inhibitors (e.g., ketoconazole) in patients with moderate renal impairment (CrCl 30-49 mL/min). Select an alternative antifungal or anticoagulant.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Fluconazole\",\n    \"resolves_primary_interaction\": false,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Fluconazole is a moderate CYP3A4 inhibitor and weak P-gp inhibitor. While less potent than ketoconazole, it still increases rivaroxaban exposure. In the context of moderate renal impairment, this residual interaction may still warrant caution, dose adjustment, or avoidance depending on clinical judgment, but it does not fully resolve the pharmacokinetic risk profile associated with strong inhibitors.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-01",
+    "passed": false,
+    "total_score": 60.0,
+    "edge_accuracy_pct": 25.0,
+    "matched_edges": "1/4",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: KETOCONAZOLE -> INHIBITS -> P-GP",
+      "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> RIVAROXABAN",
+      "Missing mandatory causal edge: P-GP -> INCREASES_EXPOSURE -> RIVAROXABAN",
+      "Counterfactual primary resolution error: expected True, got False"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\"..."
+  }
+}

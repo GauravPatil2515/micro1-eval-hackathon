@@ -1,0 +1,22 @@
+{
+  "task_id": "TASK-06",
+  "model": "qwen/qwen3.8-27b",
+  "trial": 1,
+  "latency_ms": 22227.72,
+  "tokens": 1514,
+  "cost_usd": 0.00076,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"CYP3A5\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"P-glycoprotein (ABCB1)\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"CYP3A4\",\n      \"target\": \"Tacrolimus\",\n      \"relation\": \"METABOLIZES\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"CYP3A5\",\n      \"target\": \"Tacrolimus\",\n      \"relation\": \"METABOLIZES\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"P-glycoprotein (ABCB1)\",\n      \"target\": \"Tacrolimus\",\n      \"relation\": \"TRANSPORTS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"Tacrolimus\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"CYP3A5*3/*3 (Homozygous non-expressor)\",\n    \"clinical_consequence\": \"The patient lacks functional CYP3A5 enzyme activity, rendering Tacrolimus metabolism exclusively dependent on CYP3A4. This eliminates the CYP3A5-mediated clearance pathway, thereby amplifying the relative impact of Voriconazole's CYP3A4 inhibition on Tacrolimus exposure. The absence of CYP3A5 activity means there is no alternative metabolic 'shunt' to mitigate the drug-drug interaction, leading to a more predictable and severe increase in Tacrolimus AUC compared to CYP3A5 expressors.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Reduce Tacrolimus dose by 50% (e.g., from 4 mg BID to 2 mg BID) upon initiation of Voriconazole. Monitor whole-blood Tacrolimus trough levels within 48-72 hours and adjust dose to maintain target trough (typically 5-10 ng/mL depending on post-transplant phase). Do not maintain current dose.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Isavuconazole\",\n    \"resolves_primary_interaction\": false,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Isavuconazole is a moderate CYP3A4 inhibitor and also inhibits P-glycoprotein. While it may cause a less dramatic increase in Tacrolimus levels compared to Voriconazole (a strong inhibitor), it still significantly increases Tacrolimus exposure. Therefore, dose adjustment and TDM are still required. The primary interaction (CYP3A4/P-gp inhibition) is not resolved, only attenuated. Additionally, Isavuconazole has its own QT prolongation risk, which may be additive with other QT-prolonging agents, though Tacrolimus is not a major QT prolonger. The residual risk is primarily the continued need for dose reduction and monitoring, not a complete elimination of the interaction.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-06",
+    "passed": false,
+    "total_score": 76.67,
+    "edge_accuracy_pct": 66.7,
+    "matched_edges": "2/3",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> TACROLIMUS",
+      "Counterfactual primary resolution error: expected True, got False"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\"..."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "task_id": "TASK-05",
+  "model": "openai/gpt-oss-120b",
+  "trial": 1,
+  "latency_ms": 3468.78,
+  "tokens": 1777,
+  "cost_usd": 0.00089,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Amlodipine\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Amlodipine\",\n      \"target\": \"Simvastatin\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"Renal function normal (CrCl > 90\u202fmL/min)\",\n    \"clinical_consequence\": \"Renal clearance does not affect the interaction; the risk is driven by CYP3A4 inhibition leading to higher simvastatin plasma concentrations.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Reduce simvastatin to \u226420\u202fmg daily when co\u2011administered with amlodipine 10\u202fmg, or switch to a statin not metabolized by CYP3A4 (e.g., pravastatin, rosuvastatin).\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Pravastatin\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": false,\n    \"residual_risk_explanation\": \"Pravastatin is not a CYP3A4 substrate and is not affected by amlodipine inhibition; therefore the CYP\u2011mediated exposure increase is eliminated. Standard monitoring for statin therapy still applies.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-05",
+    "passed": false,
+    "total_score": 80.0,
+    "edge_accuracy_pct": 50.0,
+    "matched_edges": "1/2",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> SIMVASTATIN"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Amlodipine\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": ..."
+  }
+}

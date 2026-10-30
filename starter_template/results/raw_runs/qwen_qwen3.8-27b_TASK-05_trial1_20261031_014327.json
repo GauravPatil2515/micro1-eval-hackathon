@@ -1,0 +1,22 @@
+{
+  "task_id": "TASK-05",
+  "model": "qwen/qwen3.8-27b",
+  "trial": 1,
+  "latency_ms": 47825.92,
+  "tokens": 990,
+  "cost_usd": 0.00049,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Amlodipine\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Amlodipine\",\n      \"target\": \"Simvastatin\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": false,\n    \"parameter\": \"Normal renal function (CrCl > 90 mL/min)\",\n    \"clinical_consequence\": \"Renal clearance is not a limiting factor for simvastatin or amlodipine; the interaction is driven primarily by hepatic CYP3A4 inhibition.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Reduce Simvastatin dose to a maximum of 20 mg daily when co-administered with Amlodipine.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Rosuvastatin\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": false,\n    \"residual_risk_explanation\": \"Rosuvastatin is minimally metabolized by CYP3A4 (primarily CYP2C9), thereby bypassing the competitive inhibition caused by Amlodipine and eliminating the specific dose-limiting interaction.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-05",
+    "passed": false,
+    "total_score": 70.0,
+    "edge_accuracy_pct": 50.0,
+    "matched_edges": "1/2",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> SIMVASTATIN",
+      "Failed to identify active physiological modifier (e.g. CrCl, electrolytes, genotype)."
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Amlodipine\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": ..."
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "task_id": "TASK-02",
+  "model": "openai/gpt-oss-120b",
+  "trial": 1,
+  "latency_ms": 4629.94,
+  "tokens": 2496,
+  "cost_usd": 0.00125,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Omeprazole\",\n      \"target\": \"CYP2C19\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Omeprazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"J Clin Pharmacol 2005; literature\"\n    },\n    {\n      \"source\": \"CYP2C19\",\n      \"target\": \"Clopidogrel active metabolite\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"CYP3A4\",\n      \"target\": \"Clopidogrel active metabolite\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"Pharmacol Rev 2010; literature\"\n    },\n    {\n      \"source\": \"Omeprazole\",\n      \"target\": \"Clopidogrel active metabolite\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"CPIC guideline 2022\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"CYP2C19 genotype unknown\",\n    \"clinical_consequence\": \"Uncertain intrinsic CYP2C19 activity; any CYP2C19 inhibition by omeprazole may markedly reduce conversion of clopidogrel to its active metabolite, risking loss of antiplatelet effect.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Discontinue omeprazole; switch to a PPI with minimal CYP2C19 inhibition (e.g., pantoprazole) or use an H2\u2011receptor antagonist. Consider platelet function monitoring if PPI cannot be changed.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Pantoprazole\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Pantoprazole is a weak CYP2C19 inhibitor; it causes only a minimal (<10%) reduction in clopidogrel active metabolite exposure, which is generally clinically insignificant. However, in a patient who is a CYP2C19 poor metabolizer, any additional inhibition could still modestly lower active metabolite levels, so low\u2011level residual risk persists and platelet function monitoring is advisable.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-02",
+    "passed": false,
+    "total_score": 30.0,
+    "edge_accuracy_pct": 50.0,
+    "matched_edges": "1/2",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CYP2C19 -> BLOCKS_BIOACTIVATION -> CLOPIDOGREL",
+      "Regulatory verdict mismatch: expected 'CONTRAINDICATED', got 'DOSE_ADJUSTMENT_REQUIRED'",
+      "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Omeprazole\",\n      \"target\": \"CYP2C19\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\":..."
+  }
+}
