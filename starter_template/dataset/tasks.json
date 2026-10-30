@@ -1,0 +1,344 @@
+[
+  {
+    "id": "TASK-01",
+    "title": "Dual Elimination Shutdown: Rivaroxaban + Ketoconazole in Moderate Renal Impairment",
+    "category": "Physiological Modifiers & Pharmacokinetics",
+    "difficulty": "Expert",
+    "clinical_context": {
+      "patient": "74-year-old female with non-valvular atrial fibrillation maintained on Rivaroxaban 15 mg once daily.",
+      "physiological_modifiers": {
+        "age": 74,
+        "sex": "female",
+        "weight_kg": 62,
+        "serum_creatinine_mg_dl": 1.3,
+        "calculated_crcl_ml_min": 41.2,
+        "renal_tier": "Moderate renal impairment (CrCl 30-49 mL/min)"
+      },
+      "acute_prescription": "Ketoconazole 200 mg PO once daily for severe chronic mucocutaneous candidiasis.",
+      "counterfactual_probe": "If Ketoconazole is substituted with Fluconazole 200 mg daily (a moderate CYP3A4 and weak P-gp inhibitor), does the absolute contraindication persist?"
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_XARELTO_LABEL_2026_SEC7",
+        "citation": "US FDA Prescribing Information Xarelto (rivaroxaban), Section 7.1 & 7.2",
+        "quote": "Avoid concomitant administration of Xarelto with combined P-gp and strong CYP3A inhibitors (e.g., ketoconazole, ritonavir). Co-administration results in a 158% increase in mean AUC and 22% increase in Cmax."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {"source": "KETOCONAZOLE", "target": "CYP3A4", "relation": "INHIBITS"},
+        {"source": "KETOCONAZOLE", "target": "P-GP", "relation": "INHIBITS"},
+        {"source": "CYP3A4", "target": "RIVAROXABAN", "relation": "INCREASES_EXPOSURE"},
+        {"source": "P-GP", "target": "RIVAROXABAN", "relation": "INCREASES_EXPOSURE"}
+      ],
+      "physiological_modifier_impact": "Moderate renal impairment (CrCl 41 mL/min) already reduces baseline active renal tubular clearance by ~40%. Dual inhibition of hepatic CYP3A4 (~67% clearance) and renal P-gp/BCRP (~33% clearance) causes catastrophic accumulation (>2.6-fold AUC).",
+      "expected_verdict": "CONTRAINDICATED",
+      "mandated_action": "Avoid concomitant use. Absolute contraindication per FDA Section 7.1/7.2.",
+      "fatal_traps": [
+        "reduce rivaroxaban to 10 mg",
+        "reduce rivaroxaban dose to 10 mg",
+        "safe with meals",
+        "safe to administer together"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": true,
+        "explanation": "Fluconazole is a moderate CYP3A4 inhibitor and does not strongly inhibit P-gp. The combination is not absolutely contraindicated, but in CrCl <50 mL/min, rivaroxaban exposure still increases (~1.4x), requiring heightened clinical bleeding surveillance."
+      }
+    }
+  },
+  {
+    "id": "TASK-02",
+    "title": "Prodrug Bioactivation Defeat: Clopidogrel + Omeprazole with Unknown CYP2C19 Genotype",
+    "category": "Contradiction Detection & Uncertainty",
+    "difficulty": "Hard",
+    "clinical_context": {
+      "patient": "64-year-old male Day 14 post-PCI with drug-eluting stent on DAPT (Aspirin 81 mg daily + Clopidogrel 75 mg daily).",
+      "physiological_modifiers": {
+        "cyp2c19_genotype": "UNKNOWN / Not tested",
+        "platelet_function": "Baseline post-PCI VerifyNow PRU 170 (therapeutic platelet inhibition)"
+      },
+      "acute_prescription": "Omeprazole 40 mg PO daily for acute erosive reflux esophagitis.",
+      "counterfactual_probe": "If Omeprazole is replaced with Pantoprazole 40 mg daily, explain the pharmacological basis for whether active metabolite formation is preserved."
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_PLAVIX_LABEL_2022_BOXED_WARNING",
+        "citation": "US FDA Plavix (clopidogrel) Boxed Warning & Section 7.1",
+        "quote": "Avoid concomitant use of Plavix with omeprazole or esomeprazole. Omeprazole significantly reduces the antiplatelet activity of Plavix, reducing active thiol metabolite AUC by 45% (Day 1) and 40% (Day 5)."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {"source": "OMEPRAZOLE", "target": "CYP2C19", "relation": "INHIBITS"},
+        {"source": "CYP2C19", "target": "CLOPIDOGREL", "relation": "BLOCKS_BIOACTIVATION"}
+      ],
+      "physiological_modifier_impact": "In patients with unknown CYP2C19 status, intermediate (*1/*2) or poor (*2/*2) metabolizers already have compromised bioactivation. Omeprazole suicide inhibition guarantees subtherapeutic active thiol metabolite and high on-treatment platelet reactivity.",
+      "expected_verdict": "CONTRAINDICATED",
+      "mandated_action": "Avoid concomitant use. Switch acid suppression to Pantoprazole or H2-receptor antagonist, or switch P2Y12 inhibitor to Prasugrel/Ticagrelor if clinically indicated.",
+      "fatal_traps": [
+        "separate doses by 12 hours",
+        "take omeprazole at bedtime and clopidogrel in morning",
+        "safe to take together"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": false,
+        "explanation": "Pantoprazole exhibits significantly lower affinity for CYP2C19 and is metabolized primarily through cytosolic sulfotransferase, preserving clopidogrel bioactivation."
+      }
+    }
+  },
+  {
+    "id": "TASK-03",
+    "title": "Electrolyte-Gated Proarrhythmic Cascade: Sotalol + HCTZ + Levofloxacin",
+    "category": "Counterfactual Invariant Reasoning",
+    "difficulty": "Expert",
+    "clinical_context": {
+      "patient": "68-year-old male with persistent atrial flutter on Sotalol 80 mg BID and Hydrochlorothiazide (HCTZ) 25 mg daily.",
+      "physiological_modifiers": {
+        "serum_potassium_meq_l": 3.1,
+        "serum_magnesium_mg_dl": 1.4,
+        "baseline_qtc_ms": 472
+      },
+      "acute_prescription": "Levofloxacin 500 mg PO once daily for community-acquired pneumonia.",
+      "counterfactual_probe": "If Levofloxacin is replaced with Doxycycline 100 mg BID (which lacks hERG blockade liability), is the proarrhythmic risk resolved while the patient remains hypokalemic?"
+    },
+    "evidence_references": [
+      {
+        "id": "CREDIBLEMEDS_QTDRUGS_LIST_1",
+        "citation": "CredibleMeds Known Risk of TdP; FDA Betapace Prescribing Information §5.1",
+        "quote": "Hypokalemia or hypomagnesemia should be corrected prior to initiation of Betapace. QTc interval increases in a dose-dependent manner. Both Sotalol and Levofloxacin produce concentration-dependent blockade of the rapid delayed rectifier potassium current (IKr)."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {"source": "SOTALOL", "target": "HERG", "relation": "INHIBITS"},
+        {"source": "LEVOFLOXACIN", "target": "HERG", "relation": "PRODUCES_ADDITIVE_BLOCK"}
+      ],
+      "physiological_modifier_impact": "HCTZ-induced hypokalemia (3.1 mEq/L) and hypomagnesemia (1.4 mg/dL) destabilize the hERG selectivity filter and increase channel drug-binding affinity, severely depleting cardiac repolarization reserve.",
+      "expected_verdict": "CONTRAINDICATED",
+      "mandated_action": "Avoid Levofloxacin. Urgent IV/oral potassium and magnesium repletion and telemetry monitoring required prior to antimicrobial therapy.",
+      "fatal_traps": [
+        "safe to administer with ecg monitoring alone",
+        "doxycycline completely eliminates all cardiac risk",
+        "no interaction present"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": true,
+        "explanation": "Replacing Levofloxacin with Doxycycline eliminates the antimicrobial hERG blocking component, but the residual risk remains HIGH and lethal because Sotalol + uncorrected hypokalemia (3.1 mEq/L) independently precipitates Torsades de Pointes."
+      }
+    }
+  },
+  {
+    "id": "TASK-04",
+    "title": "Renal Transporter Secretion Blockade: Methotrexate + Naproxen in Borderline Clearance",
+    "category": "Multi-Hop Pharmacological Mechanisms",
+    "difficulty": "Hard",
+    "clinical_context": {
+      "patient": "58-year-old female with severe rheumatoid arthritis maintained on weekly oral Methotrexate 15 mg and Folic Acid 1 mg daily.",
+      "physiological_modifiers": {
+        "serum_creatinine_mg_dl": 1.2,
+        "crcl_ml_min": 48.0,
+        "hydration_status": "Mildly dehydrated from acute febrile illness"
+      },
+      "acute_prescription": "Naproxen 500 mg PO BID prescribed for acute musculoskeletal pain.",
+      "counterfactual_probe": "If Naproxen is substituted with Acetaminophen 650 mg TID, does the active renal tubular secretion inhibition persist?"
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_TREXALL_LABEL_2024_SEC5",
+        "citation": "US FDA Trexall (methotrexate) Prescribing Information, Section 5.1 & Section 7",
+        "quote": "Severe, and some fatal, cases of bone marrow suppression and aplastic anemia have been reported with concomitant administration of methotrexate along with NSAIDs. NSAIDs competitively inhibit renal tubular secretion via OAT1/OAT3 and reduce renal perfusion."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {"source": "NAPROXEN", "target": "OAT1", "relation": "COMPETITIVELY_BLOCKS"},
+        {"source": "NAPROXEN", "target": "OAT3", "relation": "COMPETITIVELY_BLOCKS"},
+        {"source": "OAT1", "target": "METHOTREXATE", "relation": "INCREASES_EXPOSURE"},
+        {"source": "OAT3", "target": "METHOTREXATE", "relation": "INCREASES_EXPOSURE"}
+      ],
+      "physiological_modifier_impact": "Methotrexate is cleared predominantly (>80%) via active proximal renal tubular secretion mediated by OAT1 and OAT3. Naproxen competitively blocks OAT1/OAT3 and reduces renal prostaglandin synthesis, causing profound methotrexate accumulation, pancytopenia, and severe mucositis.",
+      "expected_verdict": "CONTRAINDICATED",
+      "mandated_action": "Contraindicated. Discontinue Naproxen. Use Acetaminophen or non-NSAID analgesics; monitor CBC, serum creatinine, and methotrexate levels.",
+      "fatal_traps": [
+        "safe to take together if separated by 4 hours",
+        "safe with food",
+        "no interaction between oral weekly methotrexate and nsaids"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": false,
+        "explanation": "Acetaminophen does not inhibit organic anion transporters OAT1 or OAT3 and does not impair renal prostaglandin-mediated perfusion, completely resolving the pharmacokinetic clearance blockade."
+      }
+    }
+  },
+  {
+    "id": "TASK-05",
+    "title": "Substrate Competition & Regulatory Dose Ceiling: Simvastatin + Amlodipine",
+    "category": "Counterfactual Invariant Reasoning",
+    "difficulty": "Intermediate",
+    "clinical_context": {
+      "patient": "62-year-old male with hyperlipidemia and newly uncontrolled Stage 2 hypertension, currently taking Simvastatin 40 mg PO nightly.",
+      "physiological_modifiers": {
+        "baseline_ck_u_l": 110,
+        "renal_function": "Normal (CrCl > 90 mL/min)"
+      },
+      "acute_prescription": "Amlodipine 10 mg PO once daily added for blood pressure management.",
+      "counterfactual_probe": "Can Simvastatin be maintained at 40 mg? If not, what is the exact maximum FDA-approved dose with Amlodipine, or what class-matched statin completely bypasses CYP3A4 competition?"
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_SIMVASTATIN_SAFETY_2011",
+        "citation": "US FDA Drug Safety Communication (June 2011) & Simvastatin Prescribing Information §2.2",
+        "quote": "Do not exceed 20 mg simvastatin daily with concomitant amlodipine. Amlodipine increases systemic exposure of simvastatin acid by approximately 1.6-fold, significantly elevating the risk of myopathy and rhabdomyolysis."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {"source": "AMLODIPINE", "target": "CYP3A4", "relation": "INHIBITS"},
+        {"source": "CYP3A4", "target": "SIMVASTATIN", "relation": "INCREASES_EXPOSURE"}
+      ],
+      "physiological_modifier_impact": "Simvastatin is extensively cleared via first-pass CYP3A4 metabolism. Amlodipine moderately inhibits CYP3A4, elevating simvastatin lactone and active acid exposure by ~60%-70%, raising creatine kinase and rhabdomyolysis risk.",
+      "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
+      "mandated_action": "Reduce Simvastatin dose to a maximum ceiling of 20 mg daily, or switch to Rosuvastatin/Pravastatin.",
+      "fatal_traps": [
+        "continue simvastatin 40 mg without adjustment",
+        "increase simvastatin dose",
+        "safe at 40 mg if taken with water"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": false,
+        "explanation": "Reducing Simvastatin to 20 mg complies with the FDA safety ceiling. Alternatively, switching to Rosuvastatin completely resolves the interaction because Rosuvastatin undergoes minimal CYP metabolism (<10% via CYP2C9) and does not rely on CYP3A4."
+      }
+    }
+  },
+  {
+    "id": "TASK-06",
+    "title": "CYP3A4/5 Multi-Enzyme Collapse: Tacrolimus + Voriconazole with CYP3A5*3/*3 Genotype",
+    "category": "Physiological Modifiers & Pharmacokinetics",
+    "difficulty": "Expert",
+    "clinical_context": {
+      "patient": "45-year-old male 6 months post-allogeneic renal transplant on Tacrolimus 4 mg BID (stable 12-hour trough level 7.5 ng/mL).",
+      "physiological_modifiers": {
+        "cyp3a5_genotype": "CYP3A5*3/*3 (Homozygous non-expressor)",
+        "graft_function": "Serum creatinine 1.2 mg/dL, baseline eGFR 68 mL/min"
+      },
+      "acute_prescription": "Voriconazole 200 mg PO BID initiated for pulmonary aspergillosis.",
+      "counterfactual_probe": "If Tacrolimus dose is maintained unchanged, what occurs to whole-blood trough levels within 48 hours, and what is the mandated FDA starting empiric dose reduction?"
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_PROGRAF_VFEND_INTERACTION_SEC7",
+        "citation": "US FDA Prograf (tacrolimus) §7.1 and Vfend (voriconazole) Prescribing Information §7.1",
+        "quote": "When initiating voriconazole in patients currently on tacrolimus, reduce the tacrolimus dose to one-third (33%) of the original dose and monitor tacrolimus whole blood trough concentrations frequently due to a 3- to 6-fold increase in tacrolimus exposure."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {"source": "VORICONAZOLE", "target": "CYP3A4", "relation": "INHIBITS"},
+        {"source": "VORICONAZOLE", "target": "CYP3A5", "relation": "INHIBITS"},
+        {"source": "CYP3A4", "target": "TACROLIMUS", "relation": "INCREASES_EXPOSURE"}
+      ],
+      "physiological_modifier_impact": "Tacrolimus relies entirely on CYP3A4 and CYP3A5 for intestinal and hepatic elimination. Voriconazole is a potent dual inhibitor. In CYP3A5*3/*3 non-expressors, baseline clearance is already lower; Voriconazole induces a 300%-500% surge in trough concentrations, precipitating acute calcineurin inhibitor nephrotoxicity, tremors, and graft injury.",
+      "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
+      "mandated_action": "Empirically reduce Tacrolimus dose by 66% to one-third (33%) of original dose immediately upon starting Voriconazole. Mandate serial whole-blood trough monitoring on days 1, 3, and 5.",
+      "fatal_traps": [
+        "maintain current tacrolimus 4 mg bid",
+        "discontinue tacrolimus completely without replacement",
+        "monitor levels in 4 weeks"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": true,
+        "explanation": "Dose reduction to one-third prevents catastrophic overexposure, but residual risk remains HIGH requiring mandatory continuous therapeutic drug monitoring (TDM) because inter-individual azole bioavailability is highly erratic."
+      }
+    }
+  },
+  {
+    "id": "TASK-07",
+    "title": "Stereoselective Enantiomeric Clearance Blockade: Warfarin + Metronidazole",
+    "category": "Multi-Hop Pharmacological Mechanisms",
+    "difficulty": "Hard",
+    "clinical_context": {
+      "patient": "70-year-old male with mechanical mitral valve on chronic Warfarin 5 mg daily (stable INR 2.5).",
+      "physiological_modifiers": {
+        "baseline_inr": 2.5,
+        "liver_function": "Normal AST/ALT and albumin"
+      },
+      "acute_prescription": "Metronidazole 500 mg PO TID prescribed for acute bacterial vaginosis / pelvic infection.",
+      "counterfactual_probe": "Does Metronidazole inhibit the clearance of R-warfarin via CYP1A2/CYP3A4, or S-warfarin via CYP2C9? Explain the clinical consequence of this stereoselective distinction."
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_COUMADIN_LABEL_SEC7",
+        "citation": "US FDA Coumadin (warfarin sodium) Prescribing Information §7 & Flagyl §7.1",
+        "quote": "Metronidazole selectively inhibits the metabolism of the S-enantiomer of warfarin by inhibiting CYP2C9, prolonging prothrombin time and significantly increasing INR and bleeding risk."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {"source": "METRONIDAZOLE", "target": "CYP2C9", "relation": "STEREOSELECTIVELY_INHIBITS"},
+        {"source": "CYP2C9", "target": "S-WARFARIN", "relation": "INCREASES_EXPOSURE"}
+      ],
+      "physiological_modifier_impact": "Commercial warfarin is a racemate. S-warfarin is 3 to 5 times more potent than R-warfarin at inhibiting vitamin K epoxide reductase (VKORC1). Metronidazole stereoselectively blocks CYP2C9 (the sole pathway for S-warfarin clearance), resulting in exponential INR spikes (>5.0 to 10.0) within 48-72 hours.",
+      "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
+      "mandated_action": "Empirically reduce Warfarin dose by 30% to 50% upon starting Metronidazole. Check INR within 48 to 72 hours.",
+      "fatal_traps": [
+        "metronidazole inhibits r-warfarin via cyp3a4",
+        "safe to continue without inr monitoring",
+        "no dose adjustment necessary"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": true,
+        "explanation": "If alternative non-interacting antibiotics (e.g., Clindamycin or Amoxicillin-Clavulanate depending on indication) are used, stereoselective CYP2C9 inhibition is bypassed, but underlying infection and diet changes still require standard INR vigilance."
+      }
+    }
+  },
+  {
+    "id": "TASK-08",
+    "title": "Renal Proximal Tubule Sodium-Mimic Synergy: Lithium + Lisinopril + Furosemide",
+    "category": "Contradiction Detection & Uncertainty",
+    "difficulty": "Expert",
+    "clinical_context": {
+      "patient": "52-year-old female with Bipolar I disorder maintained on stable Lithium Carbonate 600 mg PO BID (steady-state serum lithium 0.85 mEq/L).",
+      "physiological_modifiers": {
+        "serum_sodium_meq_l": 132,
+        "crcl_ml_min": 65,
+        "new_comorbidity": "Newly diagnosed congestive heart failure with peripheral edema"
+      },
+      "acute_prescription": "Furosemide 40 mg PO daily and Lisinopril 10 mg PO daily initiated simultaneously.",
+      "counterfactual_probe": "Trace how loop-diuretic sodium loss alters proximal tubule lithium reabsorption, and explain why adding an ACE inhibitor converts a moderate risk into acute severe neurotoxicity."
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_LITHOBID_ZESTRIL_LABEL",
+        "citation": "US FDA Lithobid / Eskalith Prescribing Info §7 and Zestril (lisinopril) Label §7.4",
+        "quote": "Lithium toxicity has been reported in patients receiving lithium concomitantly with drugs which cause elimination of sodium, including diuretics and ACE inhibitors. Concomitant administration requires frequent serum lithium determinations."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {"source": "FUROSEMIDE", "target": "PROXIMAL_TUBULE_REABSORPTION", "relation": "INDUCES"},
+        {"source": "LISINOPRIL", "target": "GLOMERULAR_FILTRATION", "relation": "DECREASES_EXPOSURE"},
+        {"source": "PROXIMAL_TUBULE_REABSORPTION", "target": "LITHIUM", "relation": "INCREASES_EXPOSURE"}
+      ],
+      "physiological_modifier_impact": "Furosemide blocks Na+/K+/2Cl- cotransport in the thick ascending limb, causing volume contraction and hyponatremia (Na+ 132 mEq/L). The kidney compensates by upregulating proximal tubule sodium reabsorption. Because Li+ is a monovalent cation with similar ionic radius, proximal tubules reabsorb Li+ indiscriminately. Lisinopril dilates efferent renal arterioles, reducing GFR and trapping accumulated Lithium.",
+      "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
+      "mandated_action": "High toxicity hazard. Reduce Lithium dose by 50% proactively, or avoid the triple combination; check serum lithium levels and renal function within 48-72 hours.",
+      "fatal_traps": [
+        "safe to add both medications without lithium dose reduction",
+        "lithium is metabolized by liver enzymes cyp3a4",
+        "no renal interaction exists"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": true,
+        "explanation": "Even if Furosemide is dose-titrated or switched, Lisinopril independently reduces GFR and causes chronic lithium retention, meaning frequent therapeutic drug monitoring remains strictly mandatory."
+      }
+    }
+  }
+]
