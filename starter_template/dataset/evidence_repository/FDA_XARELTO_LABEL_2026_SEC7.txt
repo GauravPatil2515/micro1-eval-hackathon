@@ -1,0 +1,9 @@
+# Evidence Document: FDA_XARELTO_LABEL_2026_SEC7
+Source: US FDA Prescribing Information Xarelto (rivaroxaban), NDA 022406
+Sections: 7.1 (General Inhibitors and Inducers of CYPs and Transporters), 12.3 (Pharmacokinetics)
+
+EXCERPT:
+"Avoid concomitant administration of XARELTO with combined P-gp and strong CYP3A inhibitors (e.g., ketoconazole, itraconazole, lopinavir/ritonavir, ritonavir, indinavir/ritonavir, and conivaptan).
+Rivaroxaban is eliminated through both renal and non-renal pathways. Approximately 66% of the administered dose is cleared via hepatic CYP3A4, CYP2J2, and CYP-independent mechanisms, while ~33% is excreted unchanged in urine primarily via active tubular secretion mediated by P-gp and BCRP transporters.
+In subjects with normal renal function, co-administration of XARELTO with ketoconazole (400 mg once daily) resulted in a 158% increase in mean AUC and a 22% increase in Cmax of rivaroxaban, with significant increases in pharmacological effect (Factor Xa inhibition and prolongation of PT).
+In patients with renal impairment (CrCl < 50 mL/min), co-administration with combined P-gp and strong CYP3A4 inhibitors leads to further elevated exposure and a marked, unacceptable increase in major bleeding risk. Concomitant use is contraindicated/to be avoided in patients with CrCl < 50 mL/min."

@@ -1,0 +1,8 @@
+# Evidence Document: FDA_LIPITOR_LABEL_SEC7
+Source: US FDA Lipitor (atorvastatin calcium) Prescribing Information Section 7.1 & 12.3
+
+EXCERPT:
+"Azithromycin does not inhibit CYP3A4 and does not significantly increase atorvastatin exposure. Co-administration of atorvastatin with azithromycin does not require dose adjustment.
+In clinical studies, azithromycin 500 mg daily for 3 days did not alter the plasma concentrations of atorvastatin or its active metabolites.
+In contrast, strong CYP3A4 inhibitors (clarithromycin, itraconazole, ketoconazole, nefazodone, HIV protease inhibitors) increase atorvastatin AUC by up to 4-fold and Cmax by up to 2-fold, significantly increasing the risk of myopathy and rhabdomyolysis.
+Atorvastatin dose should not exceed 20 mg daily when co-administered with clarithromycin."

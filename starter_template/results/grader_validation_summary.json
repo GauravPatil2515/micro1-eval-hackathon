@@ -1,0 +1,11 @@
+{
+  "sample_size": 30,
+  "deterministic_grader": {
+    "cohens_kappa": 1.0,
+    "observed_agreement_pct": 100.0,
+    "run_to_run_variance": 0.0
+  },
+  "llm_judge_baseline": {
+    "note": "Requires live API evaluation with multiple seeds. Not included in template."
+  }
+}

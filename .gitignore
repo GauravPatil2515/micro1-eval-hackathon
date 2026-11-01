@@ -18,3 +18,7 @@ env/
 # Temporary results / scratch
 *.log
 .pytest_cache/
+.kilo/
+solve_lunar_giant.py
+transitions.tsv
+MechanismTrace_DDI_Submission.zip

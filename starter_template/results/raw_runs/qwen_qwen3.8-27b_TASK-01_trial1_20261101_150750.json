@@ -1,0 +1,25 @@
+{
+  "task_id": "TASK-01",
+  "model": "qwen/qwen3.8-27b",
+  "trial": 1,
+  "latency_ms": 12.0,
+  "tokens": 450,
+  "cost_usd": 0.0,
+  "raw_output": "```json\n{\n  \"causal_graph\": [\n    {\"source\": \"Ketoconazole\", \"target\": \"CYP3A4\", \"relation\": \"INHIBITS\", \"evidence_source\": \"FDA Section 7\"},\n    {\"source\": \"Ketoconazole\", \"target\": \"P-gp\", \"relation\": \"INHIBITS\", \"evidence_source\": \"FDA Section 7\"},\n    {\"source\": \"CYP3A4\", \"target\": \"Rivaroxaban\", \"relation\": \"INCREASES_EXPOSURE\", \"evidence_source\": \"FDA Section 12\"},\n    {\"source\": \"P-gp\", \"target\": \"Rivaroxaban\", \"relation\": \"INCREASES_EXPOSURE\", \"evidence_source\": \"FDA Section 12\"}\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"CrCl 41 mL/min\",\n    \"clinical_consequence\": \"Dual clearance block in renal impairment.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Avoid concomitant use. Alternatively, reduce rivaroxaban to 10 mg daily.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Fluconazole\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Moderate inhibition still requires heightened bleeding monitoring.\"\n  }\n}\n```",
+  "eval_grade": {
+    "task_id": "TASK-01",
+    "passed": true,
+    "total_score": 100.0,
+    "edge_accuracy_pct": 100.0,
+    "edge_precision_pct": 100.0,
+    "matched_edges": "4/4",
+    "cpcs_score": 1.0,
+    "cpcs_continuity": "CONTINUOUS",
+    "fatal_error": false,
+    "reasons": [],
+    "response_preview": "```json\n{\n  \"causal_graph\": [\n    {\"source\": \"Ketoconazole\", \"target\": \"CYP3A4\", \"relation\": \"INHIBITS\", \"evidence_source\": \"FDA Section 7\"},\n    {\"source\": \"Ketoconazole\", \"target...",
+    "atomic_accuracy": 1.0,
+    "atomic_matched": 4,
+    "atomic_total": 4
+  }
+}

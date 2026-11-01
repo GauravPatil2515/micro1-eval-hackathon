@@ -1,0 +1,7 @@
+# Evidence Document: FDA_CAMPTOSAR_UGT1A1
+Source: US FDA Camptosar (irinotecan) Prescribing Information & CPIC UGT1A1/Irinotecan Guideline
+
+EXCERPT:
+"UGT1A1*28/*28 homozygotes have ~30% glucuronidation activity for SN-38 (active irinotecan metabolite). At standard doses, risk of Grade 4 neutropenia is ~50%. CPIC recommends 25-50% dose reduction for *28/*28.
+Irinotecan is a prodrug converted by carboxylesterases to SN-38 (active topoisomerase I inhibitor). SN-38 is detoxified by UGT1A1-mediated glucuronidation to SN-38-glucuronide (inactive). UGT1A1*28 promoter polymorphism reduces enzyme expression.
+CPIC Guideline: UGT1A1 *28/*28 (poor metabolizers) - reduce irinotecan starting dose by 25-50% (to 120 mg/m2 or lower). Heterozygotes *1/*28 - consider 25% reduction. Standard dose 180 mg/m2 only for *1/*1."

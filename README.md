@@ -6,41 +6,61 @@ Built for the **micro1 Eval Hackathon (Organized by micro1 & HackerRank)**.
 ---
 
 ## 1. Short Description
-**MechanismTrace-DDI** is an automated, peer-reviewed evaluation benchmark designed to expose a critical reasoning blind spot in frontier AI models: tracking multi-hop pharmacological causal cascades in complex polypharmacy under changing patient physiological states. 
+**MechanismTrace-DDI** is an automated, deterministic causal benchmark testing whether frontier AI models can track multi-hop pharmacological causal cascades ($Drug \rightarrow Target \rightarrow Exposure \rightarrow Risk$) under changing patient physiological states.
 
-While state-of-the-art models (such as GPT-4o, Claude 3.5 Sonnet, and 120B parameter architectures) achieve >85% accuracy on conventional 2-drug lookup benchmarks (e.g. RxSafeBench, Rx-LLM), they suffer a **87.5%–100% failure rate** when required to reconstruct the underlying biochemical causal chain across metabolic enzymes ($CYP450$), active drug transporters ($P\text{-}gp$, $OAT1/OAT3$), non-linear clearance shifts in organ impairment ($CrCl < 50\text{ mL/min}$), and counterfactual residual risks.
+This benchmark exposes a critical failure mode: **Counterfactual Collapse** — models recognize when a counterfactual drug swap resolves the primary interaction, but reflexively issue a complete false all-clear (`residual_risk_remains = False`), failing to track that background physiological risk invariants (e.g., uncorrected hypokalemia, genetic non-expressor alleles) persist independently.
 
 ---
 
-## 2. Video Walkthrough Link
-* **Public Video Walkthrough URL:** `https://www.loom.com/share/YOUR_PUBLIC_LOOM_ID` *(or YouTube Unlisted Link)*
-* *Note: The video provides a complete 5-minute walkthrough of the clinical problem context, why models fail, the deterministic causal graph grader, and live benchmark execution.*
+## 2. Public Video Walkthrough
+* **Video Walkthrough URL:** `NOT YET RECORDED` — to be uploaded as YouTube unlisted link before submission deadline
+* **Runtime:** 5 Minutes (planned)
+* **Contents:** Clinical problem context, why frontier LLMs produce lethal false all-clears, live fixture-mode reproduction, deterministic causal graph grader, and Mermaid DAG diffs.
 
 ---
 
 ## 3. Domain and Expertise
-* **Domain:** Clinical Pharmacology, Molecular Toxicology, and Neuro-Symbolic Safety Verification.
-* **Target Expertise:** Requires deep domain intuition in pharmacokinetic/pharmacodynamic (PK/PD) interplay, including:
-  1. **Dual Clearance Choke Points:** Quantifying how combined CYP3A4 and P-gp inhibition shifts elimination to compromised renal pathways in CKD.
-  2. **Stereoselective Metabolism:** Differentiating active vs. inactive enantiomers (S-warfarin vs. R-warfarin clearance via CYP2C9).
-  3. **Electrolyte-Gated Cardiac Channel Kinetics:** Understanding how hypokalemia/hypomagnesemia destabilizes the cardiac $hERG$ ($I_{Kr}$) selectivity filter, precipitating Torsades de Pointes.
-  4. **Counterfactual Invariant Preservation:** Recognizing that swapping an offending antibiotic resolves only its specific contribution while unresolved background risks remain lethal.
+
+* **Clinical Domain:** Clinical Pharmacology, Molecular Toxicology, Pharmacogenomics (PGx), and Neuro-Symbolic Safety Verification.
+* **Clinical Provenance:**
+  - All 14 ground truth DAGs and safety limits are derived from **US FDA Prescribing Information Boxed Warnings** (§5.1, §7, §12) and peer-reviewed **CPIC Guidelines** (Clinical Pharmacogenetics Implementation Consortium).
+  - Ground truth text excerpts are preserved locally in [`starter_template/dataset/evidence_repository/`](starter_template/dataset/evidence_repository/).
+* **Human & Oracle Baseline Frameworks:** The repository includes frameworks for collecting real clinician responses (`human_baseline.py`) and validating the grader against human annotations (`grader_validation.py`). These require independent clinician recruitment and annotation — templates are provided for format demonstration only and are NOT valid empirical evidence.
 
 ---
 
 ## 4. What It Tests and Why It Matters
-* **What it measures:** Evaluates whether frontier models can reconstruct formal directed causal graphs ($Drug \rightarrow Target \rightarrow Exposure \rightarrow Risk$) and preserve logical invariants under single-variable mutations.
-* **Who relies on this:** Clinical pharmacologists, hospital clinical decision support systems (CDSS), ICU intensivists, and healthcare AI agent developers.
-* **Real-World Stakes:** In clinical practice, polypharmacy is responsible for over 100,000 deaths annually in the US alone. LLMs deployed in medical scribing or patient triage that provide superficial reassurance ("safe to take with meals" or "reduce dose to 10 mg") directly cause fatal hemorrhages, stent thromboses, and sudden cardiac death.
+
+### The Core Failure Mode: Counterfactual Collapse (The "False All-Clear")
+In clinical practice, polypharmacy causes over 100,000 deaths annually. Standard AI safety evaluations test static drug pairs in isolation. However, in real clinical care, patients exist in dynamic physiological states (e.g., severe renal impairment, hypokalemia, genetic non-expressor alleles).
+
+When an AI clinician agent recommends swapping an offending drug (e.g., substituting Levofloxacin with Doxycycline), frontier LLMs exhibit **Counterfactual Collapse**:
+1. They recognize that Doxycycline does not block cardiac $hERG$ channels.
+2. They **reflexively issue a complete false all-clear** (`residual_risk_remains = False`).
+3. They fail to track that the patient remains on Sotalol while severely hypokalemic ($K^+ 3.1\text{ mEq/L}$), which independently precipitates fatal **Torsades de Pointes**.
+
+```
+[Patient: Sotalol + HCTZ (K+ 3.1 mEq/L) + Levofloxacin]
+                        │
+       (Counterfactual Swap: Levofloxacin -> Doxycycline)
+                        │
+                        ▼
+   ┌────────────────────────────────────────────────────────┐
+   │  FRONTIER LLM VERDICT: "SAFE - NO RESIDUAL RISK" ❌    │
+   │  CLINICAL REALITY:     LETHAL TdP / SUDDEN DEATH 🚨    │
+   └────────────────────────────────────────────────────────┘
+```
+
+A clinical decision support agent that provides false reassurance ("patient is safe to discharge without telemetry") kills the patient.
 
 ---
 
 ## 5. Setup and Run Instructions
 
-Run from a clean environment in one command:
+Reproduce all evaluations in one command from a clean machine:
 
 ```bash
-# 1. Enter starter_template
+# 1. Enter the starter template directory
 cd starter_template
 
 # 2. Setup virtual environment & dependencies
@@ -48,81 +68,133 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# 3. Configure API keys (OpenAI / Anthropic / Groq)
-cp .env.example .env
-# Edit .env with your keys
+# 3. Verify Deterministic Grader (26 adversarial tests passing)
+python3 -m pytest tests/test_causal_grader.py -v
 
-# 4. Run the benchmark evaluation
-# (Option A: Live Model API execution)
-python3 run_eval.py --models openai/gpt-oss-120b,qwen/qwen3.8-27b
+# 4. Run the benchmark in fixture mode (0-cost, 100% offline, deterministic demos)
+python3 run_eval.py --fixture-mode
 
-# (Option B: Zero-cost offline dry-run validation)
-python3 run_eval.py --dry-run
+# 5. Run Atomic Probe & Oracle-Facts Evaluation (requires live API keys)
+python3 atomic_probe_eval.py --models "gpt-4o-2024-08-06,claude-3-5-sonnet-20241022" --trials 3
+python3 atomic_probe_eval.py --oracle-facts --models "gpt-4o-2024-08-06,claude-3-5-sonnet-20241022" --trials 3
+
+# 6. Human Baseline Framework (requires human_responses.json from real clinicians)
+python3 human_baseline.py --use-templates  # SIMULATION ONLY - not empirical evidence
+
+# 7. Grader Validation Framework (requires grader_validation_annotations.jsonl from real annotators)
+python3 grader_validation.py --use-templates  # SIMULATION ONLY - not empirical evidence
 ```
 
-* **Approximate Runtime:** 1 to 3 minutes for all 8 scenarios.
-* **Approximate API Cost:** ~$0.04 across the complete benchmark.
-* **Deterministic Unit Tests:** Verify grader integrity with `pytest tests/test_causal_grader.py -v`.
+**For Live API Evaluation:** Configure `.env` (using `.env.example` as template) with `GROQ_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, then run:
+```bash
+python3 run_eval.py --models "gpt-4o-2024-08-06,claude-3-5-sonnet-20241022,openai/gpt-oss-120b,qwen/qwen3.8-27b" --trials 5 --thresholds "60,70,80,85"
+```
+
+* **Approximate Runtime:** ~10 seconds for fixture mode; ~2-5 minutes for full live API benchmark (depending on model latencies).
+* **Deterministic Unit Tests:** 26/26 unit tests pass in ~0.04s.
 
 ---
 
-## 6. Models Tested and Results
+## 6. Benchmark Dataset: 14 Curated Clinical Scenarios
 
-All evaluations were executed under strictly standardized, reproducible conditions: `temperature = 0.0`, `seed = 42`, `top_p = 1.0`, `max_tokens = 2048`.
+| Task ID | Scenario | Category | Core Mechanism Tested |
+|---------|----------|----------|----------------------|
+| TASK-01 | Rivaroxaban + Ketoconazole (CKD CrCl 41) | Dual Clearance Collapse | CYP3A4 + P-gp shutdown with renal impairment |
+| TASK-02 | Clopidogrel + Omeprazole (CYP2C19 unknown) | Prodrug Bioactivation Defeat | CYP2C19 inhibition prevents active thiol conversion |
+| TASK-03 | Sotalol + HCTZ + Levofloxacin | Electrolyte-Gated Arrhythmia | Hypokalemia-sensitized hERG block / Torsades |
+| TASK-04 | Methotrexate + Naproxen (dose/context stratified) | Renal Transporter Blockade | OAT1/OAT3 competition + renal perfusion |
+| TASK-05 | Simvastatin + Amlodipine | Substrate Competition | CYP3A4 saturation with dose ceiling |
+| TASK-06 | Tacrolimus + Voriconazole (CYP3A5*3/*3) | Multi-Enzyme Collapse | CYP3A4/5 dual inhibition in non-expressor |
+| TASK-07 | Warfarin + Metronidazole | Stereoselective Inhibition | S-warfarin CYP2C9 inhibition vs R-warfarin |
+| TASK-08 | Lithium + Lisinopril + Furosemide | Proximal Tubule Synergy | Loop diuretic + ACEi lithium reabsorption |
+| TASK-09 | Atorvastatin + Azithromycin | **Negative Control (CYP3A4-PK only)** | Safe macrolide lacking CYP3A4 heme-iron complexation |
+| TASK-10 | Warfarin + Ceftriaxone | **Negative Control (CYP-mediated PK)** | No CYP2C9 inhibition; INR monitoring still required |
+| TASK-11 | Codeine + CYP2D6 UM | Pharmacogenomic Crisis | Ultrarapid metabolizer morphine surge |
+| TASK-12 | Azathioprine + TPMT*3A/*3A | Pharmacogenomic Myelosuppression | Thiopurine shunting to toxic 6-TGN |
+| TASK-13 | Abacavir + HLA-B*57:01 | Immunologic Hypersensitivity | HSR (not DRESS); absolute contraindication |
+| TASK-14 | Irinotecan + UGT1A1*28/*28 | Oncology Toxicity | Dose reduction required; residual risk remains |
 
-| Model Name | Exact Model ID | Tasks Passed | Total Tasks | Pass Rate (%) | Mean Score (/100) | Avg Latency |
-|---|---|:---:|:---:|:---:|:---:|:---:|
-| **GPT-OSS-120B** | `openai/gpt-oss-120b` | **0** | **8** | **0.0%** | **52.9** | 8,360 ms |
-| **Qwen 27B** | `qwen/qwen3.8-27b` | **1** | **8** | **12.5%** | **62.1** | 32,357 ms |
-| **Claude 3.5 Sonnet** | `claude-3-5-sonnet-20241022` | *Pending Run* | 8 | *Est: 25.0%* | *Est: 68.0* | ~3,200 ms |
-| **GPT-4o** | `gpt-4o-2024-08-06` | *Pending Run* | 8 | *Est: 25.0%* | *Est: 65.0* | ~2,800 ms |
-
-### Scenario Breakdown (Pass/Fail Matrix):
-
-| Task ID | Benchmark Scenario | Difficulty | GPT-OSS-120B | Qwen 27B | Core Failure Mode |
-|---|---|:---:|:---:|:---:|---|
-| **TASK-01** | Rivaroxaban + Ketoconazole (CrCl 41) | Expert | ❌ Fail (70/100) | ❌ Fail (60/100) | Omitted P-gp transporter edge; missed dual clearance collapse. |
-| **TASK-02** | Clopidogrel + Omeprazole (PGx Unknown) | Hard | ❌ Fail (30/100) | ✅ **PASS (100/100)** | Inverted causal edge attribution between CYP2C19 and prodrug. |
-| **TASK-03** | Sotalol + HCTZ + Levofloxacin ($K^+ 3.1$) | Expert | ❌ Fail (60/100) | ❌ Fail (60/100) | **Counterfactual Failure**: Missed residual risk persistence. |
-| **TASK-04** | Methotrexate + Naproxen (Borderline CrCl) | Hard | ❌ Fail (10/100) | ❌ Fail (60/100) | Missed renal proximal OAT1/OAT3 active secretion block. |
-| **TASK-05** | Simvastatin + Amlodipine (Dose Cap) | Intermediate | ❌ Fail (80/100) | ❌ Fail (70/100) | Failed to trace active simvastatin acid exposure surge. |
-| **TASK-06** | Tacrolimus + Voriconazole (CYP3A5*3/*3) | Expert | ❌ Fail (73/100) | ❌ Fail (76/100) | Omitted secondary CYP3A5 enzyme inhibition edge. |
-| **TASK-07** | Warfarin + Metronidazole (Stereoselective) | Hard | ❌ Fail (60/100) | ❌ Fail (40/100) | Confused S-warfarin with R-warfarin / CYP3A4 pathway. |
-| **TASK-08** | Lithium + Lisinopril + Furosemide | Expert | ❌ Fail (40/100) | ❌ Fail (30/100) | Failed to trace proximal tubule sodium-lithium co-reabsorption. |
+Each task includes: patient-specific physiological modifiers, FDA/CPIC evidence citations, minimal counterfactual pairs, mandated regulatory actions, fatal safety traps, and accepted alternate causal paths.
 
 ---
 
-## 7. Failure Analysis
+## 7. Deterministic Grading Architecture
 
-Our evaluation exposes four fundamental structural failure modes in frontier AI:
+### Three-Tier Scoring (100 Points Total)
 
-### 1. Transporter Blindness (CYP Fixation)
-Frontier models are heavily biased toward Cytochrome P450 enzymes and routinely ignore active transport proteins. In **TASK-01** (Rivaroxaban) and **TASK-04** (Methotrexate), models correctly identified CYP3A4 or NSAID class warnings, but completely omitted the organic anion transporters (**OAT1/OAT3**) and **P-glycoprotein (P-gp)**. Because renal secretion accounts for ~33% to >80% of elimination in these drugs, omitting transporter block leads to disastrous underestimation of systemic toxicity.
+**Tier 1: Causal Edge Alignment (40 pts)**
+- Edge Recall + Precision: Each required edge must be matched by a distinct predicted edge
+- Accepted alternates: Complete alternate causal paths accepted as full replacements
+- Spurious/hallucinated edges penalized (neutral biology edges excluded)
+- **CPCS (Clinical Trace Continuity)**: 0.6 × Edge F1 + 0.4 × Path Continuity
+  - Path Continuity = 1.0 (continuous perpetrator→victim path with correct relations)
+  - Path Continuity = 0.5 (disconnected/orphaned edges)
+  - Path Continuity = 0.0 (inverted cause-effect)
+  - CPCS multiplies Tier 1 score (broken chains reduce credit)
 
-### 2. Counterfactual Invariant Amnesia
-When prompted with a counterfactual substitution (e.g. in **TASK-03**, swapping Levofloxacin to Doxycycline), models exhibit "tunnel vision": they correctly observe that Doxycycline does not block cardiac hERG channels, but then make the **fatal conclusion that the patient is now safe**. They completely forget that the patient remains severely hypokalemic ($K^+ 3.1\text{ mEq/L}$) on Sotalol, leaving the proarrhythmic Torsades de Pointes cascade active.
+**Tier 2: Regulatory Verdict & Fatal Traps (30 pts)**
+- Verdict matching with synonym mapping (NO_DOSE_ADJUSTMENT ≡ SAFE_WITHOUT_ADJUSTMENT ≡ NO_CYP_INTERACTION)
+- **Negation-aware fatal trap detection** on `mandated_action` field only
+  - Detects: "reduce dose", "safe with meals", "separate by 12 hours"
+  - Exempts: "Do NOT reduce", "avoid underdosing", "not contraindicated to reduce"
+- Physiological modifier identification required for full credit
 
-### 3. Racemic & Stereoselective Confusion
-In **TASK-07**, candidate models treated Warfarin as a monolithic compound rather than a racemic mixture of R- and S-enantiomers. Models hallucinated that Metronidazole acts via CYP3A4 or CYP1A2, missing the clinical fact that **S-warfarin is 3–5x more potent** and is exclusively metabolized by **CYP2C9**.
+**Tier 3: Counterfactual Invariant & Residual Risk (30 pts)**
+- Primary resolution: Does the swap resolve the targeted interaction?
+- **Residual risk invariant**: Must correctly identify `residual_risk_remains = True` when independent physiological risk persists
+- This tier is the primary discriminator — models that collapse to "all clear" fail here
 
-### 4. Fatal Reassurance Anti-Patterns
-When models are asked to resolve clinical contraindications, they frequently hallucinate unauthorized clinical improvisations—such as *"suggesting reducing Rivaroxaban to 10 mg daily"* or *"separating administration by 12 hours"*. Under US FDA §7.1 labeling, dual CYP3A4/P-gp inhibition with renal compromise cannot be mitigated by dose titration; it is an absolute contraindication.
+### Pass Criteria
+- **Total Score ≥ 80.0** AND no fatal error
+- Threshold sensitivity analysis reported at 60, 70, 80, 85
 
 ---
 
-## 8. Prior Work and Evidence Provenance
+## 8. Evaluation Modes
 
-### Authoritative Primary References:
-1. **US FDA Prescribing Information:**
-   - *Xarelto (rivaroxaban)* NDA 022406/s-045 (2026 update), Section 7.1 & 12.3.
-   - *Plavix (clopidogrel)* NDA 020839/s-074, Boxed Warning & Section 7.1.
-   - *Trexall (methotrexate)* DailyMed setid: `8a75e3c7-3132-4e4d-bf7d-2b47b2ef4ec7`, Section 5.1.
-   - *Prograf (tacrolimus) & Vfend (voriconazole)* Section 7.1.
-   - *Betapace (sotalol)* Section 5.1 Proarrhythmia & Electrolyte Derangements.
-2. **Clinical Pharmacogenetics Implementation Consortium (CPIC):**
-   - *CPIC Guideline for CYP2C19 and Clopidogrel Therapy* (2022 Update).
-   - *CPIC Guideline for CYP3A5 and Tacrolimus Dosing*.
-3. **Existing Benchmarks Reviewed:**
-   - **RxSafeBench (2024):** Limited to multiple-choice dialogues; does not evaluate causal DAG reconstruction or patient modifier shifts.
-   - **Rx-LLM (2024):** Evaluates isolated single-hop EHR extraction; does not test multi-variable counterfactual invariants.
-   - **BioHopR & MedHopQA (2024):** Evaluate abstract knowledge graph entity links, lacking real-world physiological modifier gating.
+| Mode | Command | Purpose |
+|------|---------|---------|
+| **Fixture Mode** | `python3 run_eval.py --fixture-mode` | Deterministic demos (0 cost, offline). Clearly labeled as fixtures, NOT empirical evidence. |
+| **Live Evaluation** | `python3 run_eval.py --models "..." --trials 5` | Empirical model evaluation. Requires API keys. Fails visibly if no keys. |
+| **Atomic Probes** | `python3 atomic_probe_eval.py --models "..."` | 60-80 balanced single-hop probes (true/false/direction/negation). Live API only. |
+| **Oracle-Facts** | `python3 atomic_probe_eval.py --oracle-facts --models "..."` | All atomic facts injected in-context. Tests compositional reasoning. Live API only. |
+| **Human Baseline** | `python3 human_baseline.py` | Framework for real clinician evaluation. Requires `human_responses.json`. |
+| **Grader Validation** | `python3 grader_validation.py` | Framework for Cohen's κ against human annotators. Requires annotation JSONL. |
+
+---
+
+## 9. Prior Work and Scientific Benchmark Comparison
+
+| Evaluation Benchmark | Primary Paradigm | Multi-Hop Causal Graphs? | Physiological Modifier Gating? | Counterfactual Invariant Probing? |
+|---|---|:---:|:---:|:---:|
+| **RxSafeBench** (Zhao et al., arXiv:2511.04328) | Single-pair DDI severity classification (Answer-Only) | ❌ No | ❌ No | ❌ No |
+| **Rx-LLM** (medRxiv 2025) | Text extraction of drug label interactions | ❌ No | ❌ No | ❌ No |
+| **Med-HALT** (Umapathi et al., 2023) | Hallucination detection in medical reasoning | ❌ No | ❌ No | ❌ No |
+| **GPQA / MedQA** | Multiple-choice question answering | ❌ No | ❌ No | ❌ No |
+| **MechanismTrace-DDI (Ours)** | **Neuro-symbolic causal DAG ($Drug \rightarrow Target \rightarrow Exposure \rightarrow Risk$)** | **✅ Yes (CPCS graph scoring)** | **✅ Yes (CrCl, electrolytes, PGx alleles)** | **✅ Yes (Residual risk preservation)** |
+
+### Foundational References:
+1. **Pearl, J. (2009).** *Causality: Models, Reasoning, and Inference.* Cambridge University Press. (Structural Causal Models and do-calculus foundations for CPCS graph scoring).
+2. **Zhao, et al. (2025).** *RxSafeBench: A Benchmark for Evaluating Safety-Critical Pharmacological Capabilities of LLMs.* arXiv:2511.04328. (RxSafeBench shows GPT-4 at 30.36% on drug interaction severity — not >85%).
+3. **US FDA Prescribing Information:** NDA 022406 (Rivaroxaban), NDA 019842 (Sotalol), NDA 020839 (Clopidogrel), NDA 011719 (Methotrexate).
+4. **Clinical Pharmacogenetics Implementation Consortium (CPIC):** Guidelines for CYP2C19, CYP3A5, TPMT, HLA-B, UGT1A1.
+5. **Press, O. et al. (2022).** *Measuring and Narrowing the Compositionality Gap.* (Atomic vs Composed framework).
+6. **Dziri, N. et al. (2023).** *Faith and Fate: Limits of Transformers on Compositionality.* (Compositionality gap evidence).
+7. **Efron, B. (1979).** *Bootstrap Methods.* (Statistical confidence intervals).
+
+---
+
+## 10. Known Limitations & Non-Use Statement
+
+* **Educational benchmark only** — not validated for clinical decision support.
+* **Requires live API keys** for empirical results (not provided in repo).
+* **Human baseline & grader validation** require independent clinician recruitment and annotation (frameworks provided; data not included).
+* **14 tasks** → wide confidence intervals on pass rates; report exact counts and binomial CIs.
+* **Negative controls (TASK-09, TASK-10)** are mechanistic controls only, not overall safety endorsements.
+* **No confidential, proprietary, or pre-training leak data** used. All scenarios curated from public US FDA drug labels and CPIC clinical consensus guidelines.
+
+---
+
+## License & Integrity Declaration
+* **Code & Dataset License:** MIT License.
+* **Integrity Gate:** Zero confidential, proprietary, or pre-training leak data used. All scenarios curated from public US FDA drug labels and CPIC clinical consensus guidelines.

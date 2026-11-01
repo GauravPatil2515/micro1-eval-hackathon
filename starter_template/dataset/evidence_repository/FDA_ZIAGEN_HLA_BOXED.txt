@@ -1,0 +1,7 @@
+# Evidence Document: FDA_ZIAGEN_HLA_BOXED
+Source: US FDA Ziagen (abacavir) Boxed Warning & CPIC HLA-B/Abacavir Guideline
+
+EXCERPT:
+"Abacavir is contraindicated in patients positive for HLA-B*57:01 allele. Hypersensitivity reaction occurs in ~50-60% of HLA-B*57:01 positive patients vs <1% negative. Re-exposure after reaction causes anaphylaxis and death.
+Abacavir binds to HLA-B*57:01 peptide binding groove, altering the self-peptide repertoire presented to CD8+ T-cells. This triggers a massive, abacavir-specific CD8+ T-cell immune response causing systemic hypersensitivity (fever, rash, hepatitis, renal failure, hypotension).
+FDA Mandate: HLA-B*57:01 screening required before abacavir initiation. Do not use abacavir in HLA-B*57:01 positive patients. Do not re-challenge after hypersensitivity reaction."

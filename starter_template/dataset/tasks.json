@@ -26,14 +26,54 @@
     ],
     "ground_truth": {
       "causal_edges": [
-        {"source": "KETOCONAZOLE", "target": "CYP3A4", "relation": "INHIBITS"},
-        {"source": "KETOCONAZOLE", "target": "P-GP", "relation": "INHIBITS"},
-        {"source": "CYP3A4", "target": "RIVAROXABAN", "relation": "INCREASES_EXPOSURE"},
-        {"source": "P-GP", "target": "RIVAROXABAN", "relation": "INCREASES_EXPOSURE"}
+        {
+          "source": "KETOCONAZOLE",
+          "target": "CYP3A4",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "KETOCONAZOLE",
+          "target": "P-GP",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "CYP3A4",
+          "target": "RIVAROXABAN",
+          "relation": "INCREASES_EXPOSURE"
+        },
+        {
+          "source": "P-GP",
+          "target": "RIVAROXABAN",
+          "relation": "INCREASES_EXPOSURE"
+        }
+      ],
+      "accepted_alternates": [
+        [
+          {
+            "source": "KETOCONAZOLE",
+            "target": "CYP3A4",
+            "relation": "STRONGLY_INHIBITS"
+          },
+          {
+            "source": "KETOCONAZOLE",
+            "target": "P-GP",
+            "relation": "STRONGLY_INHIBITS"
+          },
+          {
+            "source": "CYP3A4",
+            "target": "RIVAROXABAN",
+            "relation": "ELEVATES_AUC"
+          },
+          {
+            "source": "P-GP",
+            "target": "RIVAROXABAN",
+            "relation": "ELEVATES_AUC"
+          }
+        ]
       ],
       "physiological_modifier_impact": "Moderate renal impairment (CrCl 41 mL/min) already reduces baseline active renal tubular clearance by ~40%. Dual inhibition of hepatic CYP3A4 (~67% clearance) and renal P-gp/BCRP (~33% clearance) causes catastrophic accumulation (>2.6-fold AUC).",
-      "expected_verdict": "CONTRAINDICATED",
-      "mandated_action": "Avoid concomitant use. Absolute contraindication per FDA Section 7.1/7.2.",
+      "expected_verdict": "AVOID_CONCOMITANT_USE",
+      "mandated_action": "Avoid concomitant use per FDA Section 7.1/7.2. Do not attempt dose reduction.",
       "fatal_traps": [
         "reduce rivaroxaban to 10 mg",
         "reduce rivaroxaban dose to 10 mg",
@@ -44,7 +84,42 @@
         "resolves_primary": true,
         "residual_risk_remains": true,
         "explanation": "Fluconazole is a moderate CYP3A4 inhibitor and does not strongly inhibit P-gp. The combination is not absolutely contraindicated, but in CrCl <50 mL/min, rivaroxaban exposure still increases (~1.4x), requiring heightened clinical bleeding surveillance."
-      }
+      },
+      "atomic_probes": 4,
+      "minimal_pairs": [
+        {
+          "pair_id": "TASK-01-MP1",
+          "description": "CrCl 41 mL/min vs CrCl 90 mL/min — action invariant, mechanism graph changes",
+          "variant_a": {
+            "parameter": "calculated_crcl_ml_min",
+            "value": 41.2,
+            "verdict": "AVOID_CONCOMITANT_USE"
+          },
+          "variant_b": {
+            "parameter": "calculated_crcl_ml_min",
+            "value": 90.0,
+            "verdict": "AVOID_CONCOMITANT_USE"
+          },
+          "explanation": "Ketoconazole is a combined strong CYP3A4 + P-gp inhibitor. FDA label says 'avoid concomitant use' regardless of renal function. The action is invariant. However, the mechanism graph changes: at CrCl 90, the renal P-gp/BCRP backup pathway is intact (edge present), while at CrCl 41 that edge is lost. The model must preserve the action while correctly showing the mechanism graph difference."
+        }
+      ],
+      "neutral_edges": [
+        {
+          "source": "KETOCONAZOLE",
+          "target": "CYP2C9",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "RIVAROXABAN",
+          "target": "BCRP",
+          "relation": "SUBSTRATE_OF"
+        },
+        {
+          "source": "KETOCONAZOLE",
+          "target": "BCRP",
+          "relation": "INHIBITS"
+        }
+      ]
     }
   },
   {
@@ -70,10 +145,32 @@
     ],
     "ground_truth": {
       "causal_edges": [
-        {"source": "OMEPRAZOLE", "target": "CYP2C19", "relation": "INHIBITS"},
-        {"source": "CYP2C19", "target": "CLOPIDOGREL", "relation": "BLOCKS_BIOACTIVATION"}
+        {
+          "source": "OMEPRAZOLE",
+          "target": "CYP2C19",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "CYP2C19",
+          "target": "CLOPIDOGREL",
+          "relation": "BLOCKS_BIOACTIVATION"
+        }
       ],
-      "physiological_modifier_impact": "In patients with unknown CYP2C19 status, intermediate (*1/*2) or poor (*2/*2) metabolizers already have compromised bioactivation. Omeprazole suicide inhibition guarantees subtherapeutic active thiol metabolite and high on-treatment platelet reactivity.",
+      "accepted_alternates": [
+        [
+          {
+            "source": "OMEPRAZOLE",
+            "target": "CYP2C19",
+            "relation": "SUICIDE_INHIBITS"
+          },
+          {
+            "source": "CYP2C19",
+            "target": "CLOPIDOGREL",
+            "relation": "PREVENTS_BIOACTIVATION"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "Unknown CYP2C19 genotype does not equal poor metabolizer status. In patients with unknown status, intermediate (*1/*2) or poor (*2/*2) metabolizers may have compromised bioactivation. Omeprazole suicide inhibition substantially increases the probability of subtherapeutic active thiol metabolite and high on-treatment platelet reactivity. CPIC recommends genotyping; if unknown, consider alternative P2Y12 inhibitor (prasugrel/ticagrelor) or PPI switch.",
       "expected_verdict": "CONTRAINDICATED",
       "mandated_action": "Avoid concomitant use. Switch acid suppression to Pantoprazole or H2-receptor antagonist, or switch P2Y12 inhibitor to Prasugrel/Ticagrelor if clinically indicated.",
       "fatal_traps": [
@@ -85,7 +182,25 @@
         "resolves_primary": true,
         "residual_risk_remains": false,
         "explanation": "Pantoprazole exhibits significantly lower affinity for CYP2C19 and is metabolized primarily through cytosolic sulfotransferase, preserving clopidogrel bioactivation."
-      }
+      },
+      "atomic_probes": 2,
+      "neutral_edges": [
+        {
+          "source": "OMEPRAZOLE",
+          "target": "CYP3A4",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "CLOPIDOGREL",
+          "target": "CYP3A4",
+          "relation": "METABOLIZED_BY"
+        },
+        {
+          "source": "CLOPIDOGREL",
+          "target": "P2Y12",
+          "relation": "INHIBITS"
+        }
+      ]
     }
   },
   {
@@ -106,14 +221,36 @@
     "evidence_references": [
       {
         "id": "CREDIBLEMEDS_QTDRUGS_LIST_1",
-        "citation": "CredibleMeds Known Risk of TdP; FDA Betapace Prescribing Information §5.1",
+        "citation": "CredibleMeds Known Risk of TdP; FDA Betapace Prescribing Information \u00a75.1",
         "quote": "Hypokalemia or hypomagnesemia should be corrected prior to initiation of Betapace. QTc interval increases in a dose-dependent manner. Both Sotalol and Levofloxacin produce concentration-dependent blockade of the rapid delayed rectifier potassium current (IKr)."
       }
     ],
     "ground_truth": {
       "causal_edges": [
-        {"source": "SOTALOL", "target": "HERG", "relation": "INHIBITS"},
-        {"source": "LEVOFLOXACIN", "target": "HERG", "relation": "PRODUCES_ADDITIVE_BLOCK"}
+        {
+          "source": "SOTALOL",
+          "target": "HERG",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "LEVOFLOXACIN",
+          "target": "HERG",
+          "relation": "PRODUCES_ADDITIVE_BLOCK"
+        }
+      ],
+      "accepted_alternates": [
+        [
+          {
+            "source": "SOTALOL",
+            "target": "HERG",
+            "relation": "BLOCKS"
+          },
+          {
+            "source": "LEVOFLOXACIN",
+            "target": "HERG",
+            "relation": "ADDITIVELY_INHIBITS"
+          }
+        ]
       ],
       "physiological_modifier_impact": "HCTZ-induced hypokalemia (3.1 mEq/L) and hypomagnesemia (1.4 mg/dL) destabilize the hERG selectivity filter and increase channel drug-binding affinity, severely depleting cardiac repolarization reserve.",
       "expected_verdict": "CONTRAINDICATED",
@@ -127,7 +264,42 @@
         "resolves_primary": true,
         "residual_risk_remains": true,
         "explanation": "Replacing Levofloxacin with Doxycycline eliminates the antimicrobial hERG blocking component, but the residual risk remains HIGH and lethal because Sotalol + uncorrected hypokalemia (3.1 mEq/L) independently precipitates Torsades de Pointes."
-      }
+      },
+      "atomic_probes": 2,
+      "minimal_pairs": [
+        {
+          "pair_id": "TASK-03-MP1",
+          "description": "K+ 3.1 mEq/L vs 4.5 mEq/L — residual risk persists even after antibiotic swap",
+          "variant_a": {
+            "parameter": "serum_potassium_meq_l",
+            "value": 3.1,
+            "verdict": "CONTRAINDICATED"
+          },
+          "variant_b": {
+            "parameter": "serum_potassium_meq_l",
+            "value": 4.5,
+            "verdict": "DOSE_ADJUSTMENT_REQUIRED"
+          },
+          "explanation": "Sotalol alone carries dose-dependent TdP risk; 'safe' is never correct at K+ 4.5. The correct state after Levofloxacin→Doxycycline swap is 'risk reduced, baseline Sotalol QT monitoring remains, Doxycycline is a non-QT-prolonging alternative.' The swap eliminates fluoroquinolone hERG block, but Sotalol dose-dependent hERG block persists. Grade on invariants: hypokalemia must be corrected, residual risk persists."
+        }
+      ],
+      "neutral_edges": [
+        {
+          "source": "HCTZ",
+          "target": "DISTAL_CONVOLUTED_TUBULE",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "HCTZ",
+          "target": "SERUM_POTASSIUM",
+          "relation": "DECREASES_EXPOSURE"
+        },
+        {
+          "source": "SOTALOL",
+          "target": "BETA_RECEPTOR",
+          "relation": "INHIBITS"
+        }
+      ]
     }
   },
   {
@@ -154,14 +326,86 @@
     ],
     "ground_truth": {
       "causal_edges": [
-        {"source": "NAPROXEN", "target": "OAT1", "relation": "COMPETITIVELY_BLOCKS"},
-        {"source": "NAPROXEN", "target": "OAT3", "relation": "COMPETITIVELY_BLOCKS"},
-        {"source": "OAT1", "target": "METHOTREXATE", "relation": "INCREASES_EXPOSURE"},
-        {"source": "OAT3", "target": "METHOTREXATE", "relation": "INCREASES_EXPOSURE"}
+        {
+          "source": "NAPROXEN",
+          "target": "OAT1",
+          "relation": "COMPETITIVELY_BLOCKS"
+        },
+        {
+          "source": "NAPROXEN",
+          "target": "OAT3",
+          "relation": "COMPETITIVELY_BLOCKS"
+        },
+        {
+          "source": "OAT1",
+          "target": "METHOTREXATE",
+          "relation": "INCREASES_EXPOSURE"
+        },
+        {
+          "source": "OAT3",
+          "target": "METHOTREXATE",
+          "relation": "INCREASES_EXPOSURE"
+        }
       ],
-      "physiological_modifier_impact": "Methotrexate is cleared predominantly (>80%) via active proximal renal tubular secretion mediated by OAT1 and OAT3. Naproxen competitively blocks OAT1/OAT3 and reduces renal prostaglandin synthesis, causing profound methotrexate accumulation, pancytopenia, and severe mucositis.",
-      "expected_verdict": "CONTRAINDICATED",
-      "mandated_action": "Contraindicated. Discontinue Naproxen. Use Acetaminophen or non-NSAID analgesics; monitor CBC, serum creatinine, and methotrexate levels.",
+      "accepted_alternates": [
+        [
+          {
+            "source": "NAPROXEN",
+            "target": "OAT1",
+            "relation": "INHIBITS"
+          },
+          {
+            "source": "NAPROXEN",
+            "target": "OAT3",
+            "relation": "INHIBITS"
+          },
+          {
+            "source": "OAT1",
+            "target": "METHOTREXATE",
+            "relation": "ELEVATES_AUC"
+          },
+          {
+            "source": "OAT3",
+            "target": "METHOTREXATE",
+            "relation": "ELEVATES_AUC"
+          }
+        ],
+        [
+          {
+            "source": "NAPROXEN",
+            "target": "OAT1",
+            "relation": "COMPETITIVELY_BLOCKS"
+          },
+          {
+            "source": "NAPROXEN",
+            "target": "OAT3",
+            "relation": "COMPETITIVELY_BLOCKS"
+          },
+          {
+            "source": "OAT1",
+            "target": "METHOTREXATE",
+            "relation": "INCREASES_EXPOSURE"
+          },
+          {
+            "source": "OAT3",
+            "target": "METHOTREXATE",
+            "relation": "INCREASES_EXPOSURE"
+          },
+          {
+            "source": "NAPROXEN",
+            "target": "RENAL_PERFUSION",
+            "relation": "DECREASES"
+          },
+          {
+            "source": "RENAL_PERFUSION",
+            "target": "METHOTREXATE",
+            "relation": "INCREASES_EXPOSURE"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "Methotrexate is cleared predominantly (>80%) via active proximal renal tubular secretion mediated by OAT1 and OAT3. Naproxen competitively blocks OAT1/OAT3 and reduces renal prostaglandin synthesis, causing profound methotrexate accumulation, pancytopenia, and severe mucositis. Risk is highest with high-dose oncology methotrexate, dehydration, and impaired kidney function; low-dose weekly rheumatology methotrexate (15 mg/week) with normal renal function carries lower but non-zero risk.",
+      "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
+      "mandated_action": "High-risk context (dehydration, CrCl 48): discontinue naproxen, hydrate, use acetaminophen; monitor CBC, creatinine, MTX levels. In stable low-dose rheumatology MTX with normal renal function: enhanced monitoring may suffice.",
       "fatal_traps": [
         "safe to take together if separated by 4 hours",
         "safe with food",
@@ -171,7 +415,42 @@
         "resolves_primary": true,
         "residual_risk_remains": false,
         "explanation": "Acetaminophen does not inhibit organic anion transporters OAT1 or OAT3 and does not impair renal prostaglandin-mediated perfusion, completely resolving the pharmacokinetic clearance blockade."
-      }
+      },
+      "atomic_probes": 4,
+      "minimal_pairs": [
+        {
+          "pair_id": "TASK-04-MP1",
+          "description": "High-dose oncology MTX + dehydration + CKD vs low-dose rheumatology MTX + normal renal",
+          "variant_a": {
+            "parameter": "context",
+            "value": "High-dose MTX (oncology) + dehydration + CrCl 48",
+            "verdict": "CONTRAINDICATED"
+          },
+          "variant_b": {
+            "parameter": "context",
+            "value": "Low-dose MTX 15mg/week (rheumatology) + normal renal + euvolemic",
+            "verdict": "DOSE_ADJUSTMENT_REQUIRED"
+          },
+          "explanation": "High-dose oncology MTX with dehydration and CKD is contraindicated with NSAIDs. Stable low-dose rheumatology MTX (7.5-15 mg/week) with normal renal function and euvolemia is co-prescribed with NSAIDs routinely with CBC/creatinine monitoring. A model that over-flags the rheumatology case as contraindicated should be graded as OVER_FLAGGING. The pair tests whether the model distinguishes dose/context appropriately."
+        }
+      ],
+      "neutral_edges": [
+        {
+          "source": "NAPROXEN",
+          "target": "COX1",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "NAPROXEN",
+          "target": "COX2",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "METHOTREXATE",
+          "target": "DHFR",
+          "relation": "INHIBITS"
+        }
+      ]
     }
   },
   {
@@ -191,14 +470,36 @@
     "evidence_references": [
       {
         "id": "FDA_SIMVASTATIN_SAFETY_2011",
-        "citation": "US FDA Drug Safety Communication (June 2011) & Simvastatin Prescribing Information §2.2",
+        "citation": "US FDA Drug Safety Communication (June 2011) & Simvastatin Prescribing Information \u00a72.2",
         "quote": "Do not exceed 20 mg simvastatin daily with concomitant amlodipine. Amlodipine increases systemic exposure of simvastatin acid by approximately 1.6-fold, significantly elevating the risk of myopathy and rhabdomyolysis."
       }
     ],
     "ground_truth": {
       "causal_edges": [
-        {"source": "AMLODIPINE", "target": "CYP3A4", "relation": "INHIBITS"},
-        {"source": "CYP3A4", "target": "SIMVASTATIN", "relation": "INCREASES_EXPOSURE"}
+        {
+          "source": "AMLODIPINE",
+          "target": "CYP3A4",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "CYP3A4",
+          "target": "SIMVASTATIN",
+          "relation": "INCREASES_EXPOSURE"
+        }
+      ],
+      "accepted_alternates": [
+        [
+          {
+            "source": "AMLODIPINE",
+            "target": "CYP3A4",
+            "relation": "MODERATELY_INHIBITS"
+          },
+          {
+            "source": "CYP3A4",
+            "target": "SIMVASTATIN",
+            "relation": "ELEVATES_AUC"
+          }
+        ]
       ],
       "physiological_modifier_impact": "Simvastatin is extensively cleared via first-pass CYP3A4 metabolism. Amlodipine moderately inhibits CYP3A4, elevating simvastatin lactone and active acid exposure by ~60%-70%, raising creatine kinase and rhabdomyolysis risk.",
       "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
@@ -212,7 +513,20 @@
         "resolves_primary": true,
         "residual_risk_remains": false,
         "explanation": "Reducing Simvastatin to 20 mg complies with the FDA safety ceiling. Alternatively, switching to Rosuvastatin completely resolves the interaction because Rosuvastatin undergoes minimal CYP metabolism (<10% via CYP2C9) and does not rely on CYP3A4."
-      }
+      },
+      "atomic_probes": 2,
+      "neutral_edges": [
+        {
+          "source": "SIMVASTATIN",
+          "target": "HMG_COA_REDUCTASE",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "AMLODIPINE",
+          "target": "CALCIUM_CHANNEL",
+          "relation": "BLOCKS"
+        }
+      ]
     }
   },
   {
@@ -232,17 +546,38 @@
     "evidence_references": [
       {
         "id": "FDA_PROGRAF_VFEND_INTERACTION_SEC7",
-        "citation": "US FDA Prograf (tacrolimus) §7.1 and Vfend (voriconazole) Prescribing Information §7.1",
+        "citation": "US FDA Prograf (tacrolimus) \u00a77.1 and Vfend (voriconazole) Prescribing Information \u00a77.1",
         "quote": "When initiating voriconazole in patients currently on tacrolimus, reduce the tacrolimus dose to one-third (33%) of the original dose and monitor tacrolimus whole blood trough concentrations frequently due to a 3- to 6-fold increase in tacrolimus exposure."
       }
     ],
     "ground_truth": {
       "causal_edges": [
-        {"source": "VORICONAZOLE", "target": "CYP3A4", "relation": "INHIBITS"},
-        {"source": "VORICONAZOLE", "target": "CYP3A5", "relation": "INHIBITS"},
-        {"source": "CYP3A4", "target": "TACROLIMUS", "relation": "INCREASES_EXPOSURE"}
+        {
+          "source": "VORICONAZOLE",
+          "target": "CYP3A4",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "CYP3A4",
+          "target": "TACROLIMUS",
+          "relation": "INCREASES_EXPOSURE"
+        }
       ],
-      "physiological_modifier_impact": "Tacrolimus relies entirely on CYP3A4 and CYP3A5 for intestinal and hepatic elimination. Voriconazole is a potent dual inhibitor. In CYP3A5*3/*3 non-expressors, baseline clearance is already lower; Voriconazole induces a 300%-500% surge in trough concentrations, precipitating acute calcineurin inhibitor nephrotoxicity, tremors, and graft injury.",
+      "accepted_alternates": [
+        [
+          {
+            "source": "VORICONAZOLE",
+            "target": "CYP3A4",
+            "relation": "POTENTLY_INHIBITS"
+          },
+          {
+            "source": "CYP3A4",
+            "target": "TACROLIMUS",
+            "relation": "ELEVATES_TROUGH"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "Tacrolimus relies entirely on CYP3A4 and CYP3A5 for intestinal and hepatic elimination. Voriconazole is a potent dual inhibitor. In CYP3A5*3/*3 non-expressors, baseline clearance is already lower; Voriconazole induces a 300%-500% surge in trough concentrations, precipitating acute calcineurin inhibitor nephrotoxicity, tremors, and graft injury. In CYP3A5*3/*3 non-expressors, CYP3A5 is non-functional, so the CYP3A5 inhibition edge is ABSENT — the multi-enzyme collapse is solely via CYP3A4.",
       "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
       "mandated_action": "Empirically reduce Tacrolimus dose by 66% to one-third (33%) of original dose immediately upon starting Voriconazole. Mandate serial whole-blood trough monitoring on days 1, 3, and 5.",
       "fatal_traps": [
@@ -254,7 +589,42 @@
         "resolves_primary": true,
         "residual_risk_remains": true,
         "explanation": "Dose reduction to one-third prevents catastrophic overexposure, but residual risk remains HIGH requiring mandatory continuous therapeutic drug monitoring (TDM) because inter-individual azole bioavailability is highly erratic."
-      }
+      },
+      "minimal_pairs": [
+        {
+          "pair_id": "TASK-06-MP1",
+          "description": "CYP3A5*3/*3 (non-expressor) vs CYP3A5*1/*1 (expressor) — CYP3A5 edge flips, action invariant",
+          "variant_a": {
+            "parameter": "cyp3a5_genotype",
+            "value": "CYP3A5*3/*3 (Homozygous non-expressor)",
+            "verdict": "DOSE_ADJUSTMENT_REQUIRED"
+          },
+          "variant_b": {
+            "parameter": "cyp3a5_genotype",
+            "value": "CYP3A5*1/*1 (Expressor)",
+            "verdict": "DOSE_ADJUSTMENT_REQUIRED"
+          },
+          "explanation": "In CYP3A5*3/*3 non-expressors, there is NO functional CYP3A5, so the Voriconazole→CYP3A5 inhibition edge is ABSENT (moot). In expressors, that edge IS PRESENT and contributes to the multi-enzyme collapse. The tacrolimus dose-reduction guidance (empiric 66% reduction) is the SAME regardless of genotype. This pair tests whether the model correctly shows the CYP3A5 edge flipping while keeping the regulatory action invariant."
+        }
+      ],
+      "atomic_probes": 3,
+      "neutral_edges": [
+        {
+          "source": "TACROLIMUS",
+          "target": "CALCINEURIN",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "VORICONAZOLE",
+          "target": "CYP2C19",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "TACROLIMUS",
+          "target": "P-GP",
+          "relation": "SUBSTRATE_OF"
+        }
+      ]
     }
   },
   {
@@ -274,16 +644,38 @@
     "evidence_references": [
       {
         "id": "FDA_COUMADIN_LABEL_SEC7",
-        "citation": "US FDA Coumadin (warfarin sodium) Prescribing Information §7 & Flagyl §7.1",
+        "citation": "US FDA Coumadin (warfarin sodium) Prescribing Information \u00a77 & Flagyl \u00a77.1",
         "quote": "Metronidazole selectively inhibits the metabolism of the S-enantiomer of warfarin by inhibiting CYP2C9, prolonging prothrombin time and significantly increasing INR and bleeding risk."
       }
     ],
     "ground_truth": {
       "causal_edges": [
-        {"source": "METRONIDAZOLE", "target": "CYP2C9", "relation": "STEREOSELECTIVELY_INHIBITS"},
-        {"source": "CYP2C9", "target": "S-WARFARIN", "relation": "INCREASES_EXPOSURE"}
+        {
+          "source": "METRONIDAZOLE",
+          "target": "CYP2C9",
+          "relation": "STEREOSELECTIVELY_INHIBITS"
+        },
+        {
+          "source": "CYP2C9",
+          "target": "S-WARFARIN",
+          "relation": "INCREASES_EXPOSURE"
+        }
       ],
-      "physiological_modifier_impact": "Commercial warfarin is a racemate. S-warfarin is 3 to 5 times more potent than R-warfarin at inhibiting vitamin K epoxide reductase (VKORC1). Metronidazole stereoselectively blocks CYP2C9 (the sole pathway for S-warfarin clearance), resulting in exponential INR spikes (>5.0 to 10.0) within 48-72 hours.",
+      "accepted_alternates": [
+        [
+          {
+            "source": "METRONIDAZOLE",
+            "target": "CYP2C9",
+            "relation": "SELECTIVELY_INHIBITS"
+          },
+          {
+            "source": "CYP2C9",
+            "target": "S-WARFARIN",
+            "relation": "ELEVATES_EXPOSURE"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "Commercial warfarin is a racemate. S-warfarin is 3 to 5 times more potent than R-warfarin at inhibiting vitamin K epoxide reductase (VKORC1). Metronidazole stereoselectively inhibits CYP2C9 (the primary pathway for S-warfarin clearance), resulting in significant INR elevation typically within 3-5 days; magnitude varies by patient factors. R-warfarin clearance via CYP1A2/3A4 may also be inhibited by metronidazole at high doses.",
       "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
       "mandated_action": "Empirically reduce Warfarin dose by 30% to 50% upon starting Metronidazole. Check INR within 48 to 72 hours.",
       "fatal_traps": [
@@ -295,7 +687,42 @@
         "resolves_primary": true,
         "residual_risk_remains": true,
         "explanation": "If alternative non-interacting antibiotics (e.g., Clindamycin or Amoxicillin-Clavulanate depending on indication) are used, stereoselective CYP2C9 inhibition is bypassed, but underlying infection and diet changes still require standard INR vigilance."
-      }
+      },
+      "minimal_pairs": [
+        {
+          "pair_id": "TASK-07-MP1",
+          "description": "Metronidazole vs non-interacting antibiotic (Amoxicillin-Clavulanate)",
+          "variant_a": {
+            "parameter": "antibiotic",
+            "value": "Metronidazole",
+            "verdict": "DOSE_ADJUSTMENT_REQUIRED"
+          },
+          "variant_b": {
+            "parameter": "antibiotic",
+            "value": "Amoxicillin-Clavulanate",
+            "verdict": "NO_DOSE_ADJUSTMENT"
+          },
+          "explanation": "Non-interacting antibiotics bypass stereoselective CYP2C9 inhibition entirely."
+        }
+      ],
+      "atomic_probes": 2,
+      "neutral_edges": [
+        {
+          "source": "WARFARIN",
+          "target": "VKORC1",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "METRONIDAZOLE",
+          "target": "CYP3A4",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "WARFARIN",
+          "target": "CYP1A2",
+          "relation": "METABOLIZED_BY"
+        }
+      ]
     }
   },
   {
@@ -303,6 +730,7 @@
     "title": "Renal Proximal Tubule Sodium-Mimic Synergy: Lithium + Lisinopril + Furosemide",
     "category": "Contradiction Detection & Uncertainty",
     "difficulty": "Expert",
+    "type": "atomic_control",
     "clinical_context": {
       "patient": "52-year-old female with Bipolar I disorder maintained on stable Lithium Carbonate 600 mg PO BID (steady-state serum lithium 0.85 mEq/L).",
       "physiological_modifiers": {
@@ -316,17 +744,48 @@
     "evidence_references": [
       {
         "id": "FDA_LITHOBID_ZESTRIL_LABEL",
-        "citation": "US FDA Lithobid / Eskalith Prescribing Info §7 and Zestril (lisinopril) Label §7.4",
-        "quote": "Lithium toxicity has been reported in patients receiving lithium concomitantly with drugs which cause elimination of sodium, including diuretics and ACE inhibitors. Concomitant administration requires frequent serum lithium determinations."
+        "citation": "US FDA Lithobid / Eskalith Prescribing Info \u00a77 and Zestril (lisinopril) Label \u00a77.4",
+        "quote": "Lithium toxicity has been reported in patients receiving lithium concomitantly with drugs which cause elimination of sodium, including loop/thiazide diuretics and ACE inhibitors. Concomitant administration requires frequent serum lithium determinations."
       }
     ],
     "ground_truth": {
       "causal_edges": [
-        {"source": "FUROSEMIDE", "target": "PROXIMAL_TUBULE_REABSORPTION", "relation": "INDUCES"},
-        {"source": "LISINOPRIL", "target": "GLOMERULAR_FILTRATION", "relation": "DECREASES_EXPOSURE"},
-        {"source": "PROXIMAL_TUBULE_REABSORPTION", "target": "LITHIUM", "relation": "INCREASES_EXPOSURE"}
+        {
+          "source": "FUROSEMIDE",
+          "target": "PROXIMAL_TUBULE_REABSORPTION",
+          "relation": "INDUCES"
+        },
+        {
+          "source": "LISINOPRIL",
+          "target": "GLOMERULAR_FILTRATION",
+          "relation": "DECREASES_EXPOSURE"
+        },
+        {
+          "source": "PROXIMAL_TUBULE_REABSORPTION",
+          "target": "LITHIUM",
+          "relation": "INCREASES_EXPOSURE"
+        }
       ],
-      "physiological_modifier_impact": "Furosemide blocks Na+/K+/2Cl- cotransport in the thick ascending limb, causing volume contraction and hyponatremia (Na+ 132 mEq/L). The kidney compensates by upregulating proximal tubule sodium reabsorption. Because Li+ is a monovalent cation with similar ionic radius, proximal tubules reabsorb Li+ indiscriminately. Lisinopril dilates efferent renal arterioles, reducing GFR and trapping accumulated Lithium.",
+      "accepted_alternates": [
+        [
+          {
+            "source": "FUROSEMIDE",
+            "target": "PROXIMAL_TUBULE_REABSORPTION",
+            "relation": "UPREGULATES"
+          },
+          {
+            "source": "LISINOPRIL",
+            "target": "GLOMERULAR_FILTRATION",
+            "relation": "REDUCES"
+          },
+          {
+            "source": "PROXIMAL_TUBULE_REABSORPTION",
+            "target": "LITHIUM",
+            "relation": "INCREASES_EXPOSURE"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "Thiazide diuretics are the canonical high-confidence lithium interaction; loop diuretic (furosemide) effects are less uniform and strongly volume-status dependent. Furosemide blocks Na+/K+/2Cl- cotransport in the thick ascending limb, causing volume contraction and hyponatremia (Na+ 132 mEq/L). The kidney compensates by upregulating proximal tubule sodium reabsorption. Because Li+ is a monovalent cation with similar ionic radius, proximal tubules reabsorb Li+ indiscriminately. Lisinopril dilates efferent renal arterioles, reducing GFR and trapping accumulated Lithium. ACE inhibitors independently reduce GFR and lithium clearance. The triple combination is highest risk.",
       "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
       "mandated_action": "High toxicity hazard. Reduce Lithium dose by 50% proactively, or avoid the triple combination; check serum lithium levels and renal function within 48-72 hours.",
       "fatal_traps": [
@@ -338,7 +797,586 @@
         "resolves_primary": true,
         "residual_risk_remains": true,
         "explanation": "Even if Furosemide is dose-titrated or switched, Lisinopril independently reduces GFR and causes chronic lithium retention, meaning frequent therapeutic drug monitoring remains strictly mandatory."
+      },
+      "minimal_pairs": [
+        {
+          "pair_id": "TASK-08-MP1",
+          "description": "With vs without Furosemide",
+          "variant_a": {
+            "parameter": "diuretic",
+            "value": "Furosemide + Lisinopril",
+            "verdict": "DOSE_ADJUSTMENT_REQUIRED"
+          },
+          "variant_b": {
+            "parameter": "diuretic",
+            "value": "Lisinopril alone",
+            "verdict": "DOSE_ADJUSTMENT_REQUIRED"
+          },
+          "explanation": "Lisinopril alone still reduces GFR and causes lithium retention; furosemide adds proximal tubule reabsorption synergy but is not the sole driver."
+        }
+      ],
+      "atomic_probes": 3,
+      "neutral_edges": [
+        {
+          "source": "LISINOPRIL",
+          "target": "ACE",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "FUROSEMIDE",
+          "target": "NKCC2",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "LITHIUM",
+          "target": "SODIUM_CHANNEL",
+          "relation": "COMPETITIVELY_BLOCKS"
+        }
+      ]
+    }
+  },
+  {
+    "id": "TASK-09",
+    "title": "Safe Combination Control: Atorvastatin + Azithromycin (No Clinically Meaningful CYP3A4 Inhibition)",
+    "category": "Negative Control / False Alarm Detection",
+    "difficulty": "Intermediate",
+    "type": "atomic_control",
+    "clinical_context": {
+      "patient": "55-year-old male with hyperlipidemia on Atorvastatin 40 mg PO nightly.",
+      "physiological_modifiers": {
+        "baseline_ck_u_l": 85,
+        "renal_function": "Normal (CrCl > 90 mL/min)",
+        "hepatic_function": "Normal AST/ALT"
+      },
+      "acute_prescription": "Azithromycin 500 mg PO day 1, then 250 mg daily days 2-5 for acute bacterial sinusitis.",
+      "counterfactual_probe": "If Azithromycin is substituted with Clarithromycin 500 mg BID (a strong CYP3A4 inhibitor), would the interaction profile change?"
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_LIPITOR_LABEL_SEC7",
+        "citation": "US FDA Lipitor (atorvastatin) Prescribing Information Section 7.1 & 12.3",
+        "quote": "Azithromycin does not inhibit CYP3A4 and does not significantly increase atorvastatin exposure. Co-administration of atorvastatin with azithromycin does not require dose adjustment. In contrast, strong CYP3A4 inhibitors (clarithromycin, itraconazole) increase atorvastatin AUC by up to 4-fold."
       }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {
+          "source": "AZITHROMYCIN",
+          "target": "CYP3A4",
+          "relation": "NO_INHIBITION"
+        },
+        {
+          "source": "CYP3A4",
+          "target": "ATORVASTATIN",
+          "relation": "NO_CHANGE_IN_EXPOSURE"
+        }
+      ],
+      "accepted_alternates": [
+        [
+          {
+            "source": "AZITHROMYCIN",
+            "target": "CYP3A4",
+            "relation": "DOES_NOT_INHIBIT"
+          },
+          {
+            "source": "CYP3A4",
+            "target": "ATORVASTATIN",
+            "relation": "MAINTAINS_EXPOSURE"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "Azithromycin is a macrolide antibiotic that lacks the N-demethylated tertiary amine structure responsible for CYP3A4 inhibition seen in clarithromycin and erythromycin. It does not form a metabolic intermediate complex with CYP3A4 heme iron. This is a 'no clinically meaningful CYP3A4 inhibition at standard doses' control. NOTE: Azithromycin carries QT prolongation/TdP risk in patients with hypokalemia, hypomagnesemia, or on antiarrhythmics; this is a CYP3A4-PK negative control ONLY, not an overall safety endorsement.",
+      "expected_verdict": "NO_DOSE_ADJUSTMENT",
+      "mandated_action": "No dose adjustment required. Atorvastatin 40 mg may be continued with azithromycin. Monitor CK if symptoms develop.",
+      "fatal_traps": [
+        "reduce atorvastatin dose",
+        "contraindicated",
+        "hold atorvastatin during therapy",
+        "azithromycin is completely safe in all patients"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": false,
+        "explanation": "Clarithromycin is a strong CYP3A4 inhibitor and would increase atorvastatin AUC ~4-fold, requiring dose reduction or alternative antibiotic. This contrast validates that the benchmark correctly distinguishes safe macrolides from interacting ones."
+      },
+      "atomic_probes": 1,
+      "neutral_edges": [
+        {
+          "source": "ATORVASTATIN",
+          "target": "HMG_COA_REDUCTASE",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "AZITHROMYCIN",
+          "target": "BACTERIAL_RIBOSOME",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "AZITHROMYCIN",
+          "target": "P-GP",
+          "relation": "INHIBITS"
+        }
+      ]
+    }
+  },
+  {
+    "id": "TASK-10",
+    "title": "Safe Combination Control: Warfarin + Ceftriaxone (No CYP-Mediated PK Interaction)",
+    "category": "Negative Control / False Alarm Detection",
+    "difficulty": "Intermediate",
+    "type": "atomic_control",
+    "clinical_context": {
+      "patient": "68-year-old female with mechanical aortic valve on chronic Warfarin 4 mg daily (stable INR 2.8).",
+      "physiological_modifiers": {
+        "baseline_inr": 2.8,
+        "hepatic_function": "Normal",
+        "dietary_vitamin_k": "Consistent intake"
+      },
+      "acute_prescription": "Ceftriaxone 2 g IV daily for community-acquired pneumonia (hospitalized).",
+      "counterfactual_probe": "If Ceftriaxone is substituted with Trimethoprim-Sulfamethoxazole (TMP-SMX) DS BID, how does the interaction mechanism differ?"
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_COUMADIN_CEPHALOSPORINS",
+        "citation": "US FDA Coumadin Prescribing Information Section 7 & Clinical Pharmacology Literature",
+        "quote": "Third-generation cephalosporins (ceftriaxone, cefotaxime) lack significant CYP2C9 inhibitory activity and do not displace warfarin from albumin. They may transiently reduce vitamin K-producing gut flora, but the effect on INR is clinically negligible in patients with normal nutrition. In contrast, TMP-SMX is a potent CYP2C9 inhibitor and displaces warfarin from protein binding, increasing S-warfarin AUC by 30-50%."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {
+          "source": "CEFTRIAXONE",
+          "target": "CYP2C9",
+          "relation": "NO_INHIBITION"
+        },
+        {
+          "source": "CEFTRIAXONE",
+          "target": "VITAMIN_K_FLORA",
+          "relation": "MINIMAL_DECREASE"
+        }
+      ],
+      "accepted_alternates": [
+        [
+          {
+            "source": "CEFTRIAXONE",
+            "target": "CYP2C9",
+            "relation": "DOES_NOT_INHIBIT"
+          },
+          {
+            "source": "CEFTRIAXONE",
+            "target": "VITAMIN_K_FLORA",
+            "relation": "WEAKLY_DECREASES"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "Ceftriaxone has minimal biliary excretion and weak effect on gut flora compared to broad-spectrum oral antibiotics. Any INR drift is typically <0.5 and clinically insignificant without dose change in patients with normal nutrition. However, in frail, malnourished, or hospitalized patients with poor intake, hepatic dysfunction, or antibiotic-related flora effects, INR can still shift. Unlike TMP-SMX, ceftriaxone does not inhibit CYP2C9 or displace warfarin from albumin. This is a 'no CYP-mediated PK interaction' control. Score 'no major CYP-mediated interaction' separately from 'no clinically relevant INR risk.'",
+      "expected_verdict": "NO_CYP_INTERACTION",
+      "mandated_action": "No empiric warfarin dose reduction required for CYP interaction. Continue standard INR monitoring per protocol (weekly). Earlier INR check (48-72h) if frail/malnourished/inpatient. Do not withhold ceftriaxone for fear of CYP-mediated interaction.",
+      "fatal_traps": [
+        "reduce warfarin dose empirically",
+        "contraindicated",
+        "hold warfarin",
+        "switch to heparin bridge"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": false,
+        "explanation": "TMP-SMX would require ~30-50% warfarin reduction and INR check at 48-72 hours due to dual CYP2C9 inhibition and protein displacement. The contrast proves models must distinguish cephalosporin safety from sulfonamide danger."
+      },
+      "atomic_probes": 1,
+      "neutral_edges": [
+        {
+          "source": "WARFARIN",
+          "target": "VKORC1",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "CEFTRIAXONE",
+          "target": "PBP",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "CEFTRIAXONE",
+          "target": "GUT_MICROBIOME",
+          "relation": "DECREASES_EXPOSURE"
+        }
+      ]
+    }
+  },
+  {
+    "id": "TASK-11",
+    "title": "Pharmacogenomic Crisis: Codeine + CYP2D6 Ultrarapid Metabolizer",
+    "category": "Pharmacogenomics & Pediatric Toxicology",
+    "difficulty": "Expert",
+    "type": "atomic_control",
+    "clinical_context": {
+      "patient": "8-year-old post-tonsillectomy (weight 28 kg), prescribed Codeine 30 mg PO q6h PRN pain.",
+      "physiological_modifiers": {
+        "cyp2d6_genotype": "*1/*2xN (Ultrarapid Metabolizer - UM)",
+        "age": 8,
+        "weight_kg": 28,
+        "renal_function": "Normal"
+      },
+      "acute_prescription": "Codeine 30 mg PO q6h as needed for post-operative pain.",
+      "counterfactual_probe": "If Codeine is replaced with Morphine 2.5 mg PO q4h, does the life-threatening respiratory depression risk resolve?"
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_CODEINE_BOXED_WARNING_2013",
+        "citation": "US FDA Codeine Boxed Warning (2013) & CPIC CYP2D6/Codeine Guideline",
+        "quote": "Children with CYP2D6 ultrarapid metabolizer phenotype convert codeine to morphine more rapidly and completely, leading to life-threatening respiratory depression and death. Codeine is contraindicated in children <12 years for post-tonsillectomy/adenoidectomy pain."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {
+          "source": "CODEINE",
+          "target": "CYP2D6",
+          "relation": "REQUIRES_FOR_BIOACTIVATION"
+        },
+        {
+          "source": "CYP2D6",
+          "target": "MORPHINE",
+          "relation": "INCREASES_EXPOSURE"
+        },
+        {
+          "source": "MORPHINE",
+          "target": "MU_OPIOID_RECEPTOR",
+          "relation": "INCREASES_EXPOSURE"
+        }
+      ],
+"accepted_alternates": [
+        [
+          {
+            "source": "VORICONAZOLE",
+            "target": "CYP3A4",
+            "relation": "POTENTLY_INHIBITS"
+          },
+          {
+            "source": "CYP3A4",
+            "target": "TACROLIMUS",
+            "relation": "ELEVATES_TROUGH"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "CYP2D6 UM genotype (*1/*2xN) causes ultra-rapid conversion of codeine to morphine, producing toxic morphine levels in children. Respiratory depression occurs at standard doses. FDA contraindicates codeine for post-tonsillectomy pain in children <12 years.",
+      "expected_verdict": "CONTRAINDICATED",
+      "mandated_action": "Absolute contraindication. Avoid codeine entirely in CYP2D6 UM and children <12 years. Use non-opioid analgesics (acetaminophen/ibuprofen) or morphine with careful titration.",
+      "fatal_traps": [
+        "reduce codeine dose",
+        "safe at lower dose",
+        "monitor respiratory rate only"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": false,
+        "explanation": "Morphine bypasses CYP2D6 bioactivation, eliminating the pharmacogenomic risk. However, standard opioid precautions (respiratory monitoring, dose titration) still apply."
+      },
+      "atomic_probes": 3,
+      "neutral_edges": [
+        {
+          "source": "CODEINE",
+          "target": "CYP3A4",
+          "relation": "METABOLIZED_BY"
+        },
+        {
+          "source": "CODEINE",
+          "target": "NORCODEINE",
+          "relation": "INCREASES_EXPOSURE"
+        },
+        {
+          "source": "CODEINE",
+          "target": "UGT2B7",
+          "relation": "METABOLIZED_BY"
+        }
+      ]
+    }
+  },
+  {
+    "id": "TASK-12",
+    "title": "Thiopurine Methyltransferase Deficiency: Azathioprine + TPMT*3A/*3A",
+    "category": "Pharmacogenomics & Hematologic Toxicity",
+    "difficulty": "Expert",
+    "type": "atomic_control",
+    "clinical_context": {
+      "patient": "32-year-old female with refractory Crohn's disease, initiated on Azathioprine 2.5 mg/kg/day.",
+      "physiological_modifiers": {
+        "tpmt_genotype": "*3A/*3A (Homozygous deficient - Poor Metabolizer)",
+        "baseline_wbc": 6.2,
+        "baseline_anc": 3.1,
+        "hepatic_function": "Normal"
+      },
+      "acute_prescription": "Azathioprine 150 mg PO daily (2.5 mg/kg) for Crohn's maintenance.",
+      "counterfactual_probe": "If Azathioprine is switched to Methotrexate 15 mg weekly, does the myelosuppression risk resolve?"
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_IMURAN_TPMT_BOXED",
+        "citation": "US FDA Imuran (azathioprine) Boxed Warning & CPIC TPMT/Thiopurine Guideline",
+        "quote": "Patients with homozygous TPMT deficiency (*3A/*3A, *3C/*3C) are at extreme risk for severe, life-threatening myelosuppression from standard azathioprine doses. Reduce dose to 10% of standard and monitor CBC weekly, or avoid entirely."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {
+          "source": "AZATHIOPRINE",
+          "target": "TPMT",
+          "relation": "COMPETITIVELY_BLOCKS"
+        },
+        {
+          "source": "TPMT",
+          "target": "6_THIOGUANINE_NUCLEOTIDES",
+          "relation": "INCREASES_EXPOSURE"
+        },
+        {
+          "source": "6_THIOGUANINE_NUCLEOTIDES",
+          "target": "BONE_MARROW",
+          "relation": "INCREASES_EXPOSURE"
+        }
+      ],
+      "accepted_alternates": [
+        [
+          {
+            "source": "AZATHIOPRINE",
+            "target": "TPMT",
+            "relation": "IS_METABOLIZED_BY"
+          },
+          {
+            "source": "TPMT",
+            "target": "6_THIOGUANINE_NUCLEOTIDES",
+            "relation": "INCREASES_EXPOSURE"
+          },
+          {
+            "source": "6_THIOGUANINE_NUCLEOTIDES",
+            "target": "BONE_MARROW",
+            "relation": "INCREASES_EXPOSURE"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "TPMT*3A/*3A homozygotes have <5% enzyme activity. Azathioprine is shunted toward toxic 6-thioguanine nucleotides (6-TGN), causing profound myelosuppression (neutropenia, anemia, thrombocytopenia) within 2-4 weeks at standard doses. CPIC recommends 10% dose reduction or alternative therapy.",
+      "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
+      "mandated_action": "Reduce azathioprine to 10% of standard dose (0.25 mg/kg) with weekly CBC monitoring, OR avoid azathioprine and use alternative (methotrexate, biologics).",
+      "fatal_traps": [
+        "standard dose azathioprine",
+        "monitor CBC monthly",
+        "no dose adjustment needed"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": false,
+        "explanation": "Methotrexate does not require TPMT for metabolism and bypasses the thiopurine toxicity pathway entirely. Standard methotrexate monitoring (CBC, LFTs) applies."
+      },
+      "atomic_probes": 3,
+      "neutral_edges": [
+        {
+          "source": "AZATHIOPRINE",
+          "target": "6_MERCAPTOPURINE",
+          "relation": "INCREASES_EXPOSURE"
+        },
+        {
+          "source": "AZATHIOPRINE",
+          "target": "XANTHINE_OXIDASE",
+          "relation": "METABOLIZED_BY"
+        },
+        {
+          "source": "6_THIOGUANINE_NUCLEOTIDES",
+          "target": "DNA_SYNTHESIS",
+          "relation": "INHIBITS"
+        }
+      ]
+    }
+  },
+  {
+    "id": "TASK-13",
+    "title": "HLA-B*57:01 Hypersensitivity: Abacavir in HLA-B*57:01 Positive Patient",
+    "category": "Pharmacogenomics & Immunologic Toxicity",
+    "difficulty": "Expert",
+    "type": "atomic_control",
+    "clinical_context": {
+      "patient": "41-year-old male with newly diagnosed HIV, HLA-B*57:01 positive, initiated on Abacavir 300 mg BID as part of ART.",
+      "physiological_modifiers": {
+        "hla_b5701_status": "POSITIVE",
+        "cd4_count": 320,
+        "viral_load": 45000,
+        "renal_function": "Normal (eGFR >90)"
+      },
+      "acute_prescription": "Abacavir 300 mg PO BID + Lamivudine 300 mg + Dolutegravir 50 mg daily.",
+      "counterfactual_probe": "If Abacavir is replaced with Tenofovir Alafenamide 25 mg daily, does the hypersensitivity reaction risk resolve?"
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_ZIAGEN_HLA_BOXED",
+        "citation": "US FDA Ziagen (abacavir) Boxed Warning & CPIC HLA-B/Abacavir Guideline",
+        "quote": "Abacavir is contraindicated in patients positive for HLA-B*57:01 allele. Hypersensitivity reaction occurs in ~50-60% of HLA-B*57:01 positive patients vs <1% negative. Re-exposure after reaction causes anaphylaxis and death."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {
+          "source": "ABACAVIR",
+          "target": "HLA_B5701",
+          "relation": "BINDS_AND_ALTERS_PEPTIDE_REPERTOIRE"
+        },
+        {
+          "source": "HLA_B5701",
+          "target": "CD8_T_CELL_ACTIVATION",
+          "relation": "INCREASES_EXPOSURE"
+        },
+        {
+          "source": "CD8_T_CELL_ACTIVATION",
+          "target": "HYPERSENSITIVITY_SYNDROME",
+          "relation": "INCREASES_EXPOSURE"
+        }
+      ],
+      "accepted_alternates": [
+        [
+          {
+            "source": "ABACAVIR",
+            "target": "HLA_B5701",
+            "relation": "PRESENTS_AS_ALTERED_SELF"
+          },
+          {
+            "source": "HLA_B5701",
+            "target": "CD8_T_CELL_ACTIVATION",
+            "relation": "INCREASES_EXPOSURE"
+          },
+          {
+            "source": "CD8_T_CELL_ACTIVATION",
+            "target": "HYPERSENSITIVITY_SYNDROME",
+            "relation": "INCREASES_EXPOSURE"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "HLA-B*57:01 presents abacavir as an altered self-peptide, triggering massive CD8+ T-cell activation and systemic hypersensitivity (fever, rash, hepatitis, renal failure). Positive predictive value ~50-60%. FDA mandates HLA-B*57:01 screening before initiation; contraindicated if positive.",
+      "expected_verdict": "CONTRAINDICATED",
+      "mandated_action": "Absolute contraindication. Do not use abacavir in HLA-B*57:01 positive patients. Switch to tenofovir alafenamide (TAF) or tenofovir disoproxil fumarate (TDF) based regimen.",
+      "fatal_traps": [
+        "pretreat with antihistamines",
+        "start at lower dose",
+        "monitor for rash only"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": false,
+        "explanation": "Tenofovir alafenamide does not associate with HLA-B*57:01 hypersensitivity. Standard renal monitoring for tenofovir applies."
+      },
+      "atomic_probes": 3,
+      "neutral_edges": [
+        {
+          "source": "ABACAVIR",
+          "target": "REVERSE_TRANSCRIPTASE",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "ABACAVIR",
+          "target": "ALCOHOL_DEHYDROGENASE",
+          "relation": "METABOLIZED_BY"
+        }
+      ]
+    }
+  },
+  {
+    "id": "TASK-14",
+    "title": "UGT1A1*28 Polymorphism: Irinotecan in Homozygous *28/*28 Patient",
+    "category": "Pharmacogenomics & Oncology Toxicity",
+    "difficulty": "Expert",
+    "type": "atomic_control",
+    "clinical_context": {
+      "patient": "58-year-old male with metastatic colorectal cancer, UGT1A1*28/*28 homozygous, scheduled for FOLFIRI (Irinotecan 180 mg/m2 q2w).",
+      "physiological_modifiers": {
+        "ugt1a1_genotype": "*28/*28 (Homozygous reduced function)",
+        "baseline_bilirubin": 1.2,
+        "baseline_anc": 4.8,
+        "hepatic_function": "Normal AST/ALT"
+      },
+      "acute_prescription": "Irinotecan 180 mg/m2 IV day 1 of 14-day cycle (FOLFIRI regimen).",
+      "counterfactual_probe": "If Irinotecan dose is reduced to 120 mg/m2 per CPIC guidelines, does the severe neutropenia risk resolve?"
+    },
+    "evidence_references": [
+      {
+        "id": "FDA_CAMPTOSAR_UGT1A1",
+        "citation": "US FDA Camptosar (irinotecan) Prescribing Information & CPIC UGT1A1/Irinotecan Guideline",
+        "quote": "UGT1A1*28/*28 homozygotes have ~30% glucuronidation activity for SN-38 (active irinotecan metabolite). At standard doses, risk of Grade 4 neutropenia is ~50%. CPIC recommends 25-50% dose reduction for *28/*28."
+      }
+    ],
+    "ground_truth": {
+      "causal_edges": [
+        {
+          "source": "IRINOTECAN",
+          "target": "CARBOXYLESTERASE",
+          "relation": "INCREASES_EXPOSURE"
+        },
+        {
+          "source": "CARBOXYLESTERASE",
+          "target": "SN38",
+          "relation": "INCREASES_EXPOSURE"
+        },
+        {
+          "source": "SN38",
+          "target": "UGT1A1",
+          "relation": "DECREASES_EXPOSURE"
+        },
+        {
+          "source": "UGT1A1",
+          "target": "SN38_GLUCURONIDE",
+          "relation": "INCREASES_EXPOSURE"
+        }
+      ],
+      "accepted_alternates": [
+        [
+          {
+            "source": "IRINOTECAN",
+            "target": "CARBOXYLESTERASE",
+            "relation": "IS_CONVERTED_BY"
+          },
+          {
+            "source": "CARBOXYLESTERASE",
+            "target": "SN38",
+            "relation": "PRODUCES"
+          },
+          {
+            "source": "SN38",
+            "target": "UGT1A1",
+            "relation": "IS_GLUCURONIDATED_BY"
+          },
+          {
+            "source": "UGT1A1",
+            "target": "SN38_GLUCURONIDE",
+            "relation": "PRODUCES"
+          }
+        ]
+      ],
+      "physiological_modifier_impact": "UGT1A1*28/*28 reduces SN-38 glucuronidation to ~30% of normal, causing SN-38 accumulation. This increases topoisomerase I inhibition in bone marrow, leading to severe neutropenia (Grade 3-4 in ~50% at standard dose). CPIC recommends 25-50% dose reduction.",
+      "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
+      "mandated_action": "Reduce irinotecan starting dose by at least 25-50% (to 120 mg/m2 or lower). Mandate pre-cycle CBC and G-CSF prophylaxis consideration. Do not use standard 180 mg/m2 dose.",
+      "fatal_traps": [
+        "standard 180 mg/m2 dose",
+        "no dose adjustment for genotype",
+        "prophylactic antibiotics instead of dose reduction"
+      ],
+      "counterfactual": {
+        "resolves_primary": true,
+        "residual_risk_remains": true,
+        "explanation": "Dose reduction to 120 mg/m2 significantly reduces but does not eliminate neutropenia risk in *28/*28. Residual risk requires continued CBC monitoring and G-CSF support. Alternative non-irinotecan regimens (FOLFOX) bypass UGT1A1 entirely."
+      },
+      "atomic_probes": 4,
+      "neutral_edges": [
+        {
+          "source": "IRINOTECAN",
+          "target": "TOP1",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "SN38",
+          "target": "TOP1",
+          "relation": "INHIBITS"
+        },
+        {
+          "source": "IRINOTECAN",
+          "target": "CYP3A4",
+          "relation": "METABOLIZED_BY"
+        }
+      ]
     }
   }
 ]

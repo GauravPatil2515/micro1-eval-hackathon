@@ -1,0 +1,7 @@
+# Evidence Document: FDA_SIMVASTATIN_AMLODIPINE_SEC2
+Source: US FDA Drug Safety Communication (June 2011) & Simvastatin (Zocor) Prescribing Information Section 2.2 & Section 7.1
+
+EXCERPT:
+"Do not exceed 20 mg simvastatin daily with concomitant amlodipine. Amlodipine increases systemic exposure of simvastatin acid by approximately 1.6-fold, significantly elevating the risk of myopathy and rhabdomyolysis.
+Simvastatin is extensively metabolized by CYP3A4 to form the active hydroxyacid metabolite (simvastatin acid). Amlodipine is a moderate inhibitor of CYP3A4, leading to a 60-70% increase in simvastatin lactone and active acid exposure.
+Alternative statins not extensively metabolized by CYP3A4 (such as rosuvastatin or pravastatin) may be used without dose limitation when co-administered with amlodipine."

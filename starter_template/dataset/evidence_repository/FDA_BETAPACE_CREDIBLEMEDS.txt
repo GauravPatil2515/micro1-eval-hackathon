@@ -1,0 +1,8 @@
+# Evidence Document: FDA_BETAPACE_CREDIBLEMEDS
+Source: US FDA Prescribing Information Betapace (sotalol HCl), NDA 019842 Section 5.1 (Proarrhythmia); CredibleMeds List 1 (Known Risk of TdP)
+
+EXCERPT:
+"Sotalol can cause serious, life-threatening ventricular proarrhythmias, primarily Torsades de Pointes (TdP) type ventricular tachycardia. The risk of TdP is related to the prolongation of the QTc interval, which reflects block of the rapid delayed rectifier potassium current (IKr / hERG channel).
+Hypokalemia (< 4.0 mEq/L) and hypomagnesemia significantly increase the risk of proarrhythmia. Potassium and magnesium deficiencies must be corrected prior to initiation of sotalol and maintained during therapy.
+Concomitant administration of sotalol with other drugs that prolong the QT interval, such as fluoroquinolone antibiotics (e.g., levofloxacin, moxifloxacin), produces additive potassium channel blockade and significantly elevates the incidence of polymorphic ventricular tachyarrhythmias.
+Substituting levofloxacin for an agent with negligible QT liability (such as doxycycline) eliminates the antibiotic contribution to IKr blockade, but uncorrected hypokalemia continues to destabilize the cardiac repolarization reserve in the presence of sotalol."

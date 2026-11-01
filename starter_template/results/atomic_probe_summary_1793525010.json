@@ -1,0 +1,1026 @@
+{
+  "openai/gpt-oss-120b": {
+    "total_probes": 37,
+    "correct_probes": 37,
+    "overall_atomic_accuracy_pct": 100.0,
+    "task_atomic_stats": {
+      "TASK-01": {
+        "probes_count": 4,
+        "probes_correct": 4,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does ketoconazole inhibit CYP3A4?",
+            "expected_edge": [
+              "KETOCONAZOLE",
+              "CYP3A4",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does ketoconazole inhibit P-gp?",
+            "expected_edge": [
+              "KETOCONAZOLE",
+              "P-GP",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP3A4 inhibition increase rivaroxaban exposure?",
+            "expected_edge": [
+              "CYP3A4",
+              "RIVAROXABAN",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does P-gp inhibition increase rivaroxaban exposure?",
+            "expected_edge": [
+              "P-GP",
+              "RIVAROXABAN",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-02": {
+        "probes_count": 2,
+        "probes_correct": 2,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does omeprazole inhibit CYP2C19?",
+            "expected_edge": [
+              "OMEPRAZOLE",
+              "CYP2C19",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP2C19 inhibition block clopidogrel bioactivation?",
+            "expected_edge": [
+              "CYP2C19",
+              "CLOPIDOGREL",
+              "BLOCKS_BIOACTIVATION"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-03": {
+        "probes_count": 2,
+        "probes_correct": 2,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does sotalol inhibit hERG?",
+            "expected_edge": [
+              "SOTALOL",
+              "HERG",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does levofloxacin produce additive hERG block?",
+            "expected_edge": [
+              "LEVOFLOXACIN",
+              "HERG",
+              "PRODUCES_ADDITIVE_BLOCK"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-04": {
+        "probes_count": 4,
+        "probes_correct": 4,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does naproxen competitively block OAT1?",
+            "expected_edge": [
+              "NAPROXEN",
+              "OAT1",
+              "COMPETITIVELY_BLOCKS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does naproxen competitively block OAT3?",
+            "expected_edge": [
+              "NAPROXEN",
+              "OAT3",
+              "COMPETITIVELY_BLOCKS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does OAT1 inhibition increase methotrexate exposure?",
+            "expected_edge": [
+              "OAT1",
+              "METHOTREXATE",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does OAT3 inhibition increase methotrexate exposure?",
+            "expected_edge": [
+              "OAT3",
+              "METHOTREXATE",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-05": {
+        "probes_count": 2,
+        "probes_correct": 2,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does amlodipine inhibit CYP3A4?",
+            "expected_edge": [
+              "AMLODIPINE",
+              "CYP3A4",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP3A4 inhibition increase simvastatin exposure?",
+            "expected_edge": [
+              "CYP3A4",
+              "SIMVASTATIN",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-06": {
+        "probes_count": 3,
+        "probes_correct": 3,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does voriconazole inhibit CYP3A4?",
+            "expected_edge": [
+              "VORICONAZOLE",
+              "CYP3A4",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does voriconazole inhibit CYP3A5?",
+            "expected_edge": [
+              "VORICONAZOLE",
+              "CYP3A5",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP3A4 inhibition increase tacrolimus exposure?",
+            "expected_edge": [
+              "CYP3A4",
+              "TACROLIMUS",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-07": {
+        "probes_count": 2,
+        "probes_correct": 2,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does metronidazole stereoselectively inhibit CYP2C9?",
+            "expected_edge": [
+              "METRONIDAZOLE",
+              "CYP2C9",
+              "STEREOSELECTIVELY_INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP2C9 inhibition increase S-warfarin exposure?",
+            "expected_edge": [
+              "CYP2C9",
+              "S-WARFARIN",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-08": {
+        "probes_count": 3,
+        "probes_correct": 3,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does furosemide induce proximal tubule reabsorption?",
+            "expected_edge": [
+              "FUROSEMIDE",
+              "PROXIMAL_TUBULE_REABSORPTION",
+              "INDUCES"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does lisinopril decrease glomerular filtration?",
+            "expected_edge": [
+              "LISINOPRIL",
+              "GLOMERULAR_FILTRATION",
+              "DECREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does proximal tubule reabsorption increase lithium exposure?",
+            "expected_edge": [
+              "PROXIMAL_TUBULE_REABSORPTION",
+              "LITHIUM",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-09": {
+        "probes_count": 1,
+        "probes_correct": 1,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does azithromycin decrease CYP3A4 activity?",
+            "expected_edge": [
+              "AZITHROMYCIN",
+              "CYP3A4",
+              "DECREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-10": {
+        "probes_count": 1,
+        "probes_correct": 1,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does ceftriaxone decrease vitamin K flora?",
+            "expected_edge": [
+              "CEFTRIAXONE",
+              "VITAMIN_K_FLORA",
+              "DECREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-11": {
+        "probes_count": 3,
+        "probes_correct": 3,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does codeine require CYP2D6 for bioactivation to morphine?",
+            "expected_edge": [
+              "CODEINE",
+              "CYP2D6",
+              "BLOCKS_BIOACTIVATION"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP2D6 activity increase morphine exposure?",
+            "expected_edge": [
+              "CYP2D6",
+              "MORPHINE",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does morphine increase mu-opioid receptor activation?",
+            "expected_edge": [
+              "MORPHINE",
+              "MU_OPIOID_RECEPTOR",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-12": {
+        "probes_count": 3,
+        "probes_correct": 3,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does azathioprine competitively block TPMT?",
+            "expected_edge": [
+              "AZATHIOPRINE",
+              "TPMT",
+              "COMPETITIVELY_BLOCKS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does TPMT deficiency increase 6-thioguanine nucleotides?",
+            "expected_edge": [
+              "TPMT",
+              "6_THIOGUANINE_NUCLEOTIDES",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Do 6-thioguanine nucleotides increase bone marrow toxicity?",
+            "expected_edge": [
+              "6_THIOGUANINE_NUCLEOTIDES",
+              "BONE_MARROW",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-13": {
+        "probes_count": 3,
+        "probes_correct": 3,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does abacavir interact with HLA-B*57:01?",
+            "expected_edge": [
+              "ABACAVIR",
+              "HLA_B5701",
+              "PRODUCES_ADDITIVE_BLOCK"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does HLA-B*57:01 increase CD8 T-cell activation?",
+            "expected_edge": [
+              "HLA_B5701",
+              "CD8_T_CELL_ACTIVATION",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CD8 T-cell activation increase hypersensitivity?",
+            "expected_edge": [
+              "CD8_T_CELL_ACTIVATION",
+              "HYPERSENSITIVITY_SYNDROME",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-14": {
+        "probes_count": 4,
+        "probes_correct": 4,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does irinotecan convert to SN-38 via carboxylesterase?",
+            "expected_edge": [
+              "IRINOTECAN",
+              "CARBOXYLESTERASE",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does carboxylesterase increase SN-38?",
+            "expected_edge": [
+              "CARBOXYLESTERASE",
+              "SN38",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does SN-38 require UGT1A1 for glucuronidation?",
+            "expected_edge": [
+              "SN38",
+              "UGT1A1",
+              "DECREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does UGT1A1 increase SN-38 glucuronide?",
+            "expected_edge": [
+              "UGT1A1",
+              "SN38_GLUCURONIDE",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      }
+    }
+  },
+  "qwen/qwen3.8-27b": {
+    "total_probes": 37,
+    "correct_probes": 37,
+    "overall_atomic_accuracy_pct": 100.0,
+    "task_atomic_stats": {
+      "TASK-01": {
+        "probes_count": 4,
+        "probes_correct": 4,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does ketoconazole inhibit CYP3A4?",
+            "expected_edge": [
+              "KETOCONAZOLE",
+              "CYP3A4",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does ketoconazole inhibit P-gp?",
+            "expected_edge": [
+              "KETOCONAZOLE",
+              "P-GP",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP3A4 inhibition increase rivaroxaban exposure?",
+            "expected_edge": [
+              "CYP3A4",
+              "RIVAROXABAN",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does P-gp inhibition increase rivaroxaban exposure?",
+            "expected_edge": [
+              "P-GP",
+              "RIVAROXABAN",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-02": {
+        "probes_count": 2,
+        "probes_correct": 2,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does omeprazole inhibit CYP2C19?",
+            "expected_edge": [
+              "OMEPRAZOLE",
+              "CYP2C19",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP2C19 inhibition block clopidogrel bioactivation?",
+            "expected_edge": [
+              "CYP2C19",
+              "CLOPIDOGREL",
+              "BLOCKS_BIOACTIVATION"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-03": {
+        "probes_count": 2,
+        "probes_correct": 2,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does sotalol inhibit hERG?",
+            "expected_edge": [
+              "SOTALOL",
+              "HERG",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does levofloxacin produce additive hERG block?",
+            "expected_edge": [
+              "LEVOFLOXACIN",
+              "HERG",
+              "PRODUCES_ADDITIVE_BLOCK"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-04": {
+        "probes_count": 4,
+        "probes_correct": 4,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does naproxen competitively block OAT1?",
+            "expected_edge": [
+              "NAPROXEN",
+              "OAT1",
+              "COMPETITIVELY_BLOCKS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does naproxen competitively block OAT3?",
+            "expected_edge": [
+              "NAPROXEN",
+              "OAT3",
+              "COMPETITIVELY_BLOCKS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does OAT1 inhibition increase methotrexate exposure?",
+            "expected_edge": [
+              "OAT1",
+              "METHOTREXATE",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does OAT3 inhibition increase methotrexate exposure?",
+            "expected_edge": [
+              "OAT3",
+              "METHOTREXATE",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-05": {
+        "probes_count": 2,
+        "probes_correct": 2,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does amlodipine inhibit CYP3A4?",
+            "expected_edge": [
+              "AMLODIPINE",
+              "CYP3A4",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP3A4 inhibition increase simvastatin exposure?",
+            "expected_edge": [
+              "CYP3A4",
+              "SIMVASTATIN",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-06": {
+        "probes_count": 3,
+        "probes_correct": 3,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does voriconazole inhibit CYP3A4?",
+            "expected_edge": [
+              "VORICONAZOLE",
+              "CYP3A4",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does voriconazole inhibit CYP3A5?",
+            "expected_edge": [
+              "VORICONAZOLE",
+              "CYP3A5",
+              "INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP3A4 inhibition increase tacrolimus exposure?",
+            "expected_edge": [
+              "CYP3A4",
+              "TACROLIMUS",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-07": {
+        "probes_count": 2,
+        "probes_correct": 2,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does metronidazole stereoselectively inhibit CYP2C9?",
+            "expected_edge": [
+              "METRONIDAZOLE",
+              "CYP2C9",
+              "STEREOSELECTIVELY_INHIBITS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP2C9 inhibition increase S-warfarin exposure?",
+            "expected_edge": [
+              "CYP2C9",
+              "S-WARFARIN",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-08": {
+        "probes_count": 3,
+        "probes_correct": 3,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does furosemide induce proximal tubule reabsorption?",
+            "expected_edge": [
+              "FUROSEMIDE",
+              "PROXIMAL_TUBULE_REABSORPTION",
+              "INDUCES"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does lisinopril decrease glomerular filtration?",
+            "expected_edge": [
+              "LISINOPRIL",
+              "GLOMERULAR_FILTRATION",
+              "DECREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does proximal tubule reabsorption increase lithium exposure?",
+            "expected_edge": [
+              "PROXIMAL_TUBULE_REABSORPTION",
+              "LITHIUM",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-09": {
+        "probes_count": 1,
+        "probes_correct": 1,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does azithromycin decrease CYP3A4 activity?",
+            "expected_edge": [
+              "AZITHROMYCIN",
+              "CYP3A4",
+              "DECREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-10": {
+        "probes_count": 1,
+        "probes_correct": 1,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does ceftriaxone decrease vitamin K flora?",
+            "expected_edge": [
+              "CEFTRIAXONE",
+              "VITAMIN_K_FLORA",
+              "DECREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-11": {
+        "probes_count": 3,
+        "probes_correct": 3,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does codeine require CYP2D6 for bioactivation to morphine?",
+            "expected_edge": [
+              "CODEINE",
+              "CYP2D6",
+              "BLOCKS_BIOACTIVATION"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CYP2D6 activity increase morphine exposure?",
+            "expected_edge": [
+              "CYP2D6",
+              "MORPHINE",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does morphine increase mu-opioid receptor activation?",
+            "expected_edge": [
+              "MORPHINE",
+              "MU_OPIOID_RECEPTOR",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-12": {
+        "probes_count": 3,
+        "probes_correct": 3,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does azathioprine competitively block TPMT?",
+            "expected_edge": [
+              "AZATHIOPRINE",
+              "TPMT",
+              "COMPETITIVELY_BLOCKS"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does TPMT deficiency increase 6-thioguanine nucleotides?",
+            "expected_edge": [
+              "TPMT",
+              "6_THIOGUANINE_NUCLEOTIDES",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Do 6-thioguanine nucleotides increase bone marrow toxicity?",
+            "expected_edge": [
+              "6_THIOGUANINE_NUCLEOTIDES",
+              "BONE_MARROW",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-13": {
+        "probes_count": 3,
+        "probes_correct": 3,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does abacavir interact with HLA-B*57:01?",
+            "expected_edge": [
+              "ABACAVIR",
+              "HLA_B5701",
+              "PRODUCES_ADDITIVE_BLOCK"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does HLA-B*57:01 increase CD8 T-cell activation?",
+            "expected_edge": [
+              "HLA_B5701",
+              "CD8_T_CELL_ACTIVATION",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does CD8 T-cell activation increase hypersensitivity?",
+            "expected_edge": [
+              "CD8_T_CELL_ACTIVATION",
+              "HYPERSENSITIVITY_SYNDROME",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      },
+      "TASK-14": {
+        "probes_count": 4,
+        "probes_correct": 4,
+        "atomic_accuracy_pct": 100.0,
+        "probe_details": [
+          {
+            "question": "Does irinotecan convert to SN-38 via carboxylesterase?",
+            "expected_edge": [
+              "IRINOTECAN",
+              "CARBOXYLESTERASE",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does carboxylesterase increase SN-38?",
+            "expected_edge": [
+              "CARBOXYLESTERASE",
+              "SN38",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does SN-38 require UGT1A1 for glucuronidation?",
+            "expected_edge": [
+              "SN38",
+              "UGT1A1",
+              "DECREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          },
+          {
+            "question": "Does UGT1A1 increase SN-38 glucuronide?",
+            "expected_edge": [
+              "UGT1A1",
+              "SN38_GLUCURONIDE",
+              "INCREASES_EXPOSURE"
+            ],
+            "model_answer": "YES",
+            "confidence": 95,
+            "is_correct": true
+          }
+        ]
+      }
+    }
+  }
+}

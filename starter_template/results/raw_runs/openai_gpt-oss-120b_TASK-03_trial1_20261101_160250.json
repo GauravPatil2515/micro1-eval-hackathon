@@ -1,0 +1,25 @@
+{
+  "task_id": "TASK-03",
+  "model": "openai/gpt-oss-120b",
+  "trial": 1,
+  "latency_ms": 12.0,
+  "tokens": 450,
+  "cost_usd": 0.0,
+  "raw_output": "```json\n{\n  \"causal_graph\": [\n    {\"source\": \"Sotalol\", \"target\": \"HERG\", \"relation\": \"INHIBITS\", \"evidence_source\": \"FDA Betapace \u00a75.1\"},\n    {\"source\": \"Levofloxacin\", \"target\": \"HERG\", \"relation\": \"PRODUCES_ADDITIVE_BLOCK\", \"evidence_source\": \"CredibleMeds\"}\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"K+ 3.1 mEq/L, Mg2+ 1.4 mg/dL\",\n    \"clinical_consequence\": \"Severe hypokalemia dramatically increases sotalol affinity for hERG and delays repolarization.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Contraindicated. Replete potassium to >4.0 mEq/L and magnesium to >2.0 mg/dL immediately; cardiac telemetry.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Doxycycline\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Substituting Doxycycline clears fluoroquinolone hERG block, but uncorrected hypokalemia with sotalol maintains high lethal Torsades de Pointes risk.\"\n  }\n}\n```",
+  "eval_grade": {
+    "task_id": "TASK-03",
+    "passed": true,
+    "total_score": 100.0,
+    "edge_accuracy_pct": 100.0,
+    "edge_precision_pct": 100.0,
+    "matched_edges": "2/2",
+    "cpcs_score": 1.0,
+    "cpcs_continuity": "CONTINUOUS",
+    "fatal_error": false,
+    "reasons": [],
+    "response_preview": "```json\n{\n  \"causal_graph\": [\n    {\"source\": \"Sotalol\", \"target\": \"HERG\", \"relation\": \"INHIBITS\", \"evidence_source\": \"FDA Betapace \u00a75.1\"},\n    {\"source\": \"Levofloxacin\", \"target\": ...",
+    "atomic_accuracy": 1.0,
+    "atomic_matched": 2,
+    "atomic_total": 2
+  }
+}

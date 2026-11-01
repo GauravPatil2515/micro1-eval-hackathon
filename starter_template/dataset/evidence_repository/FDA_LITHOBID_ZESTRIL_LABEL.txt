@@ -1,0 +1,8 @@
+# Evidence Document: FDA_LITHOBID_ZESTRIL_LABEL
+Source: US FDA Lithobid (lithium carbonate) §7 and Zestril (lisinopril) Label §7.4
+
+EXCERPT:
+"Lithium toxicity has been reported in patients receiving lithium concomitantly with drugs which cause elimination of sodium, including loop/thiazide diuretics and angiotensin-converting enzyme (ACE) inhibitors.
+Lithium is freely filtered at the glomerulus, and approximately 80% is reabsorbed in the proximal tubule via the same sodium-hydrogen exchanger (NHE3) and passive paracellular mechanisms that handle sodium.
+Loop diuretics (furosemide) induce brisk natriuresis in the loop of Henle, triggering compensatory upregulation of proximal tubular sodium reabsorption. The proximal tubule does not distinguish between lithium and sodium ions, leading to marked lithium reabsorption.
+Concurrently, ACE inhibitors (lisinopril) preferential dilate renal efferent arterioles, reducing intraglomerular pressure and GFR. This double insult—accelerated proximal reabsorption coupled with impaired filtration—precipitates acute, life-threatening lithium neurotoxicity and renal damage."

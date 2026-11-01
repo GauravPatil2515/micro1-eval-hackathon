@@ -1,0 +1,31 @@
+{
+  "task_id": "TASK-12",
+  "model": "openai/gpt-oss-120b",
+  "trial": 1,
+  "latency_ms": 12.0,
+  "tokens": 450,
+  "cost_usd": 0.0,
+  "raw_output": "```json\n{\n  \"causal_graph\": [],\n  \"physiological_modifier\": {\"modifier_present\": false},\n  \"regulatory_action\": {\"verdict\": \"SAFE_WITHOUT_ADJUSTMENT\", \"mandated_action\": \"No precautions necessary.\"},\n  \"counterfactual_analysis\": {\"resolves_primary_interaction\": false, \"residual_risk_remains\": false}\n}\n```",
+  "eval_grade": {
+    "task_id": "TASK-12",
+    "passed": false,
+    "total_score": 20.0,
+    "edge_accuracy_pct": 0.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "0/3",
+    "cpcs_score": 0.15,
+    "cpcs_continuity": "DISCONNECTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: AZATHIOPRINE -> COMPETITIVELY_BLOCKS -> TPMT",
+      "Missing mandatory causal edge: TPMT -> INCREASES_EXPOSURE -> 6_THIOGUANINE_NUCLEOTIDES",
+      "Missing mandatory causal edge: 6_THIOGUANINE_NUCLEOTIDES -> INCREASES_EXPOSURE -> BONE_MARROW",
+      "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+      "Counterfactual primary resolution error: expected True, got False"
+    ],
+    "response_preview": "```json\n{\n  \"causal_graph\": [],\n  \"physiological_modifier\": {\"modifier_present\": false},\n  \"regulatory_action\": {\"verdict\": \"SAFE_WITHOUT_ADJUSTMENT\", \"mandated_action\": \"No precau...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 6
+  }
+}

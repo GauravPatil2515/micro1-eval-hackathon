@@ -1,0 +1,7 @@
+# Evidence Document: FDA_IMURAN_TPMT_BOXED
+Source: US FDA Imuran (azathioprine) Boxed Warning & CPIC TPMT/Thiopurine Guideline
+
+EXCERPT:
+"Patients with homozygous TPMT deficiency (*3A/*3A, *3C/*3C) are at extreme risk for severe, life-threatening myelosuppression from standard azathioprine doses. Reduce dose to 10% of standard and monitor CBC weekly, or avoid entirely.
+Azathioprine is metabolized by TPMT (thiopurine methyltransferase) to inactive methylated metabolites. In TPMT deficiency, metabolism is shunted toward toxic 6-thioguanine nucleotides (6-TGN) which incorporate into DNA, causing bone marrow suppression.
+CPIC Guideline: TPMT *3A/*3A (poor metabolizers) - reduce azathioprine dose to 10% of standard (0.25 mg/kg) with weekly CBC monitoring, or use alternative therapy. Heterozygotes (*1/*3A) - reduce dose to 50% with standard monitoring."

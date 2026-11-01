@@ -1,0 +1,7 @@
+# Evidence Document: FDA_CODEINE_BOXED_WARNING_2013
+Source: US FDA Codeine Prescribing Information Boxed Warning (2013) & CPIC CYP2D6/Codeine Guideline
+
+EXCERPT:
+"Children with CYP2D6 ultrarapid metabolizer phenotype convert codeine to morphine more rapidly and completely, leading to life-threatening respiratory depression and death. Codeine is contraindicated in children <12 years for post-tonsillectomy/adenoidectomy pain.
+Codeine is a prodrug that requires CYP2D6-mediated O-demethylation to form morphine (active analgesic). CYP2D6 ultrarapid metabolizers (UMs) with gene duplications (*1/*2xN, *2/*2xN) have excessive CYP2D6 enzyme activity, producing toxic morphine levels even at standard codeine doses.
+FDA Boxed Warning: Contraindicated for post-operative pain in children <12 years following tonsillectomy and/or adenoidectomy. Avoid codeine in CYP2D6 UM patients of any age. Use alternative analgesics (morphine, oxycodone, non-opioids)."

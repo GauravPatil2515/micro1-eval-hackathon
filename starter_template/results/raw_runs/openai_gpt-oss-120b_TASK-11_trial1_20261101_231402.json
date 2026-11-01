@@ -1,0 +1,31 @@
+{
+  "task_id": "TASK-11",
+  "model": "openai/gpt-oss-120b",
+  "trial": 1,
+  "latency_ms": 12.0,
+  "tokens": 450,
+  "cost_usd": 0.0,
+  "raw_output": "```json\n{\n  \"causal_graph\": [],\n  \"physiological_modifier\": {\"modifier_present\": false},\n  \"regulatory_action\": {\"verdict\": \"SAFE_WITHOUT_ADJUSTMENT\", \"mandated_action\": \"No precautions necessary.\"},\n  \"counterfactual_analysis\": {\"resolves_primary_interaction\": false, \"residual_risk_remains\": false}\n}\n```",
+  "eval_grade": {
+    "task_id": "TASK-11",
+    "passed": false,
+    "total_score": 20.0,
+    "edge_accuracy_pct": 0.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "0/3",
+    "cpcs_score": 0.15,
+    "cpcs_continuity": "DISCONNECTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CODEINE -> REQUIRES_FOR_BIOACTIVATION -> CYP2D6",
+      "Missing mandatory causal edge: CYP2D6 -> INCREASES_EXPOSURE -> MORPHINE",
+      "Missing mandatory causal edge: MORPHINE -> INCREASES_EXPOSURE -> MU_OPIOID_RECEPTOR",
+      "Regulatory verdict mismatch: expected 'CONTRAINDICATED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+      "Counterfactual primary resolution error: expected True, got False"
+    ],
+    "response_preview": "```json\n{\n  \"causal_graph\": [],\n  \"physiological_modifier\": {\"modifier_present\": false},\n  \"regulatory_action\": {\"verdict\": \"SAFE_WITHOUT_ADJUSTMENT\", \"mandated_action\": \"No precau...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 6
+  }
+}

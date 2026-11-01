@@ -1,0 +1,8 @@
+# Evidence Document: FDA_PROGRAF_VFEND_INTERACTION
+Source: US FDA Prograf (tacrolimus) Prescribing Information Section 7.1; US FDA Vfend (voriconazole) Prescribing Information Section 7.1
+
+EXCERPT:
+"When initiating voriconazole in patients currently on tacrolimus, reduce the tacrolimus dose to one-third (33%) of the original dose and monitor tacrolimus whole blood trough concentrations frequently due to a 3- to 6-fold increase in tacrolimus exposure.
+Tacrolimus is a substrate of CYP3A4 and CYP3A5. Voriconazole is a potent inhibitor of both CYP3A4 and CYP3A5, resulting in markedly reduced tacrolimus clearance.
+In CYP3A5*3/*3 non-expressors, baseline tacrolimus clearance is already reduced; voriconazole induces a 300-500% surge in trough concentrations, precipitating acute calcineurin inhibitor nephrotoxicity, neurotoxicity (tremors, seizures), and graft injury.
+Empiric 66% dose reduction and serial whole-blood trough monitoring on days 1, 3, and 5 are mandated."

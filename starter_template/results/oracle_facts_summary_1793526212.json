@@ -1,0 +1,332 @@
+{
+  "openai/gpt-oss-120b": {
+    "total_tasks": 14,
+    "composed_passed_with_facts": 1,
+    "pass_rate_pct": 7.1,
+    "p_composed_given_atomic": 0.071,
+    "task_outcomes": [
+      {
+        "task_id": "TASK-01",
+        "passed": true,
+        "score": 100.0,
+        "reasons": []
+      },
+      {
+        "task_id": "TASK-02",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: OMEPRAZOLE -> INHIBITS -> CYP2C19",
+          "Missing mandatory causal edge: CYP2C19 -> BLOCKS_BIOACTIVATION -> CLOPIDOGREL",
+          "Regulatory verdict mismatch: expected 'CONTRAINDICATED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-03",
+        "passed": false,
+        "score": 80.0,
+        "reasons": [
+          "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-04",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: NAPROXEN -> COMPETITIVELY_BLOCKS -> OAT1",
+          "Missing mandatory causal edge: NAPROXEN -> COMPETITIVELY_BLOCKS -> OAT3",
+          "Missing mandatory causal edge: OAT1 -> INCREASES_EXPOSURE -> METHOTREXATE",
+          "Missing mandatory causal edge: OAT3 -> INCREASES_EXPOSURE -> METHOTREXATE",
+          "Regulatory verdict mismatch: expected 'CONTRAINDICATED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-05",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: AMLODIPINE -> INHIBITS -> CYP3A4",
+          "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> SIMVASTATIN",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-06",
+        "passed": false,
+        "score": 0.0,
+        "reasons": [
+          "Missing mandatory causal edge: VORICONAZOLE -> INHIBITS -> CYP3A4",
+          "Missing mandatory causal edge: VORICONAZOLE -> INHIBITS -> CYP3A5",
+          "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> TACROLIMUS",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False",
+          "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-07",
+        "passed": false,
+        "score": 0.0,
+        "reasons": [
+          "Missing mandatory causal edge: METRONIDAZOLE -> STEREOSELECTIVELY_INHIBITS -> CYP2C9",
+          "Missing mandatory causal edge: CYP2C9 -> INCREASES_EXPOSURE -> S-WARFARIN",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False",
+          "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-08",
+        "passed": false,
+        "score": 0.0,
+        "reasons": [
+          "Missing mandatory causal edge: FUROSEMIDE -> INDUCES -> PROXIMAL_TUBULE_REABSORPTION",
+          "Missing mandatory causal edge: LISINOPRIL -> DECREASES_EXPOSURE -> GLOMERULAR_FILTRATION",
+          "Missing mandatory causal edge: PROXIMAL_TUBULE_REABSORPTION -> INCREASES_EXPOSURE -> LITHIUM",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False",
+          "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-09",
+        "passed": false,
+        "score": 40.0,
+        "reasons": [
+          "Missing mandatory causal edge: AZITHROMYCIN -> NO_INHIBITION -> CYP3A4",
+          "Missing mandatory causal edge: CYP3A4 -> NO_CHANGE_IN_EXPOSURE -> ATORVASTATIN",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-10",
+        "passed": false,
+        "score": 40.0,
+        "reasons": [
+          "Missing mandatory causal edge: CEFTRIAXONE -> NO_INHIBITION -> CYP2C9",
+          "Missing mandatory causal edge: CEFTRIAXONE -> MINIMAL_DECREASE -> VITAMIN_K_FLORA",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-11",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: CODEINE -> REQUIRES_FOR_BIOACTIVATION -> CYP2D6",
+          "Missing mandatory causal edge: CYP2D6 -> INCREASES_EXPOSURE -> MORPHINE",
+          "Missing mandatory causal edge: MORPHINE -> INCREASES_EXPOSURE -> MU_OPIOID_RECEPTOR",
+          "Regulatory verdict mismatch: expected 'CONTRAINDICATED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-12",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: AZATHIOPRINE -> COMPETITIVELY_BLOCKS -> TPMT",
+          "Missing mandatory causal edge: TPMT -> INCREASES_EXPOSURE -> 6_THIOGUANINE_NUCLEOTIDES",
+          "Missing mandatory causal edge: 6_THIOGUANINE_NUCLEOTIDES -> INCREASES_EXPOSURE -> BONE_MARROW",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-13",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: ABACAVIR -> BINDS_AND_ALTERS_PEPTIDE_REPERTOIRE -> HLA_B5701",
+          "Missing mandatory causal edge: HLA_B5701 -> INCREASES_EXPOSURE -> CD8_T_CELL_ACTIVATION",
+          "Missing mandatory causal edge: CD8_T_CELL_ACTIVATION -> INCREASES_EXPOSURE -> HYPERSENSITIVITY_SYNDROME",
+          "Regulatory verdict mismatch: expected 'CONTRAINDICATED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-14",
+        "passed": false,
+        "score": 0.0,
+        "reasons": [
+          "Missing mandatory causal edge: IRINOTECAN -> INCREASES_EXPOSURE -> CARBOXYLESTERASE",
+          "Missing mandatory causal edge: CARBOXYLESTERASE -> INCREASES_EXPOSURE -> SN38",
+          "Missing mandatory causal edge: SN38 -> DECREASES_EXPOSURE -> UGT1A1",
+          "Missing mandatory causal edge: UGT1A1 -> INCREASES_EXPOSURE -> SN38_GLUCURONIDE",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False",
+          "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+        ]
+      }
+    ]
+  },
+  "qwen/qwen3.8-27b": {
+    "total_tasks": 14,
+    "composed_passed_with_facts": 1,
+    "pass_rate_pct": 7.1,
+    "p_composed_given_atomic": 0.071,
+    "task_outcomes": [
+      {
+        "task_id": "TASK-01",
+        "passed": true,
+        "score": 100.0,
+        "reasons": []
+      },
+      {
+        "task_id": "TASK-02",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: OMEPRAZOLE -> INHIBITS -> CYP2C19",
+          "Missing mandatory causal edge: CYP2C19 -> BLOCKS_BIOACTIVATION -> CLOPIDOGREL",
+          "Regulatory verdict mismatch: expected 'CONTRAINDICATED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-03",
+        "passed": false,
+        "score": 80.0,
+        "reasons": [
+          "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-04",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: NAPROXEN -> COMPETITIVELY_BLOCKS -> OAT1",
+          "Missing mandatory causal edge: NAPROXEN -> COMPETITIVELY_BLOCKS -> OAT3",
+          "Missing mandatory causal edge: OAT1 -> INCREASES_EXPOSURE -> METHOTREXATE",
+          "Missing mandatory causal edge: OAT3 -> INCREASES_EXPOSURE -> METHOTREXATE",
+          "Regulatory verdict mismatch: expected 'CONTRAINDICATED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-05",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: AMLODIPINE -> INHIBITS -> CYP3A4",
+          "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> SIMVASTATIN",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-06",
+        "passed": false,
+        "score": 0.0,
+        "reasons": [
+          "Missing mandatory causal edge: VORICONAZOLE -> INHIBITS -> CYP3A4",
+          "Missing mandatory causal edge: VORICONAZOLE -> INHIBITS -> CYP3A5",
+          "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> TACROLIMUS",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False",
+          "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-07",
+        "passed": false,
+        "score": 0.0,
+        "reasons": [
+          "Missing mandatory causal edge: METRONIDAZOLE -> STEREOSELECTIVELY_INHIBITS -> CYP2C9",
+          "Missing mandatory causal edge: CYP2C9 -> INCREASES_EXPOSURE -> S-WARFARIN",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False",
+          "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-08",
+        "passed": false,
+        "score": 0.0,
+        "reasons": [
+          "Missing mandatory causal edge: FUROSEMIDE -> INDUCES -> PROXIMAL_TUBULE_REABSORPTION",
+          "Missing mandatory causal edge: LISINOPRIL -> DECREASES_EXPOSURE -> GLOMERULAR_FILTRATION",
+          "Missing mandatory causal edge: PROXIMAL_TUBULE_REABSORPTION -> INCREASES_EXPOSURE -> LITHIUM",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False",
+          "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-09",
+        "passed": false,
+        "score": 40.0,
+        "reasons": [
+          "Missing mandatory causal edge: AZITHROMYCIN -> NO_INHIBITION -> CYP3A4",
+          "Missing mandatory causal edge: CYP3A4 -> NO_CHANGE_IN_EXPOSURE -> ATORVASTATIN",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-10",
+        "passed": false,
+        "score": 40.0,
+        "reasons": [
+          "Missing mandatory causal edge: CEFTRIAXONE -> NO_INHIBITION -> CYP2C9",
+          "Missing mandatory causal edge: CEFTRIAXONE -> MINIMAL_DECREASE -> VITAMIN_K_FLORA",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-11",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: CODEINE -> REQUIRES_FOR_BIOACTIVATION -> CYP2D6",
+          "Missing mandatory causal edge: CYP2D6 -> INCREASES_EXPOSURE -> MORPHINE",
+          "Missing mandatory causal edge: MORPHINE -> INCREASES_EXPOSURE -> MU_OPIOID_RECEPTOR",
+          "Regulatory verdict mismatch: expected 'CONTRAINDICATED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-12",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: AZATHIOPRINE -> COMPETITIVELY_BLOCKS -> TPMT",
+          "Missing mandatory causal edge: TPMT -> INCREASES_EXPOSURE -> 6_THIOGUANINE_NUCLEOTIDES",
+          "Missing mandatory causal edge: 6_THIOGUANINE_NUCLEOTIDES -> INCREASES_EXPOSURE -> BONE_MARROW",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-13",
+        "passed": false,
+        "score": 20.0,
+        "reasons": [
+          "Missing mandatory causal edge: ABACAVIR -> BINDS_AND_ALTERS_PEPTIDE_REPERTOIRE -> HLA_B5701",
+          "Missing mandatory causal edge: HLA_B5701 -> INCREASES_EXPOSURE -> CD8_T_CELL_ACTIVATION",
+          "Missing mandatory causal edge: CD8_T_CELL_ACTIVATION -> INCREASES_EXPOSURE -> HYPERSENSITIVITY_SYNDROME",
+          "Regulatory verdict mismatch: expected 'CONTRAINDICATED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False"
+        ]
+      },
+      {
+        "task_id": "TASK-14",
+        "passed": false,
+        "score": 0.0,
+        "reasons": [
+          "Missing mandatory causal edge: IRINOTECAN -> INCREASES_EXPOSURE -> CARBOXYLESTERASE",
+          "Missing mandatory causal edge: CARBOXYLESTERASE -> INCREASES_EXPOSURE -> SN38",
+          "Missing mandatory causal edge: SN38 -> DECREASES_EXPOSURE -> UGT1A1",
+          "Missing mandatory causal edge: UGT1A1 -> INCREASES_EXPOSURE -> SN38_GLUCURONIDE",
+          "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'SAFE_WITHOUT_ADJUSTMENT'",
+          "Counterfactual primary resolution error: expected True, got False",
+          "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+        ]
+      }
+    ]
+  }
+}

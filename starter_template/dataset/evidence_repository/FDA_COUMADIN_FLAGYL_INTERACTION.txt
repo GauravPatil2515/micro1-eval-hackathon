@@ -1,0 +1,8 @@
+# Evidence Document: FDA_COUMADIN_FLAGYL_INTERACTION
+Source: US FDA Coumadin (warfarin sodium) Prescribing Information Section 7 & Flagyl (metronidazole) Prescribing Information Section 7.1
+
+EXCERPT:
+"Metronidazole selectively inhibits the metabolism of the S-enantiomer of warfarin by inhibiting CYP2C9, prolonging prothrombin time and significantly increasing INR and bleeding risk.
+Warfarin is a racemic mixture. S-warfarin is 3-5 times more potent than R-warfarin at inhibiting vitamin K epoxide reductase (VKORC1) and is cleared almost exclusively by CYP2C9. R-warfarin is metabolized by CYP1A2, CYP3A4, and CYP2C19.
+Metronidazole does not significantly inhibit R-warfarin clearance. The stereoselective CYP2C9 inhibition by metronidazole results in exponential INR spikes (>5.0 to 10.0) within 48-72 hours of co-administration.
+Empiric 30-50% warfarin dose reduction and INR monitoring within 48-72 hours of starting metronidazole are required."

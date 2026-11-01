@@ -1,0 +1,10 @@
+# Evidence Document: FDA_PLAVIX_LABEL_BOXED_WARNING
+Source: US FDA Prescribing Information Plavix (clopidogrel bisulfate), NDA 020839
+Sections: Boxed Warning (Diminished Antiplatelet Effect in Patients with Impaired CYP2C19 Function), Section 7.1
+
+EXCERPT:
+"WARNING: DIMINISHED ANTIPLATELET EFFECT IN PATIENTS WITH IMPAIRED CYP2C19 FUNCTION
+The effectiveness of Plavix depends on its activation to an active metabolite by Cytochrome P450 (CYP) system, principally CYP2C19.
+Clopidogrel is an inactive prodrug that requires a two-step hepatic bioactivation process. CYP2C19 contributes to both steps.
+Avoid concomitant use of Plavix with drugs that inhibit CYP2C19, such as omeprazole or esomeprazole. Co-administration of omeprazole 80 mg once daily with clopidogrel 300 mg loading dose followed by 75 mg once daily reduced exposure to the active metabolite of clopidogrel by 45% and reduced platelet inhibition (platelet aggregation) by roughly 40%.
+Pantoprazole does not exhibit substantial CYP2C19 inhibition and produces significantly less reduction in active metabolite AUC."

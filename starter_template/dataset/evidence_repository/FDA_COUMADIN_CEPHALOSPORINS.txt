@@ -1,0 +1,8 @@
+# Evidence Document: FDA_COUMADIN_CEPHALOSPORINS
+Source: US FDA Coumadin (warfarin sodium) Prescribing Information Section 7; Clinical Pharmacology Literature (Anticoagulation Journal Reviews)
+
+EXCERPT:
+"Third-generation cephalosporins (ceftriaxone, cefotaxime, ceftazidime) lack significant CYP2C9 inhibitory activity and do not displace warfarin from albumin binding.
+While some cephalosporins with an N-methylthiotetrazole (NMTT) side chain (cefoperazone, cefotetan) can cause hypoprothrombinemia via vitamin K antagonism, ceftriaxone does not possess this structural feature.
+Ceftriaxone has minimal biliary excretion (~33-67%) and weak effect on intestinal vitamin K-producing flora compared to broad-spectrum oral antibiotics like TMP-SMX. Any INR drift is typically <0.5 and clinically insignificant without dose change in patients with normal nutrition.
+In contrast, Trimethoprim-Sulfamethoxazole (TMP-SMX) is a potent CYP2C9 inhibitor (trimethoprim component) and displaces warfarin from protein binding (sulfamethoxazole component), increasing S-warfarin AUC by 30-50% and INR by 1.5-3.0 units within 3-5 days."

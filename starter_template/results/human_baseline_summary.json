@@ -1,0 +1,84 @@
+{
+  "evaluator_type": "SIMULATED Templates (NOT VALID EVIDENCE)",
+  "tasks_evaluated": 8,
+  "pass_rate_pct": 75.0,
+  "mean_score": 92.5,
+  "task_breakdown": [
+    {
+      "task_id": "TASK-01",
+      "title": "Dual Elimination Shutdown: Rivaroxaban + Ketoconazole in Moderate Renal Impairment",
+      "score": 70.0,
+      "passed": false,
+      "edge_accuracy_pct": 100.0,
+      "cpcs_score": 1.0,
+      "reasons": [
+        "Regulatory verdict mismatch: expected 'AVOID_CONCOMITANT_USE', got 'CONTRAINDICATED'"
+      ]
+    },
+    {
+      "task_id": "TASK-03",
+      "title": "Electrolyte-Gated Proarrhythmic Cascade: Sotalol + HCTZ + Levofloxacin",
+      "score": 100.0,
+      "passed": true,
+      "edge_accuracy_pct": 100.0,
+      "cpcs_score": 1.0,
+      "reasons": []
+    },
+    {
+      "task_id": "TASK-04",
+      "title": "Renal Transporter Secretion Blockade: Methotrexate + Naproxen in Borderline Clearance",
+      "score": 70.0,
+      "passed": false,
+      "edge_accuracy_pct": 100.0,
+      "cpcs_score": 1.0,
+      "reasons": [
+        "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'CONTRAINDICATED'"
+      ]
+    },
+    {
+      "task_id": "TASK-06",
+      "title": "CYP3A4/5 Multi-Enzyme Collapse: Tacrolimus + Voriconazole with CYP3A5*3/*3 Genotype",
+      "score": 100.0,
+      "passed": true,
+      "edge_accuracy_pct": 100.0,
+      "cpcs_score": 1.0,
+      "reasons": []
+    },
+    {
+      "task_id": "TASK-07",
+      "title": "Stereoselective Enantiomeric Clearance Blockade: Warfarin + Metronidazole",
+      "score": 100.0,
+      "passed": true,
+      "edge_accuracy_pct": 100.0,
+      "cpcs_score": 1.0,
+      "reasons": []
+    },
+    {
+      "task_id": "TASK-08",
+      "title": "Renal Proximal Tubule Sodium-Mimic Synergy: Lithium + Lisinopril + Furosemide",
+      "score": 100.0,
+      "passed": true,
+      "edge_accuracy_pct": 100.0,
+      "cpcs_score": 1.0,
+      "reasons": []
+    },
+    {
+      "task_id": "TASK-11",
+      "title": "Pharmacogenomic Crisis: Codeine + CYP2D6 Ultrarapid Metabolizer",
+      "score": 100.0,
+      "passed": true,
+      "edge_accuracy_pct": 100.0,
+      "cpcs_score": 1.0,
+      "reasons": []
+    },
+    {
+      "task_id": "TASK-13",
+      "title": "HLA-B*57:01 Hypersensitivity: Abacavir in HLA-B*57:01 Positive Patient",
+      "score": 100.0,
+      "passed": true,
+      "edge_accuracy_pct": 100.0,
+      "cpcs_score": 1.0,
+      "reasons": []
+    }
+  ]
+}

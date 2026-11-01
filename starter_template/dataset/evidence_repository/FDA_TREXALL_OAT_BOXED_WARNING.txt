@@ -1,0 +1,9 @@
+# Evidence Document: FDA_TREXALL_OAT_BOXED_WARNING
+Source: US FDA Prescribing Information Trexall (methotrexate tablets), NDA 011719 Section 5.1 & Section 7 (Drug Interactions)
+
+EXCERPT:
+"WARNING: SERIOUS TOXIC REACTIONS INCLUDING BONE MARROW SUPPRESSION, APLASTIC ANEMIA, ENTERITIS, AND DEATH
+Concomitant administration of methotrexate with nonsteroidal anti-inflammatory drugs (NSAIDs, including naproxen, ibuprofen, indomethacin) should be undertaken with extreme caution or avoided.
+Methotrexate is primarily eliminated by active renal tubular secretion mediated by organic anion transporters (OAT1 and OAT3) located on the basolateral membrane of renal proximal tubule cells.
+NSAIDs competitively inhibit OAT1 and OAT3 transporter uptake and diminish renal perfusion through inhibition of renal prostaglandin synthesis. This dual mechanism sharply reduces methotrexate clearance, precipitating sudden toxic accumulation and fatal myelosuppression even in low-dose weekly maintenance regimens.
+Substitution of NSAIDs with acetaminophen (paracetamol) avoids competition at OAT1 and OAT3, restoring baseline clearance."
