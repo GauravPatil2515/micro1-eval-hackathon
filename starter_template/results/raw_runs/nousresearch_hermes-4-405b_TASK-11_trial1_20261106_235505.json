@@ -1,0 +1,31 @@
+{
+  "task_id": "TASK-11",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 12284.82,
+  "tokens": 1013,
+  "cost_usd": 0.001849,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Codeine\",\n      \"target\": \"CYP2D6\",\n      \"relation\": \"BLOCKS_BIOACTIVATION\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"CYP2D6 UM genotype\",\n      \"target\": \"Codeine\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"CPIC guideline\"\n    },\n    {\n      \"source\": \"CYP2D6 UM genotype\",\n      \"target\": \"Morphine\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"CPIC guideline\"\n    },\n    {\n      \"source\": \"Morphine\",\n      \"target\": \"Mu-opioid receptor\",\n      \"relation\": \"COMPETITIVELY_BLOCKS\",\n      \"evidence_source\": \"Literature\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"CYP2D6 *1/*2xN genotype (Ultrarapid Metabolizer)\",\n    \"clinical_consequence\": \"Increased conversion of codeine to morphine leading to risk of life-threatening respiratory depression\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Avoid codeine use in CYP2D6 ultrarapid metabolizers, especially in pediatric patients post-tonsillectomy\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Morphine 2.5 mg PO q4h\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Direct morphine administration bypasses CYP2D6 bioactivation but still carries inherent respiratory depression risk, especially in pediatric patients. Careful dose titration and monitoring are required.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-11",
+    "passed": false,
+    "total_score": 40.0,
+    "edge_accuracy_pct": 0.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "0/3",
+    "cpcs_score": 0.0,
+    "cpcs_continuity": "DISCONNECTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CODEINE -> REQUIRES_FOR_BIOACTIVATION -> CYP2D6",
+      "Missing mandatory causal edge: CYP2D6 -> INCREASES_EXPOSURE -> MORPHINE",
+      "Missing mandatory causal edge: MORPHINE -> INCREASES_EXPOSURE -> MU_OPIOID_RECEPTOR",
+      "Spurious/hallucinated edges (4): CODEINE -> BLOCKS_BIOACTIVATION -> CYP2D6, CYP2D6 UM GENOTYPE -> INCREASES_EXPOSURE -> CODEINE, CYP2D6 UM GENOTYPE -> INCREASES_EXPOSURE -> MORPHINE, MORPHINE -> COMPETITIVELY_BLOCKS -> MU-OPIOID",
+      "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Codeine\",\n      \"target\": \"CYP2D6\",\n      \"relation\": \"BLOCKS_BIOACTIVATION\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 6
+  }
+}

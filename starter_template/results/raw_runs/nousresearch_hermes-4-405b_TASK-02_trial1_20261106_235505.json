@@ -1,0 +1,31 @@
+{
+  "task_id": "TASK-02",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 12146.81,
+  "tokens": 1170,
+  "cost_usd": 0.0023,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Omeprazole\",\n      \"target\": \"CYP2C19\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"CYP2C19\",\n      \"target\": \"Clopidogrel\",\n      \"relation\": \"BLOCKS_BIOACTIVATION\",\n      \"evidence_source\": \"CPIC guideline\"\n    },\n    {\n      \"source\": \"Omeprazole\",\n      \"target\": \"Clopidogrel\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Pantoprazole\",\n      \"target\": \"CYP2C19\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"Literature: Angiolillo DJ, et al. Circulation. 2011;123:2120-2128\"\n    },\n    {\n      \"source\": \"Pantoprazole\",\n      \"target\": \"Clopidogrel\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"Literature: Angiolillo DJ, et al. Circulation. 2011;123:2120-2128\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"cyp2c19_genotype: UNKNOWN / Not tested\",\n    \"clinical_consequence\": \"Unknown CYP2C19 genotype prevents determination of baseline clopidogrel metabolic capacity. Omeprazole inhibition may convert extensive metabolizers to poor metabolizer phenotype, reducing active metabolite formation and increasing thrombotic risk.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Avoid omeprazole in patients on clopidogrel. If PPI required, consider alternative with less CYP2C19 inhibition (e.g. pantoprazole) with close clinical monitoring.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Pantoprazole\",\n    \"resolves_primary_interaction\": false,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Pantoprazole also inhibits CYP2C19, though to a lesser extent than omeprazole. Residual risk of reduced clopidogrel bioactivation persists, especially in CYP2C19 intermediate or poor metabolizers. Platelet function monitoring recommended if switching to pantoprazole.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-02",
+    "passed": false,
+    "total_score": 32.93,
+    "edge_accuracy_pct": 33.3,
+    "edge_precision_pct": 20.0,
+    "matched_edges": "1/3",
+    "cpcs_score": 0.275,
+    "cpcs_continuity": "FRAGMENTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CYP2C19 -> REQUIRES_FOR_BIOACTIVATION -> CLOPIDOGREL_ACTIVE_THIOL_METABOLITE",
+      "Missing mandatory causal edge: CLOPIDOGREL_ACTIVE_THIOL_METABOLITE -> INHIBITS -> P2Y12",
+      "Spurious/hallucinated edges (4): CYP2C19 -> BLOCKS_BIOACTIVATION -> CLOPIDOGREL, OMEPRAZOLE -> DECREASES_EXPOSURE -> CLOPIDOGREL, PANTOPRAZOLE -> INHIBITS -> CYP2C19, PANTOPRAZOLE -> DECREASES_EXPOSURE -> CLOPIDOGREL",
+      "Counterfactual primary resolution error: expected True, got False",
+      "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Omeprazole\",\n      \"target\": \"CYP2C19\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\":...",
+    "atomic_accuracy": 0.4,
+    "atomic_matched": 2,
+    "atomic_total": 5
+  }
+}

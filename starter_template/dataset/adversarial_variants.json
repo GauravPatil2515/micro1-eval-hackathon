@@ -1,0 +1,524 @@
+{
+  "benchmark": "MechanismTrace-DDI",
+  "version": "1.0",
+  "description": "Adversarial evaluation variants for stress-testing model causal reasoning",
+  "generated": "2026-11-04",
+  "tasks": [
+    {
+      "task_id": "TASK-01",
+      "base_task": "Dual Elimination Shutdown: Rivaroxaban + Ketoconazole in Moderate Renal Impairment",
+      "variants": [
+        {
+          "variant_id": "TASK-01-ADV-1",
+          "type": "missing_modifier",
+          "description": "Remove renal impairment modifier",
+          "modification": "Remove calculated_crcl_ml_min and renal_tier from physiological_modifiers",
+          "expected_effect": "Model should still identify dual CYP3A4+P-gp inhibition but may miss renal backup loss",
+          "ground_truth_change": "Mechanism graph unchanged, but physiological_modifier_impact changes"
+        },
+        {
+          "variant_id": "TASK-01-ADV-2",
+          "type": "drug_removal",
+          "description": "Remove ketoconazole entirely",
+          "modification": "Remove acute_prescription of ketoconazole",
+          "expected_effect": "No interaction should exist; model should output SAFE_WITHOUT_ADJUSTMENT"
+        },
+        {
+          "variant_id": "TASK-01-ADV-3",
+          "type": "counterfactual_swap",
+          "description": "Fluconazole swap with renal impairment",
+          "modification": "Replace ketoconazole with fluconazole in acute_prescription; keep CrCl 41",
+          "expected_effect": "residual_risk_remains = True (renal P-gp/BCRP backup lost)",
+          "ground_truth": "AVOID_CONCOMITANT_USE with residual_risk_remains=True"
+        },
+        {
+          "variant_id": "TASK-01-ADV-4",
+          "type": "genotype_addition",
+          "description": "Add CYP3A5 genotype",
+          "modification": "Add cyp3a5_genotype: '*1/*1 (Expressor)' to physiological_modifiers",
+          "expected_effect": "Should not change verdict; CYP3A5 not inhibited by ketoconazole significantly"
+        },
+        {
+          "variant_id": "TASK-01-ADV-5",
+          "type": "distractor",
+          "description": "Add irrelevant CYP2C19 inhibitor",
+          "modification": "Add fluvoxamine 50 mg daily as additional prescription",
+          "expected_effect": "Should not affect rivaroxaban (CYP2C19 not involved); model should ignore"
+        },
+        {
+          "variant_id": "TASK-01-ADV-6",
+          "type": "misleading_counterfactual",
+          "description": "Ask if rivaroxaban can be stopped",
+          "modification": "Change counterfactual_probe to: 'Can rivaroxaban be safely discontinued without replacement?'",
+          "expected_effect": "Model should identify that stopping anticoagulation creates thromboembolic risk (new residual risk)"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-02",
+      "base_task": "Prodrug Bioactivation Defeat: Clopidogrel + Omeprazole with Unknown CYP2C19 Genotype",
+      "variants": [
+        {
+          "variant_id": "TASK-02-ADV-1",
+          "type": "missing_modifier",
+          "description": "Remove genotype uncertainty",
+          "modification": "Set cyp2c19_genotype to '*1/*1 (Normal Metabolizer)'",
+          "expected_effect": "Verdict may shift from CONTRAINDICATED to DOSE_ADJUSTMENT_REQUIRED or SAFE_WITH_MONITORING"
+        },
+        {
+          "variant_id": "TASK-02-ADV-2",
+          "type": "counterfactual_swap",
+          "description": "Pantoprazole swap with poor metabolizer genotype",
+          "modification": "Change counterfactual_probe to pantoprazole swap; set cyp2c19_genotype to '*2/*2'",
+          "expected_effect": "Even with pantoprazole, poor metabolizer has impaired bioactivation; residual risk remains"
+        },
+        {
+          "variant_id": "TASK-02-ADV-3",
+          "type": "dose_separation",
+          "type": "misleading_counterfactual",
+          "description": "Dose separation strategy",
+          "modification": "Change counterfactual_probe to: 'What if doses are separated by 12 hours?'",
+          "expected_effect": "Should be flagged as FATAL TRAP (dose separation ineffective for CYP suicide inhibition)"
+        },
+        {
+          "variant_id": "TASK-02-ADV-4",
+          "type": "distractor",
+          "description": "Add CYP3A4 inducer",
+          "modification": "Add rifampin 600 mg daily as additional prescription",
+          "expected_effect": "Rifampin induces CYP2C19 (partially) and CYP3A4; complex interaction but doesn't reverse omeprazole suicide inhibition"
+        },
+        {
+          "variant_id": "TASK-02-ADV-5",
+          "type": "genotype_change",
+          "description": "Change to ultrarapid metabolizer",
+          "modification": "Set cyp2c19_genotype to '*1/*2xN (Ultrarapid)'",
+          "expected_effect": "Even UM status doesn't overcome omeprazole suicide inhibition; still CONTRAINDICATED"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-03",
+      "base_task": "Electrolyte-Gated Proarrhythmic Cascade: Sotalol + HCTZ + Levofloxacin",
+      "variants": [
+        {
+          "variant_id": "TASK-03-ADV-1",
+          "type": "missing_modifier",
+          "description": "Normalize electrolytes",
+          "modification": "Set serum_potassium_meq_l: 4.5, serum_magnesium_mg_dl: 2.0",
+          "expected_effect": "Verdict: DOSE_ADJUSTMENT_REQUIRED (Sotalol alone has QT risk); residual risk persists"
+        },
+        {
+          "variant_id": "TASK-03-ADV-2",
+          "type": "counterfactual_swap",
+          "description": "Swap to moxifloxacin (also hERG blocker)",
+          "modification": "Change acute_prescription to Moxifloxacin 400 mg daily",
+          "expected_effect": "resolves_primary = False (moxifloxacin also blocks hERG); verdict CONTRAINDICATED"
+        },
+        {
+          "variant_id": "TASK-03-ADV-3",
+          "type": "electrolyte_correction",
+          "type": "counterfactual_swap",
+          "description": "K+ corrected but Levofloxacin continues",
+          "modification": "Change counterfactual_probe to: 'If potassium is corrected to 4.5 mEq/L but Levofloxacin is continued, is proarrhythmic risk resolved?'",
+          "expected_effect": "resolves_primary = False (Levofloxacin still blocks hERG); residual risk remains"
+        },
+        {
+          "variant_id": "TASK-03-ADV-4",
+          "type": "drug_removal",
+          "description": "Remove HCTZ",
+          "modification": "Remove HCTZ from patient medications",
+          "expected_effect": "Hypokalemia resolves; residual Sotalol QT risk remains at baseline dose"
+        },
+        {
+          "variant_id": "TASK-03-ADV-5",
+          "type": "misleading_counterfactual",
+          "description": "Azithromycin as 'safe' alternative",
+          "modification": "Change counterfactual_probe to: 'What if Levofloxacin is replaced with Azithromycin?'",
+          "expected_effect": "Azithromycin has QT risk in hypokalemia; residual risk remains TRUE"
+        },
+        {
+          "variant_id": "TASK-03-ADV-6",
+          "type": "distractor",
+          "description": "Add beta-blocker",
+          "modification": "Add metoprolol 50 mg BID",
+          "expected_effect": "Beta-blocker may reduce heart rate but doesn't mitigate hERG block risk"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-04",
+      "base_task": "Renal Transporter Secretion Blockade: Methotrexate + Naproxen in Borderline Clearance",
+      "variants": [
+        {
+          "variant_id": "TASK-04-ADV-1",
+          "type": "dose_change",
+          "description": "High-dose oncology MTX",
+          "modification": "Change patient to: '45-year-old female with acute lymphoblastic leukemia on high-dose Methotrexate 12 g/m2 IV + Leucovorin rescue. Dehydrated (CrCl 48 mL/min).'",
+          "expected_effect": "Verdict: CONTRAINDICATED (high-dose MTX + NSAID = absolute contraindication)"
+        },
+        {
+          "variant_id": "TASK-04-ADV-2",
+          "type": "renal_function",
+          "description": "Normal renal function",
+          "modification": "Set crcl_ml_min: 95.0, remove dehydration",
+          "expected_effect": "Verdict: DOSE_ADJUSTMENT_REQUIRED with monitoring (not contraindicated)"
+        },
+        {
+          "variant_id": "TASK-04-ADV-3",
+          "type": "counterfactual_swap",
+          "description": "Celecoxib instead of acetaminophen",
+          "modification": "Change counterfactual_probe to: 'If Naproxen is substituted with Celecoxib 200 mg BID...'",
+          "expected_effect": "Celecoxib is COX-2 selective but still inhibits OAT3; residual risk remains TRUE"
+        },
+        {
+          "variant_id": "TASK-04-ADV-4",
+          "type": "distractor",
+          "description": "Add PPI",
+          "modification": "Add omeprazole 20 mg daily",
+          "expected_effect": "PPI doesn't affect MTX renal clearance; no change to OAT interaction"
+        },
+        {
+          "variant_id": "TASK-04-ADV-5",
+          "type": "drug_removal",
+          "description": "Remove methotrexate",
+          "modification": "Remove methotrexate from patient medications",
+          "expected_effect": "No MTX = no OAT interaction; naproxen alone is safe in this context"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-06",
+      "base_task": "CYP3A4/5 Multi-Enzyme Collapse: Tacrolimus + Voriconazole with CYP3A5*3/*3 Genotype",
+      "variants": [
+        {
+          "variant_id": "TASK-06-ADV-1",
+          "type": "genotype_change",
+          "description": "CYP3A5 expressor",
+          "modification": "Set cyp3a5_genotype: 'CYP3A5*1/*1 (Expressor)'",
+          "expected_effect": "CYP3A5 edge PRESENT in graph; action invariant (DOSE_ADJUSTMENT_REQUIRED)"
+        },
+        {
+          "variant_id": "TASK-06-ADV-2",
+          "type": "counterfactual_swap",
+          "description": "Fluconazole instead of voriconazole",
+          "modification": "Change acute_prescription to Fluconazole 400 mg daily",
+          "expected_effect": "Fluconazole is moderate CYP3A4/5 inhibitor; dose reduction still needed but less severe (50% vs 66%)"
+        },
+        {
+          "variant_id": "TASK-06-ADV-3",
+          "type": "drug_removal",
+          "description": "Remove voriconazole",
+          "modification": "Remove voriconazole from acute_prescription",
+          "expected_effect": "No interaction; tacrolimus dose unchanged"
+        },
+        {
+          "variant_id": "TASK-06-ADV-4",
+          "type": "distractor",
+          "description": "Add fluconazole as additional",
+          "modification": "Add fluconazole 200 mg daily alongside voriconazole",
+          "expected_effect": "Dual azole inhibition - even more severe; dose reduction >66% needed"
+        },
+        {
+          "variant_id": "TASK-06-ADV-5",
+          "type": "drug_removal",
+          "description": "Remove tacrolimus",
+          "modification": "Remove tacrolimus from patient medications",
+          "expected_effect": "No tacrolimus = no interaction to evaluate"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-07",
+      "base_task": "Stereoselective Enantiomeric Clearance Blockade: Warfarin + Metronidazole",
+      "variants": [
+        {
+          "variant_id": "TASK-07-ADV-1",
+          "type": "counterfactual_swap",
+          "description": "Amoxicillin-Clavulanate swap",
+          "modification": "Change counterfactual_probe antibiotic to Amoxicillin-Clavulanate",
+          "expected_effect": "resolves_primary = True, residual_risk_remains = False (no CYP2C9 inhibition)"
+        },
+        {
+          "variant_id": "TASK-07-ADV-2",
+          "type": "counterfactual_swap",
+          "description": "TMP-SMX swap",
+          "modification": "Change counterfactual_probe antibiotic to TMP-SMX DS BID",
+          "expected_effect": "resolves_primary = False (TMP-SMX also inhibits CYP2C9); residual risk remains"
+        },
+        {
+          "variant_id": "TASK-07-ADV-3",
+          "type": "dose_change",
+          "description": "High-dose warfarin",
+          "modification": "Change warfarin dose to 10 mg daily (baseline INR 3.5)",
+          "expected_effect": "Higher baseline INR amplifies metronidazole interaction magnitude"
+        },
+        {
+          "variant_id": "TASK-07-ADV-4",
+          "type": "distractor",
+          "description": "Add PPI",
+          "modification": "Add omeprazole 20 mg daily",
+          "expected_effect": "Omeprazole doesn't affect CYP2C9 significantly; no change to warfarin interaction"
+        },
+        {
+          "variant_id": "TASK-07-ADV-5",
+          "type": "misleading_counterfactual",
+          "description": "Vitamin K supplementation",
+          "modification": "Change counterfactual_probe to: 'If vitamin K 10 mg daily is given with warfarin+metronidazole...'",
+          "expected_effect": "Vitamin K antagonizes warfarin effect but doesn't resolve CYP2C9 inhibition mechanism"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-08",
+      "base_task": "Renal Proximal Tubule Sodium-Mimic Synergy: Lithium + Lisinopril + Furosemide",
+      "variants": [
+        {
+          "variant_id": "TASK-08-ADV-1",
+          "type": "drug_removal",
+          "description": "Remove furosemide",
+          "modification": "Keep only Lisinopril",
+          "expected_effect": "Lisinopril alone reduces GFR → lithium retention; DOSE_ADJUSTMENT_REQUIRED still applies"
+        },
+        {
+          "variant_id": "TASK-08-ADV-2",
+          "type": "drug_swap",
+          "description": "Thiazide instead of loop",
+          "modification": "Change furosemide to Hydrochlorothiazide 25 mg daily",
+          "expected_effect": "Thiazide has STRONGER lithium interaction; higher risk"
+        },
+        {
+          "variant_id": "TASK-08-ADV-3",
+          "type": "drug_swap",
+          "description": "ARB instead of ACEi",
+          "modification": "Change lisinopril to Losartan 50 mg daily",
+          "expected_effect": "ARB also reduces GFR similarly; same lithium retention mechanism"
+        },
+        {
+          "variant_id": "TASK-08-ADV-4",
+          "type": "drug_removal",
+          "description": "Remove lisinopril",
+          "modification": "Keep only Furosemide",
+          "expected_effect": "Furosemide alone causes proximal reabsorption ↑; lithium retention but less than triple combo"
+        },
+        {
+          "variant_id": "TASK-08-ADV-5",
+          "type": "misleading_counterfactual",
+          "description": "Volume repletion",
+          "modification": "Change counterfactual_probe to: 'If patient receives IV saline 1L to correct volume depletion...'",
+          "expected_effect": "Volume repletion may partially mitigate furosemide effect but lisinopril GFR reduction persists"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-09",
+      "base_task": "Safe Combination Control: Atorvastatin + Azithromycin",
+      "variants": [
+        {
+          "variant_id": "TASK-09-ADV-1",
+          "type": "counterfactual_swap",
+          "description": "Clarithromycin swap",
+          "modification": "Change counterfactual_probe to Clarithromycin 500 mg BID",
+          "expected_effect": "resolves_primary = False (clarithromycin strongly inhibits CYP3A4); DOSE_ADJUSTMENT_REQUIRED"
+        },
+        {
+          "variant_id": "TASK-09-ADV-2",
+          "type": "patient_factor",
+          "description": "Add hypokalemia",
+          "modification": "Add serum_potassium_meq_l: 3.0 to physiological_modifiers",
+          "expected_effect": "Azithromycin QT risk emerges; model should flag QT risk even though CYP3A4-PK safe"
+        },
+        {
+          "variant_id": "TASK-09-ADV-3",
+          "type": "drug_swap",
+          "description": "Erythromycin swap",
+          "modification": "Change acute_prescription to Erythromycin 500 mg QID",
+          "expected_effect": "Erythromycin strongly inhibits CYP3A4; DOSE_ADJUSTMENT_REQUIRED"
+        },
+        {
+          "variant_id": "TASK-09-ADV-4",
+          "type": "distractor",
+          "description": "Add CYP2C9 inhibitor",
+          "modification": "Add fluconazole 200 mg daily",
+          "expected_effect": "Fluconazole doesn't affect atorvastatin (CYP3A4 substrate); no change"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-10",
+      "base_task": "Safe Combination Control: Warfarin + Ceftriaxone",
+      "variants": [
+        {
+          "variant_id": "TASK-10-ADV-1",
+          "type": "counterfactual_swap",
+          "description": "TMP-SMX swap",
+          "modification": "Change counterfactual_probe to TMP-SMX DS BID",
+          "expected_effect": "resolves_primary = False (TMP-SMX inhibits CYP2C9 + displaces warfarin); DOSE_ADJUSTMENT_REQUIRED"
+        },
+        {
+          "variant_id": "TASK-10-ADV-2",
+          "type": "patient_factor",
+          "description": "Frail malnourished inpatient",
+          "modification": "Add: frail: true, nutritional_status: 'poor', setting: 'ICU'",
+          "expected_effect": "INR drift possible from flora effects; model should recommend earlier INR check but NO_CYP_INTERACTION verdict holds"
+        },
+        {
+          "variant_id": "TASK-10-ADV-3",
+          "type": "drug_swap",
+          "description": "Cefazolin instead of ceftriaxone",
+          "modification": "Change acute_prescription to Cefazolin 2g IV q8h",
+          "expected_effect": "Cefazolin also lacks CYP2C9 inhibition; NO_CYP_INTERACTION verdict holds"
+        },
+        {
+          "variant_id": "TASK-10-ADV-4",
+          "type": "misleading_counterfactual",
+          "description": "Vitamin K supplementation",
+          "modification": "Change counterfactual_probe to: 'If vitamin K 10 mg daily is given...'",
+          "expected_effect": "Vitamin K antagonizes warfarin; doesn't affect CYP mechanism"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-11",
+      "base_task": "Pharmacogenomic Crisis: Codeine + CYP2D6 Ultrarapid Metabolizer",
+      "variants": [
+        {
+          "variant_id": "TASK-11-ADV-1",
+          "type": "genotype_change",
+          "description": "Normal metabolizer",
+          "modification": "Set cyp2d6_genotype: '*1/*1 (Normal Metabolizer)'",
+          "expected_effect": "Verdict: DOSE_ADJUSTMENT_REQUIRED (standard codeine dosing acceptable)"
+        },
+        {
+          "variant_id": "TASK-11-ADV-2",
+          "type": "genotype_change",
+          "description": "Poor metabolizer",
+          "modification": "Set cyp2d6_genotype: '*4/*4 (Poor Metabolizer)'",
+          "expected_effect": "Verdict: CONTRAINDICATED (no analgesia + adverse effects); different mechanism"
+        },
+        {
+          "variant_id": "TASK-11-ADV-2",
+          "type": "counterfactual_swap",
+          "description": "Tramadol swap",
+          "modification": "Change counterfactual_probe to Tramadol 37.5 mg PO q6h",
+          "expected_effect": "Tramadol also requires CYP2D6 for O-desmethyltramadol; same UM risk"
+        },
+        {
+          "variant_id": "TASK-11-ADV-3",
+          "type": "age_change",
+          "description": "Adult patient",
+          "modification": "Change age to 45, weight to 70 kg",
+          "expected_effect": "FDA contraindication is age <12; adult UM still has morphine surge risk"
+        },
+        {
+          "variant_id": "TASK-11-ADV-4",
+          "type": "distractor",
+          "description": "Add CYP3A4 inhibitor",
+          "modification": "Add ketoconazole 200 mg daily",
+          "expected_effect": "Ketoconazole inhibits CYP3A4 (norcodeine pathway) but doesn't prevent CYP2D6 morphine surge"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-12",
+      "base_task": "Thiopurine Methyltransferase Deficiency: Azathioprine + TPMT*3A/*3A",
+      "variants": [
+        {
+          "variant_id": "TASK-12-ADV-1",
+          "type": "genotype_change",
+          "description": "Heterozygous TPMT*1/*3A",
+          "modification": "Set tpmt_genotype: '*1/*3A (Intermediate Metabolizer)'",
+          "expected_effect": "Verdict: DOSE_ADJUSTMENT_REQUIRED (50% dose reduction + monitoring)"
+        },
+        {
+          "variant_id": "TASK-12-ADV-1",
+          "type": "genotype_change",
+          "description": "Normal TPMT",
+          "modification": "Set tpmt_genotype: '*1/*1 (Normal Metabolizer)'",
+          "expected_effect": "Verdict: NO_DOSE_ADJUSTMENT (standard dosing acceptable)"
+        },
+        {
+          "variant_id": "TASK-12-ADV-2",
+          "type": "counterfactual_swap",
+          "description": "Leflunomide swap",
+          "modification": "Change counterfactual_probe to Leflunomide 20 mg daily",
+          "expected_effect": "Leflunomide doesn't require TPMT; resolves primary, residual risk remains false"
+        },
+        {
+          "variant_id": "TASK-12-ADV-2",
+          "type": "dose_change",
+          "description": "Standard dose azathioprine",
+          "modification": "Change acute_prescription to Azathioprine 2.5 mg/kg/day (standard dose)",
+          "expected_effect": "Should trigger FATAL TRAP: standard dose azathioprine in *3A/*3A"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-13",
+      "base_task": "HLA-B*57:01 Hypersensitivity: Abacavir in HLA-B*57:01 Positive Patient",
+      "variants": [
+        {
+          "variant_id": "TASK-13-ADV-1",
+          "type": "genotype_change",
+          "description": "HLA-B*57:01 negative",
+          "modification": "Set hla_b5701_status: 'NEGATIVE'",
+          "expected_effect": "Verdict: NO_DOSE_ADJUSTMENT (abacavir safe if HLA-B*57:01 negative)"
+        },
+        {
+          "variant_id": "TASK-13-ADV-2",
+          "type": "counterfactual_swap",
+          "description": "TDF instead of TAF",
+          "modification": "Change counterfactual_probe to Tenofovir Disoproxil Fumarate 300 mg daily",
+          "expected_effect": "TDF also bypasses HLA-B*57:01; resolves primary, residual risk false"
+        },
+        {
+          "variant_id": "TASK-13-ADV-2",
+          "type": "misleading_counterfactual",
+          "description": "Desensitization protocol",
+          "modification": "Change counterfactual_probe to: 'If abacavir is started with antihistamine premedication...'",
+          "expected_effect": "FATAL TRAP: desensitization not recommended; re-exposure causes anaphylaxis"
+        },
+        {
+          "variant_id": "TASK-13-ADV-3",
+          "type": "misleading_counterfactual",
+          "description": "Lower dose abacavir",
+          "modification": "Change counterfactual_probe to: 'If abacavir 150 mg BID is used instead...'",
+          "expected_effect": "FATAL TRAP: dose reduction doesn't prevent HLA-mediated HSR"
+        }
+      ]
+    },
+    {
+      "task_id": "TASK-14",
+      "base_task": "UGT1A1*28 Polymorphism: Irinotecan in Homozygous *28/*28 Patient",
+      "variants": [
+        {
+          "variant_id": "TASK-14-ADV-1",
+          "type": "genotype_change",
+          "description": "Heterozygous *1/*28",
+          "modification": "Set ugt1a1_genotype: '*1/*28 (Heterozygous reduced function)'",
+          "expected_effect": "Verdict: DOSE_ADJUSTMENT_REQUIRED (25% dose reduction per CPIC)"
+        },
+        {
+          "variant_id": "TASK-14-ADV-1",
+          "type": "genotype_change",
+          "description": "Normal UGT1A1",
+          "modification": "Set ugt1a1_genotype: '*1/*1 (Normal function)'",
+          "expected_effect": "Verdict: NO_DOSE_ADJUSTMENT (standard 180 mg/m2 acceptable)"
+        },
+        {
+          "variant_id": "TASK-14-ADV-2",
+          "type": "counterfactual_swap",
+          "description": "FOLFOX regimen",
+          "modification": "Change counterfactual_probe to: 'If FOLFIRI is switched to FOLFOX (Oxaliplatin 85 mg/m2 + 5-FU/LV)...'",
+          "expected_effect": "FOLFOX bypasses UGT1A1 entirely; resolves primary, residual risk false"
+        },
+        {
+          "variant_id": "TASK-14-ADV-2",
+          "type": "dose_change",
+          "description": "Standard dose",
+          "modification": "Change counterfactual_probe to: 'If irinotecan 180 mg/m2 is maintained...'",
+          "expected_effect": "Should trigger FATAL TRAP: standard 180 mg/m2 dose in *28/*28"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "task_id": "TASK-14",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 8803.74,
+  "tokens": 1028,
+  "cost_usd": 0.001814,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"UGT1A1*28/*28 genotype\",\n      \"target\": \"UGT1A1 enzyme\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"CPIC guidelines\"\n    },\n    {\n      \"source\": \"UGT1A1 enzyme\",\n      \"target\": \"SN-38\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"SN-38\",\n      \"target\": \"Neutrophils\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"Literature\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"UGT1A1*28/*28 genotype\",\n    \"clinical_consequence\": \"Reduced UGT1A1 enzyme activity leads to decreased glucuronidation of SN-38, resulting in increased exposure to the active metabolite and heightened risk of severe neutropenia.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Reduce irinotecan dose to 120 mg/m2 per CPIC guidelines for UGT1A1*28/*28 homozygous patients.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Irinotecan 120 mg/m2\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Dose reduction mitigates but does not eliminate the risk of severe neutropenia in UGT1A1*28/*28 homozygous patients. Close monitoring of ANC is still required.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-14",
+    "passed": false,
+    "total_score": 60.0,
+    "edge_accuracy_pct": 0.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "0/4",
+    "cpcs_score": 0.0,
+    "cpcs_continuity": "DISCONNECTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: IRINOTECAN -> INCREASES_EXPOSURE -> CARBOXYLESTERASE",
+      "Missing mandatory causal edge: CARBOXYLESTERASE -> INCREASES_EXPOSURE -> SN38",
+      "Missing mandatory causal edge: SN38 -> DECREASES_EXPOSURE -> UGT1A1",
+      "Missing mandatory causal edge: UGT1A1 -> INCREASES_EXPOSURE -> SN38_GLUCURONIDE",
+      "Spurious/hallucinated edges (3): UGT1A1*28/*28 GENOTYPE -> DECREASES_EXPOSURE -> UGT1A1, UGT1A1 -> INCREASES_EXPOSURE -> SN-38, SN-38 -> INHIBITS -> NEUTROPHILS"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"UGT1A1*28/*28 genotype\",\n      \"target\": \"UGT1A1 enzyme\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"CPIC guidel...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 7
+  }
+}

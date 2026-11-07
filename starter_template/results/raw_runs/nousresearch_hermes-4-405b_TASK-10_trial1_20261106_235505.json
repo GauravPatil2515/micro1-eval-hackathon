@@ -1,0 +1,32 @@
+{
+  "task_id": "TASK-10",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 10013.65,
+  "tokens": 1050,
+  "cost_usd": 0.00197,
+  "raw_output": "```json\n{\n  \"causal_graph\": [\n    {\n      \"source\": \"Ceftriaxone\",\n      \"target\": \"Vitamin K-producing gut flora\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label and clinical literature\"\n    },\n    {\n      \"source\": \"Vitamin K-producing gut flora\",\n      \"target\": \"Vitamin K synthesis\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"Clinical literature\"\n    },\n    {\n      \"source\": \"Vitamin K synthesis\",\n      \"target\": \"Warfarin\",\n      \"relation\": \"COMPETITIVELY_BLOCKS\",\n      \"evidence_source\": \"Pharmacology textbooks\"\n    },\n    {\n      \"source\": \"Ceftriaxone\",\n      \"target\": \"Warfarin\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"Clinical literature\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"baseline_inr: 2.8\",\n    \"clinical_consequence\": \"Patient has stable therapeutic INR on current warfarin dose. Ceftriaxone-induced reduction in vitamin K production may potentiate warfarin effect and increase bleeding risk.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"TDM_MONITORING_MANDATED\",\n    \"mandated_action\": \"Monitor INR within 3-5 days of ceftriaxone initiation and adjust warfarin dose accordingly. Monitor for signs of bleeding.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Trimethoprim-Sulfamethoxazole (TMP-SMX)\",\n    \"resolves_primary_interaction\": false,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"TMP-SMX also inhibits vitamin K-producing gut flora, similarly potentiating warfarin effect. Additionally, TMP-SMX may cause CYP2C9 inhibition, further increasing warfarin exposure. Residual risk of over-anticoagulation persists.\"\n  }\n}\n```",
+  "eval_grade": {
+    "task_id": "TASK-10",
+    "passed": false,
+    "total_score": 0.0,
+    "edge_accuracy_pct": 0.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "0/2",
+    "cpcs_score": 0.0,
+    "cpcs_continuity": "DISCONNECTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CEFTRIAXONE -> NO_INHIBITION -> CYP2C9",
+      "Missing mandatory causal edge: CEFTRIAXONE -> MINIMAL_DECREASE -> VITAMIN_K_FLORA",
+      "Spurious/hallucinated edges (4): CEFTRIAXONE -> INHIBITS -> VITAMIN K-PRODUCING GUT FLORA, VITAMIN K-PRODUCING GUT FLORA -> DECREASES_EXPOSURE -> VITAMIN K SYNTHESIS, VITAMIN K SYNTHESIS -> COMPETITIVELY_BLOCKS -> WARFARIN, CEFTRIAXONE -> INCREASES_EXPOSURE -> WARFARIN",
+      "Regulatory verdict mismatch: expected 'NO_CYP_INTERACTION', got 'TDM_MONITORING_MANDATED'",
+      "Counterfactual primary resolution error: expected True, got False",
+      "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+    ],
+    "response_preview": "```json\n{\n  \"causal_graph\": [\n    {\n      \"source\": \"Ceftriaxone\",\n      \"target\": \"Vitamin K-producing gut flora\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA labe...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 5
+  }
+}

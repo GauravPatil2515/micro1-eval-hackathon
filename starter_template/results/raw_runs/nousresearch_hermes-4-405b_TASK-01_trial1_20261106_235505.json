@@ -1,0 +1,31 @@
+{
+  "task_id": "TASK-01",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 12496.4,
+  "tokens": 1063,
+  "cost_usd": 0.001935,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"P-glycoprotein\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"Rivaroxaban\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\": \"Moderate renal impairment (CrCl 41.2 mL/min)\",\n      \"target\": \"Rivaroxaban\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"CrCl 41.2 mL/min\",\n    \"clinical_consequence\": \"Moderate renal impairment reduces rivaroxaban elimination, compounding the exposure increase from ketoconazole-mediated inhibition of CYP3A4 and P-gp pathways.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Avoid concomitant use of rivaroxaban with ketoconazole in patients with moderate renal impairment (CrCl 30-49 mL/min).\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Fluconazole\",\n    \"resolves_primary_interaction\": false,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Fluconazole is a moderate CYP3A4 and weak P-gp inhibitor. While less potent than ketoconazole, fluconazole would still increase rivaroxaban exposure in the setting of moderate renal impairment, maintaining significant bleeding risk.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-01",
+    "passed": false,
+    "total_score": 30.0,
+    "edge_accuracy_pct": 50.0,
+    "edge_precision_pct": 50.0,
+    "matched_edges": "2/4",
+    "cpcs_score": 0.5,
+    "cpcs_continuity": "PARTIAL",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> RIVAROXABAN",
+      "Missing mandatory causal edge: P-GP -> INCREASES_EXPOSURE -> RIVAROXABAN",
+      "Spurious/hallucinated edges (2): KETOCONAZOLE -> INCREASES_EXPOSURE -> RIVAROXABAN, MODERATE RENAL IMPAIRMENT -> INCREASES_EXPOSURE -> RIVAROXABAN",
+      "Regulatory verdict mismatch: expected 'AVOID_CONCOMITANT_USE', got 'CONTRAINDICATED'",
+      "Counterfactual primary resolution error: expected True, got False"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Ketoconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label\"\n    },\n    {\n      \"source\"...",
+    "atomic_accuracy": 0.222,
+    "atomic_matched": 2,
+    "atomic_total": 9
+  }
+}

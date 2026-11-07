@@ -1,0 +1,30 @@
+{
+  "task_id": "TASK-13",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 9217.32,
+  "tokens": 980,
+  "cost_usd": 0.001724,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Abacavir\",\n      \"target\": \"HLA-B*57:01\",\n      \"relation\": \"INDUCES\",\n      \"evidence_source\": \"Mallal S, et al. HLA-B*5701 screening for hypersensitivity to abacavir. N Engl J Med. 2008;358(6):568-79.\"\n    },\n    {\n      \"source\": \"HLA-B*57:01\",\n      \"target\": \"Hypersensitivity Reaction\",\n      \"relation\": \"PRODUCES_ADDITIVE_BLOCK\",\n      \"evidence_source\": \"FDA Label: Abacavir\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"hla_b5701_status: POSITIVE\",\n    \"clinical_consequence\": \"HLA-B*57:01 positivity is a strong genetic predictor for abacavir hypersensitivity reaction, a potentially life-threatening adverse event.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Abacavir must not be prescribed to HLA-B*57:01 positive patients. Screening for HLA-B*57:01 allele is mandatory before initiating abacavir therapy.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Tenofovir Alafenamide 25 mg daily\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": false,\n    \"residual_risk_explanation\": \"Tenofovir alafenamide does not carry the HLA-B*57:01 associated hypersensitivity risk. The primary interaction is fully resolved with this substitution.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-13",
+    "passed": false,
+    "total_score": 60.0,
+    "edge_accuracy_pct": 0.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "0/3",
+    "cpcs_score": 0.0,
+    "cpcs_continuity": "DISCONNECTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: ABACAVIR -> BINDS_AND_ALTERS_PEPTIDE_REPERTOIRE -> HLA_B5701",
+      "Missing mandatory causal edge: HLA_B5701 -> INCREASES_EXPOSURE -> CD8_T_CELL_ACTIVATION",
+      "Missing mandatory causal edge: CD8_T_CELL_ACTIVATION -> INCREASES_EXPOSURE -> HYPERSENSITIVITY_SYNDROME",
+      "Spurious/hallucinated edges (2): ABACAVIR -> INDUCES -> HLA-B*57:01, HLA-B*57:01 -> PRODUCES_ADDITIVE_BLOCK -> HYPERSENSITIVITY REACTION"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Abacavir\",\n      \"target\": \"HLA-B*57:01\",\n      \"relation\": \"INDUCES\",\n      \"evidence_source\": \"Mallal S, et al. HLA-B*5701 screening ...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 6
+  }
+}

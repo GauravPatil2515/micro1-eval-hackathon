@@ -1,0 +1,325 @@
+{
+  "benchmark": "MechanismTrace-DDI",
+  "timestamp": "20261106_235505",
+  "trials_per_task": 1,
+  "results": {
+    "nousresearch/hermes-4-405b": {
+      "tasks_passed": 0,
+      "total_tasks": 14,
+      "pass_rate_pct": 0.0,
+      "mean_score": 38.3,
+      "total_tokens": 15331,
+      "total_cost_usd": 0.029,
+      "avg_latency_ms": 12109.2,
+      "task_breakdown": [
+        {
+          "task_id": "TASK-01",
+          "avg_score": 30.0,
+          "passed": false,
+          "edge_accuracy": 50.0,
+          "atomic_accuracy": 22.2,
+          "atomic_matched": 2,
+          "atomic_total": 9,
+          "cpcs_score": 0.5,
+          "cpcs_continuity": "PARTIAL",
+          "reasons": [
+            "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> RIVAROXABAN",
+            "Missing mandatory causal edge: P-GP -> INCREASES_EXPOSURE -> RIVAROXABAN",
+            "Spurious/hallucinated edges (2): KETOCONAZOLE -> INCREASES_EXPOSURE -> RIVAROXABAN, MODERATE RENAL IMPAIRMENT -> INCREASES_EXPOSURE -> RIVAROXABAN",
+            "Regulatory verdict mismatch: expected 'AVOID_CONCOMITANT_USE', got 'CONTRAINDICATED'",
+            "Counterfactual primary resolution error: expected True, got False"
+          ]
+        },
+        {
+          "task_id": "TASK-02",
+          "avg_score": 32.93,
+          "passed": false,
+          "edge_accuracy": 33.3,
+          "atomic_accuracy": 40.0,
+          "atomic_matched": 2,
+          "atomic_total": 5,
+          "cpcs_score": 0.275,
+          "cpcs_continuity": "FRAGMENTED",
+          "reasons": [
+            "Missing mandatory causal edge: CYP2C19 -> REQUIRES_FOR_BIOACTIVATION -> CLOPIDOGREL_ACTIVE_THIOL_METABOLITE",
+            "Missing mandatory causal edge: CLOPIDOGREL_ACTIVE_THIOL_METABOLITE -> INHIBITS -> P2Y12",
+            "Spurious/hallucinated edges (4): CYP2C19 -> BLOCKS_BIOACTIVATION -> CLOPIDOGREL, OMEPRAZOLE -> DECREASES_EXPOSURE -> CLOPIDOGREL, PANTOPRAZOLE -> INHIBITS -> CYP2C19, PANTOPRAZOLE -> DECREASES_EXPOSURE -> CLOPIDOGREL",
+            "Counterfactual primary resolution error: expected True, got False",
+            "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+          ]
+        },
+        {
+          "task_id": "TASK-03",
+          "avg_score": 60.0,
+          "passed": false,
+          "edge_accuracy": 0.0,
+          "atomic_accuracy": 0.0,
+          "atomic_matched": 0,
+          "atomic_total": 5,
+          "cpcs_score": 0.0,
+          "cpcs_continuity": "DISCONNECTED",
+          "reasons": [
+            "Missing mandatory causal edge: SOTALOL -> INHIBITS -> HERG",
+            "Missing mandatory causal edge: LEVOFLOXACIN -> PRODUCES_ADDITIVE_BLOCK -> HERG",
+            "Spurious/hallucinated edges (7): HYDROCHLOROTHIAZIDE -> DECREASES_EXPOSURE -> SERUM_POTASSIUM, HYPOKALEMIA -> INCREASES_EXPOSURE -> HERG_CHANNEL, SOTALOL -> BLOCKS_BIOACTIVATION -> HERG_CHANNEL, LEVOFLOXACIN -> COMPETITIVELY_BLOCKS -> HERG_CHANNEL, HYPOKALEMIA -> INCREASES_EXPOSURE -> SOTALOL..."
+          ]
+        },
+        {
+          "task_id": "TASK-04",
+          "avg_score": 32.33,
+          "passed": false,
+          "edge_accuracy": 25.0,
+          "atomic_accuracy": 0.0,
+          "atomic_matched": 0,
+          "atomic_total": 7,
+          "cpcs_score": 0.2,
+          "cpcs_continuity": "INVERTED_CAUSATION",
+          "reasons": [
+            "Missing mandatory causal edge: NAPROXEN -> COMPETITIVELY_BLOCKS -> OAT3",
+            "Missing mandatory causal edge: OAT1 -> INCREASES_EXPOSURE -> METHOTREXATE",
+            "Missing mandatory causal edge: OAT3 -> INCREASES_EXPOSURE -> METHOTREXATE",
+            "Spurious/hallucinated edges (2): NAPROXEN -> INCREASES_EXPOSURE -> METHOTREXATE, METHOTREXATE -> COMPETITIVELY_BLOCKS -> OAT3",
+            "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'CONTRAINDICATED'"
+          ]
+        },
+        {
+          "task_id": "TASK-05",
+          "avg_score": 54.44,
+          "passed": false,
+          "edge_accuracy": 33.3,
+          "atomic_accuracy": 20.0,
+          "atomic_matched": 1,
+          "atomic_total": 5,
+          "cpcs_score": 0.333,
+          "cpcs_continuity": "FRAGMENTED",
+          "reasons": [
+            "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> SIMVASTATIN_LACTONE",
+            "Missing mandatory causal edge: SIMVASTATIN_LACTONE -> INCREASES_EXPOSURE -> SIMVASTATIN_ACID",
+            "Spurious/hallucinated edges (2): SIMVASTATIN -> COMPETITIVELY_BLOCKS -> CYP3A4, AMLODIPINE -> INCREASES_EXPOSURE -> SIMVASTATIN",
+            "Failed to identify active physiological modifier (e.g. CrCl, electrolytes, genotype)."
+          ]
+        },
+        {
+          "task_id": "TASK-06",
+          "avg_score": 65.75,
+          "passed": false,
+          "edge_accuracy": 50.0,
+          "atomic_accuracy": 16.7,
+          "atomic_matched": 1,
+          "atomic_total": 6,
+          "cpcs_score": 0.383,
+          "cpcs_continuity": "PARTIAL",
+          "reasons": [
+            "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> TACROLIMUS",
+            "Spurious/hallucinated edges (3): VORICONAZOLE -> INHIBITS -> CYP2C9, VORICONAZOLE -> INCREASES_EXPOSURE -> TACROLIMUS, CYP3A5*3/*3 GENOTYPE -> DECREASES_EXPOSURE -> TACROLIMUS METABOLISM"
+          ]
+        },
+        {
+          "task_id": "TASK-07",
+          "avg_score": 40.38,
+          "passed": false,
+          "edge_accuracy": 25.0,
+          "atomic_accuracy": 0.0,
+          "atomic_matched": 0,
+          "atomic_total": 6,
+          "cpcs_score": 0.075,
+          "cpcs_continuity": "FRAGMENTED",
+          "reasons": [
+            "Missing mandatory causal edge: CYP2C9 -> INCREASES_EXPOSURE -> S-WARFARIN",
+            "Missing mandatory causal edge: METRONIDAZOLE -> INHIBITS -> CYP3A4",
+            "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> R-WARFARIN",
+            "Spurious/hallucinated edges (4): METRONIDAZOLE -> INHIBITS -> CYP2C9, CYP2C9 INHIBITION -> INCREASES_EXPOSURE -> S-WARFARIN, CYP3A4 INHIBITION -> INCREASES_EXPOSURE -> R-WARFARIN, INCREASED S-WARFARIN EXPOSURE -> INCREASES_EXPOSURE -> INR",
+            "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+          ]
+        },
+        {
+          "task_id": "TASK-08",
+          "avg_score": 30.0,
+          "passed": false,
+          "edge_accuracy": 0.0,
+          "atomic_accuracy": 0.0,
+          "atomic_matched": 0,
+          "atomic_total": 7,
+          "cpcs_score": 0.0,
+          "cpcs_continuity": "DISCONNECTED",
+          "reasons": [
+            "Missing mandatory causal edge: FUROSEMIDE -> INHIBITS -> NKCC2",
+            "Missing mandatory causal edge: NKCC2 -> DECREASES_EXPOSURE -> SODIUM_REABSORPTION_TAL",
+            "Missing mandatory causal edge: SODIUM_REABSORPTION_TAL -> UPREGULATES -> PROXIMAL_TUBULE_REABSORPTION",
+            "Missing mandatory causal edge: PROXIMAL_TUBULE_REABSORPTION -> INCREASES_EXPOSURE -> LITHIUM",
+            "Missing mandatory causal edge: LISINOPRIL -> INHIBITS -> ACE",
+            "Missing mandatory causal edge: ACE -> DECREASES_EXPOSURE -> GLOMERULAR_FILTRATION",
+            "Missing mandatory causal edge: GLOMERULAR_FILTRATION -> INCREASES_EXPOSURE -> LITHIUM",
+            "Spurious/hallucinated edges (5): FUROSEMIDE -> INCREASES_EXPOSURE -> PROXIMAL TUBULE SODIUM REABSORPTION, LISINOPRIL -> DECREASES_EXPOSURE -> RENAL PERFUSION PRESSURE, LISINOPRIL -> DECREASES_EXPOSURE -> LITHIUM CLEARANCE, FUROSEMIDE + LISINOPRIL -> PRODUCES_ADDITIVE_BLOCK -> LITHIUM, LITHIUM -> COMPETITIVELY_BLOCKS -> SODIUM CHANNEL PROTEINS",
+            "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'CONTRAINDICATED'"
+          ]
+        },
+        {
+          "task_id": "TASK-09",
+          "avg_score": 20.0,
+          "passed": false,
+          "edge_accuracy": 0.0,
+          "atomic_accuracy": 0.0,
+          "atomic_matched": 0,
+          "atomic_total": 4,
+          "cpcs_score": 0.0,
+          "cpcs_continuity": "INVERTED_CAUSATION",
+          "reasons": [
+            "Missing mandatory causal edge: AZITHROMYCIN -> NO_INHIBITION -> CYP3A4",
+            "Missing mandatory causal edge: CYP3A4 -> NO_CHANGE_IN_EXPOSURE -> ATORVASTATIN",
+            "Spurious/hallucinated edges (3): AZITHROMYCIN -> INHIBITS -> CYP3A4, ATORVASTATIN -> SUBSTRATE -> CYP3A4, AZITHROMYCIN -> NO_CLINICALLY_MEANINGFUL_INTERACTION -> ATORVASTATIN",
+            "Counterfactual primary resolution error: expected True, got False",
+            "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+          ]
+        },
+        {
+          "task_id": "TASK-10",
+          "avg_score": 0.0,
+          "passed": false,
+          "edge_accuracy": 0.0,
+          "atomic_accuracy": 0.0,
+          "atomic_matched": 0,
+          "atomic_total": 5,
+          "cpcs_score": 0.0,
+          "cpcs_continuity": "DISCONNECTED",
+          "reasons": [
+            "Missing mandatory causal edge: CEFTRIAXONE -> NO_INHIBITION -> CYP2C9",
+            "Missing mandatory causal edge: CEFTRIAXONE -> MINIMAL_DECREASE -> VITAMIN_K_FLORA",
+            "Spurious/hallucinated edges (4): CEFTRIAXONE -> INHIBITS -> VITAMIN K-PRODUCING GUT FLORA, VITAMIN K-PRODUCING GUT FLORA -> DECREASES_EXPOSURE -> VITAMIN K SYNTHESIS, VITAMIN K SYNTHESIS -> COMPETITIVELY_BLOCKS -> WARFARIN, CEFTRIAXONE -> INCREASES_EXPOSURE -> WARFARIN",
+            "Regulatory verdict mismatch: expected 'NO_CYP_INTERACTION', got 'TDM_MONITORING_MANDATED'",
+            "Counterfactual primary resolution error: expected True, got False",
+            "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+          ]
+        },
+        {
+          "task_id": "TASK-11",
+          "avg_score": 40.0,
+          "passed": false,
+          "edge_accuracy": 0.0,
+          "atomic_accuracy": 0.0,
+          "atomic_matched": 0,
+          "atomic_total": 6,
+          "cpcs_score": 0.0,
+          "cpcs_continuity": "DISCONNECTED",
+          "reasons": [
+            "Missing mandatory causal edge: CODEINE -> REQUIRES_FOR_BIOACTIVATION -> CYP2D6",
+            "Missing mandatory causal edge: CYP2D6 -> INCREASES_EXPOSURE -> MORPHINE",
+            "Missing mandatory causal edge: MORPHINE -> INCREASES_EXPOSURE -> MU_OPIOID_RECEPTOR",
+            "Spurious/hallucinated edges (4): CODEINE -> BLOCKS_BIOACTIVATION -> CYP2D6, CYP2D6 UM GENOTYPE -> INCREASES_EXPOSURE -> CODEINE, CYP2D6 UM GENOTYPE -> INCREASES_EXPOSURE -> MORPHINE, MORPHINE -> COMPETITIVELY_BLOCKS -> MU-OPIOID",
+            "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+          ]
+        },
+        {
+          "task_id": "TASK-12",
+          "avg_score": 10.0,
+          "passed": false,
+          "edge_accuracy": 0.0,
+          "atomic_accuracy": 0.0,
+          "atomic_matched": 0,
+          "atomic_total": 6,
+          "cpcs_score": 0.0,
+          "cpcs_continuity": "DISCONNECTED",
+          "reasons": [
+            "Missing mandatory causal edge: AZATHIOPRINE -> COMPETITIVELY_BLOCKS -> TPMT",
+            "Missing mandatory causal edge: TPMT -> INCREASES_EXPOSURE -> 6_THIOGUANINE_NUCLEOTIDES",
+            "Missing mandatory causal edge: 6_THIOGUANINE_NUCLEOTIDES -> INCREASES_EXPOSURE -> BONE_MARROW",
+            "Spurious/hallucinated edges (5): TPMT*3A/*3A GENOTYPE -> INHIBITS -> TPMT, TPMT ENZYME DEFICIENCY -> INCREASES_EXPOSURE -> AZATHIOPRINE, AZATHIOPRINE -> PRODUCES_ADDITIVE_BLOCK -> 6-THIOGUANINE NUCLEOTIDES, 6-THIOGUANINE NUCLEOTIDES -> INHIBITS -> DNA SYNTHESIS, DNA SYNTHESIS INHIBITION -> PRODUCES_ADDITIVE_BLOCK -> BONE MARROW SUPPRESSION",
+            "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'CONTRAINDICATED'",
+            "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+          ]
+        },
+        {
+          "task_id": "TASK-13",
+          "avg_score": 60.0,
+          "passed": false,
+          "edge_accuracy": 0.0,
+          "atomic_accuracy": 0.0,
+          "atomic_matched": 0,
+          "atomic_total": 6,
+          "cpcs_score": 0.0,
+          "cpcs_continuity": "DISCONNECTED",
+          "reasons": [
+            "Missing mandatory causal edge: ABACAVIR -> BINDS_AND_ALTERS_PEPTIDE_REPERTOIRE -> HLA_B5701",
+            "Missing mandatory causal edge: HLA_B5701 -> INCREASES_EXPOSURE -> CD8_T_CELL_ACTIVATION",
+            "Missing mandatory causal edge: CD8_T_CELL_ACTIVATION -> INCREASES_EXPOSURE -> HYPERSENSITIVITY_SYNDROME",
+            "Spurious/hallucinated edges (2): ABACAVIR -> INDUCES -> HLA-B*57:01, HLA-B*57:01 -> PRODUCES_ADDITIVE_BLOCK -> HYPERSENSITIVITY REACTION"
+          ]
+        },
+        {
+          "task_id": "TASK-14",
+          "avg_score": 60.0,
+          "passed": false,
+          "edge_accuracy": 0.0,
+          "atomic_accuracy": 0.0,
+          "atomic_matched": 0,
+          "atomic_total": 7,
+          "cpcs_score": 0.0,
+          "cpcs_continuity": "DISCONNECTED",
+          "reasons": [
+            "Missing mandatory causal edge: IRINOTECAN -> INCREASES_EXPOSURE -> CARBOXYLESTERASE",
+            "Missing mandatory causal edge: CARBOXYLESTERASE -> INCREASES_EXPOSURE -> SN38",
+            "Missing mandatory causal edge: SN38 -> DECREASES_EXPOSURE -> UGT1A1",
+            "Missing mandatory causal edge: UGT1A1 -> INCREASES_EXPOSURE -> SN38_GLUCURONIDE",
+            "Spurious/hallucinated edges (3): UGT1A1*28/*28 GENOTYPE -> DECREASES_EXPOSURE -> UGT1A1, UGT1A1 -> INCREASES_EXPOSURE -> SN-38, SN-38 -> INHIBITS -> NEUTROPHILS"
+          ]
+        }
+      ]
+    }
+  },
+  "threshold_sensitivity": {
+    "nousresearch/hermes-4-405b": {
+      "60": {
+        "pass_count": 4,
+        "pass_rate_pct": 28.6
+      },
+      "70": {
+        "pass_count": 0,
+        "pass_rate_pct": 0.0
+      },
+      "80": {
+        "pass_count": 0,
+        "pass_rate_pct": 0.0
+      },
+      "85": {
+        "pass_count": 0,
+        "pass_rate_pct": 0.0
+      }
+    }
+  },
+  "atomic_composed_gap": {
+    "model_gaps": {
+      "nousresearch/hermes-4-405b": {
+        "mean_gap_pct": -31.2,
+        "max_gap_pct": 7.1,
+        "task_gaps_pct": {
+          "TASK-01": -7.8,
+          "TASK-02": 7.1,
+          "TASK-03": -60.0,
+          "TASK-04": -32.3,
+          "TASK-05": -34.4,
+          "TASK-06": -49.0,
+          "TASK-07": -40.4,
+          "TASK-08": -30.0,
+          "TASK-09": -20.0,
+          "TASK-10": 0.0,
+          "TASK-11": -40.0,
+          "TASK-12": -10.0,
+          "TASK-13": -60.0,
+          "TASK-14": -60.0
+        }
+      }
+    },
+    "overall_mean_gap_pct": -31.2
+  },
+  "error_taxonomy": {
+    "nousresearch/hermes-4-405b": {
+      "missing_hop": 39,
+      "inverted_direction": 2,
+      "spurious_edges": 14,
+      "modifier_ignored": 1,
+      "counterfactual_collapse": 6,
+      "control_over_flag": 2,
+      "fatal_dose_trap": 0
+    }
+  }
+}

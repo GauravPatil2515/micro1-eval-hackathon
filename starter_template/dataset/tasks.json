@@ -143,33 +143,43 @@
         "quote": "Avoid concomitant use of Plavix with omeprazole or esomeprazole. Omeprazole significantly reduces the antiplatelet activity of Plavix, reducing active thiol metabolite AUC by 45% (Day 1) and 40% (Day 5)."
       }
     ],
-    "ground_truth": {
-      "causal_edges": [
-        {
-          "source": "OMEPRAZOLE",
-          "target": "CYP2C19",
-          "relation": "INHIBITS"
-        },
-        {
-          "source": "CYP2C19",
-          "target": "CLOPIDOGREL",
-          "relation": "BLOCKS_BIOACTIVATION"
-        }
-      ],
-      "accepted_alternates": [
-        [
+"ground_truth": {
+        "causal_edges": [
           {
             "source": "OMEPRAZOLE",
             "target": "CYP2C19",
-            "relation": "SUICIDE_INHIBITS"
+            "relation": "INHIBITS"
           },
           {
             "source": "CYP2C19",
-            "target": "CLOPIDOGREL",
-            "relation": "PREVENTS_BIOACTIVATION"
+            "target": "CLOPIDOGREL_ACTIVE_THIOL_METABOLITE",
+            "relation": "REQUIRES_FOR_BIOACTIVATION"
+          },
+          {
+            "source": "CLOPIDOGREL_ACTIVE_THIOL_METABOLITE",
+            "target": "P2Y12",
+            "relation": "INHIBITS"
           }
-        ]
-      ],
+        ],
+        "accepted_alternates": [
+          [
+            {
+              "source": "OMEPRAZOLE",
+              "target": "CYP2C19",
+              "relation": "SUICIDE_INHIBITS"
+            },
+            {
+              "source": "CYP2C19",
+              "target": "CLOPIDOGREL_ACTIVE_THIOL_METABOLITE",
+              "relation": "PREVENTS_BIOACTIVATION"
+            },
+            {
+              "source": "CLOPIDOGREL_ACTIVE_THIOL_METABOLITE",
+              "target": "P2Y12",
+              "relation": "INHIBITS"
+            }
+          ]
+        ],
       "physiological_modifier_impact": "Unknown CYP2C19 genotype does not equal poor metabolizer status. In patients with unknown status, intermediate (*1/*2) or poor (*2/*2) metabolizers may have compromised bioactivation. Omeprazole suicide inhibition substantially increases the probability of subtherapeutic active thiol metabolite and high on-treatment platelet reactivity. CPIC recommends genotyping; if unknown, consider alternative P2Y12 inhibitor (prasugrel/ticagrelor) or PPI switch.",
       "expected_verdict": "CONTRAINDICATED",
       "mandated_action": "Avoid concomitant use. Switch acid suppression to Pantoprazole or H2-receptor antagonist, or switch P2Y12 inhibitor to Prasugrel/Ticagrelor if clinically indicated.",
@@ -474,33 +484,43 @@
         "quote": "Do not exceed 20 mg simvastatin daily with concomitant amlodipine. Amlodipine increases systemic exposure of simvastatin acid by approximately 1.6-fold, significantly elevating the risk of myopathy and rhabdomyolysis."
       }
     ],
-    "ground_truth": {
-      "causal_edges": [
-        {
-          "source": "AMLODIPINE",
-          "target": "CYP3A4",
-          "relation": "INHIBITS"
-        },
-        {
-          "source": "CYP3A4",
-          "target": "SIMVASTATIN",
-          "relation": "INCREASES_EXPOSURE"
-        }
-      ],
-      "accepted_alternates": [
-        [
+"ground_truth": {
+        "causal_edges": [
           {
             "source": "AMLODIPINE",
             "target": "CYP3A4",
-            "relation": "MODERATELY_INHIBITS"
+            "relation": "INHIBITS"
           },
           {
             "source": "CYP3A4",
-            "target": "SIMVASTATIN",
-            "relation": "ELEVATES_AUC"
+            "target": "SIMVASTATIN_LACTONE",
+            "relation": "INCREASES_EXPOSURE"
+          },
+          {
+            "source": "SIMVASTATIN_LACTONE",
+            "target": "SIMVASTATIN_ACID",
+            "relation": "INCREASES_EXPOSURE"
           }
-        ]
-      ],
+        ],
+        "accepted_alternates": [
+          [
+            {
+              "source": "AMLODIPINE",
+              "target": "CYP3A4",
+              "relation": "MODERATELY_INHIBITS"
+            },
+            {
+              "source": "CYP3A4",
+              "target": "SIMVASTATIN_LACTONE",
+              "relation": "ELEVATES_AUC"
+            },
+            {
+              "source": "SIMVASTATIN_LACTONE",
+              "target": "SIMVASTATIN_ACID",
+              "relation": "ELEVATES_AUC"
+            }
+          ]
+        ],
       "physiological_modifier_impact": "Simvastatin is extensively cleared via first-pass CYP3A4 metabolism. Amlodipine moderately inhibits CYP3A4, elevating simvastatin lactone and active acid exposure by ~60%-70%, raising creatine kinase and rhabdomyolysis risk.",
       "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
       "mandated_action": "Reduce Simvastatin dose to a maximum ceiling of 20 mg daily, or switch to Rosuvastatin/Pravastatin.",
@@ -563,17 +583,39 @@
           "relation": "INCREASES_EXPOSURE"
         }
       ],
-      "accepted_alternates": [
+"accepted_alternates": [
         [
           {
-            "source": "VORICONAZOLE",
-            "target": "CYP3A4",
-            "relation": "POTENTLY_INHIBITS"
+            "source": "CODEINE",
+            "target": "CYP2D6",
+            "relation": "REQUIRES_FOR_BIOACTIVATION"
           },
           {
-            "source": "CYP3A4",
-            "target": "TACROLIMUS",
-            "relation": "ELEVATES_TROUGH"
+            "source": "CYP2D6",
+            "target": "MORPHINE",
+            "relation": "INCREASES_EXPOSURE"
+          },
+          {
+            "source": "MORPHINE",
+            "target": "MU_OPIOID_RECEPTOR",
+            "relation": "INCREASES_EXPOSURE"
+          }
+        ],
+        [
+          {
+            "source": "CODEINE",
+            "target": "CYP2D6",
+            "relation": "REQUIRES_FOR_BIOACTIVATION"
+          },
+          {
+            "source": "CYP2D6",
+            "target": "MORPHINE",
+            "relation": "ELEVATES_EXPOSURE"
+          },
+          {
+            "source": "MORPHINE",
+            "target": "MU_OPIOID_RECEPTOR",
+            "relation": "ELEVATES_EXPOSURE"
           }
         ]
       ],
@@ -648,33 +690,65 @@
         "quote": "Metronidazole selectively inhibits the metabolism of the S-enantiomer of warfarin by inhibiting CYP2C9, prolonging prothrombin time and significantly increasing INR and bleeding risk."
       }
     ],
-    "ground_truth": {
-      "causal_edges": [
-        {
-          "source": "METRONIDAZOLE",
-          "target": "CYP2C9",
-          "relation": "STEREOSELECTIVELY_INHIBITS"
-        },
-        {
-          "source": "CYP2C9",
-          "target": "S-WARFARIN",
-          "relation": "INCREASES_EXPOSURE"
-        }
-      ],
-      "accepted_alternates": [
-        [
+"ground_truth": {
+        "causal_edges": [
           {
             "source": "METRONIDAZOLE",
             "target": "CYP2C9",
-            "relation": "SELECTIVELY_INHIBITS"
+            "relation": "STEREOSELECTIVELY_INHIBITS"
           },
           {
             "source": "CYP2C9",
             "target": "S-WARFARIN",
-            "relation": "ELEVATES_EXPOSURE"
+            "relation": "INCREASES_EXPOSURE"
+          },
+          {
+            "source": "METRONIDAZOLE",
+            "target": "CYP3A4",
+            "relation": "INHIBITS"
+          },
+          {
+            "source": "CYP3A4",
+            "target": "R-WARFARIN",
+            "relation": "INCREASES_EXPOSURE"
           }
-        ]
-      ],
+        ],
+        "accepted_alternates": [
+          [
+            {
+              "source": "METRONIDAZOLE",
+              "target": "CYP2C9",
+              "relation": "SELECTIVELY_INHIBITS"
+            },
+            {
+              "source": "CYP2C9",
+              "target": "S-WARFARIN",
+              "relation": "ELEVATES_EXPOSURE"
+            }
+          ],
+          [
+            {
+              "source": "METRONIDAZOLE",
+              "target": "CYP2C9",
+              "relation": "STEREOSELECTIVELY_INHIBITS"
+            },
+            {
+              "source": "CYP2C9",
+              "target": "S-WARFARIN",
+              "relation": "INCREASES_EXPOSURE"
+            },
+            {
+              "source": "METRONIDAZOLE",
+              "target": "CYP3A4",
+              "relation": "WEAKLY_INHIBITS"
+            },
+            {
+              "source": "CYP3A4",
+              "target": "R-WARFARIN",
+              "relation": "INCREASES_EXPOSURE"
+            }
+          ]
+        ],
       "physiological_modifier_impact": "Commercial warfarin is a racemate. S-warfarin is 3 to 5 times more potent than R-warfarin at inhibiting vitamin K epoxide reductase (VKORC1). Metronidazole stereoselectively inhibits CYP2C9 (the primary pathway for S-warfarin clearance), resulting in significant INR elevation typically within 3-5 days; magnitude varies by patient factors. R-warfarin clearance via CYP1A2/3A4 may also be inhibited by metronidazole at high doses.",
       "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
       "mandated_action": "Empirically reduce Warfarin dose by 30% to 50% upon starting Metronidazole. Check INR within 48 to 72 hours.",
@@ -748,43 +822,83 @@
         "quote": "Lithium toxicity has been reported in patients receiving lithium concomitantly with drugs which cause elimination of sodium, including loop/thiazide diuretics and ACE inhibitors. Concomitant administration requires frequent serum lithium determinations."
       }
     ],
-    "ground_truth": {
-      "causal_edges": [
-        {
-          "source": "FUROSEMIDE",
-          "target": "PROXIMAL_TUBULE_REABSORPTION",
-          "relation": "INDUCES"
-        },
-        {
-          "source": "LISINOPRIL",
-          "target": "GLOMERULAR_FILTRATION",
-          "relation": "DECREASES_EXPOSURE"
-        },
-        {
-          "source": "PROXIMAL_TUBULE_REABSORPTION",
-          "target": "LITHIUM",
-          "relation": "INCREASES_EXPOSURE"
-        }
-      ],
-      "accepted_alternates": [
-        [
+"ground_truth": {
+        "causal_edges": [
           {
             "source": "FUROSEMIDE",
-            "target": "PROXIMAL_TUBULE_REABSORPTION",
-            "relation": "UPREGULATES"
+            "target": "NKCC2",
+            "relation": "INHIBITS"
           },
           {
-            "source": "LISINOPRIL",
-            "target": "GLOMERULAR_FILTRATION",
-            "relation": "REDUCES"
+            "source": "NKCC2",
+            "target": "SODIUM_REABSORPTION_TAL",
+            "relation": "DECREASES_EXPOSURE"
+          },
+          {
+            "source": "SODIUM_REABSORPTION_TAL",
+            "target": "PROXIMAL_TUBULE_REABSORPTION",
+            "relation": "UPREGULATES"
           },
           {
             "source": "PROXIMAL_TUBULE_REABSORPTION",
             "target": "LITHIUM",
             "relation": "INCREASES_EXPOSURE"
+          },
+          {
+            "source": "LISINOPRIL",
+            "target": "ACE",
+            "relation": "INHIBITS"
+          },
+          {
+            "source": "ACE",
+            "target": "GLOMERULAR_FILTRATION",
+            "relation": "DECREASES_EXPOSURE"
+          },
+          {
+            "source": "GLOMERULAR_FILTRATION",
+            "target": "LITHIUM",
+            "relation": "INCREASES_EXPOSURE"
           }
-        ]
-      ],
+        ],
+        "accepted_alternates": [
+          [
+            {
+              "source": "FUROSEMIDE",
+              "target": "NKCC2",
+              "relation": "BLOCKS"
+            },
+            {
+              "source": "NKCC2",
+              "target": "SODIUM_REABSORPTION_TAL",
+              "relation": "DECREASES"
+            },
+            {
+              "source": "SODIUM_REABSORPTION_TAL",
+              "target": "PROXIMAL_TUBULE_REABSORPTION",
+              "relation": "UPREGULATES"
+            },
+            {
+              "source": "PROXIMAL_TUBULE_REABSORPTION",
+              "target": "LITHIUM",
+              "relation": "INCREASES_EXPOSURE"
+            },
+            {
+              "source": "LISINOPRIL",
+              "target": "ACE",
+              "relation": "INHIBITS"
+            },
+            {
+              "source": "ACE",
+              "target": "GLOMERULAR_FILTRATION",
+              "relation": "REDUCES"
+            },
+            {
+              "source": "GLOMERULAR_FILTRATION",
+              "target": "LITHIUM",
+              "relation": "INCREASES_EXPOSURE"
+            }
+          ]
+        ],
       "physiological_modifier_impact": "Thiazide diuretics are the canonical high-confidence lithium interaction; loop diuretic (furosemide) effects are less uniform and strongly volume-status dependent. Furosemide blocks Na+/K+/2Cl- cotransport in the thick ascending limb, causing volume contraction and hyponatremia (Na+ 132 mEq/L). The kidney compensates by upregulating proximal tubule sodium reabsorption. Because Li+ is a monovalent cation with similar ionic radius, proximal tubules reabsorb Li+ indiscriminately. Lisinopril dilates efferent renal arterioles, reducing GFR and trapping accumulated Lithium. ACE inhibitors independently reduce GFR and lithium clearance. The triple combination is highest risk.",
       "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
       "mandated_action": "High toxicity hazard. Reduce Lithium dose by 50% proactively, or avoid the triple combination; check serum lithium levels and renal function within 48-72 hours.",
@@ -946,42 +1060,60 @@
       "causal_edges": [
         {
           "source": "CEFTRIAXONE",
-          "target": "CYP2C9",
-          "relation": "NO_INHIBITION"
+          "target": "VITAMIN_K_FLORA",
+          "relation": "DECREASES_SYNTHESIS"
         },
         {
-          "source": "CEFTRIAXONE",
-          "target": "VITAMIN_K_FLORA",
-          "relation": "MINIMAL_DECREASE"
+          "source": "VITAMIN_K_FLORA",
+          "target": "WARFARIN",
+          "relation": "INCREASES_EXPOSURE"
         }
       ],
       "accepted_alternates": [
         [
           {
             "source": "CEFTRIAXONE",
+            "target": "VITAMIN_K_FLORA",
+            "relation": "WEAKLY_DECREASES"
+          },
+          {
+            "source": "VITAMIN_K_FLORA",
+            "target": "WARFARIN",
+            "relation": "ELEVATES_INR"
+          }
+        ],
+        [
+          {
+            "source": "CEFTRIAXONE",
             "target": "CYP2C9",
-            "relation": "DOES_NOT_INHIBIT"
+            "relation": "NO_INHIBITION"
           },
           {
             "source": "CEFTRIAXONE",
             "target": "VITAMIN_K_FLORA",
-            "relation": "WEAKLY_DECREASES"
+            "relation": "DECREASES_SYNTHESIS"
+          },
+          {
+            "source": "VITAMIN_K_FLORA",
+            "target": "WARFARIN",
+            "relation": "INCREASES_EXPOSURE"
           }
         ]
       ],
-      "physiological_modifier_impact": "Ceftriaxone has minimal biliary excretion and weak effect on gut flora compared to broad-spectrum oral antibiotics. Any INR drift is typically <0.5 and clinically insignificant without dose change in patients with normal nutrition. However, in frail, malnourished, or hospitalized patients with poor intake, hepatic dysfunction, or antibiotic-related flora effects, INR can still shift. Unlike TMP-SMX, ceftriaxone does not inhibit CYP2C9 or displace warfarin from albumin. This is a 'no CYP-mediated PK interaction' control. Score 'no major CYP-mediated interaction' separately from 'no clinically relevant INR risk.'",
-      "expected_verdict": "NO_CYP_INTERACTION",
-      "mandated_action": "No empiric warfarin dose reduction required for CYP interaction. Continue standard INR monitoring per protocol (weekly). Earlier INR check (48-72h) if frail/malnourished/inpatient. Do not withhold ceftriaxone for fear of CYP-mediated interaction.",
+      "physiological_modifier_impact": "Ceftriaxone reduces vitamin K-producing gut flora, especially in hospitalized patients with poor oral intake. This can cause INR elevation of 0.5-1.5 units within 3-5 days. The effect is not CYP-mediated (ceftriaxone does not inhibit CYP2C9 or displace warfarin from albumin) but is a pharmacodynamic interaction via vitamin K depletion. In frail/malnourished inpatients, warfarin dose reduction of 10-20% may be needed with INR monitoring at 48-72h. This is a 'no CYP PK interaction' control that still requires clinical monitoring — distinct from TMP-SMX which has dual CYP2C9 inhibition + protein displacement.",
+      "expected_verdict": "DOSE_ADJUSTMENT_REQUIRED",
+      "mandated_action": "No empiric warfarin dose reduction for CYP interaction. Check INR at 48-72h after ceftriaxone initiation in hospitalized patients. Reduce warfarin 10-20% if INR >3.5. Continue standard weekly INR monitoring. Do not withhold ceftriaxone for fear of CYP-mediated interaction.",
       "fatal_traps": [
-        "reduce warfarin dose empirically",
+        "reduce warfarin dose empirically for CYP interaction",
         "contraindicated",
         "hold warfarin",
-        "switch to heparin bridge"
+        "switch to heparin bridge",
+        "no monitoring needed"
       ],
       "counterfactual": {
         "resolves_primary": true,
-        "residual_risk_remains": false,
-        "explanation": "TMP-SMX would require ~30-50% warfarin reduction and INR check at 48-72 hours due to dual CYP2C9 inhibition and protein displacement. The contrast proves models must distinguish cephalosporin safety from sulfonamide danger."
+        "residual_risk_remains": true,
+        "explanation": "TMP-SMX would require ~30-50% warfarin reduction and INR check at 48-72 hours due to dual CYP2C9 inhibition and protein displacement. Even with ceftriaxone substitution, residual INR drift from vitamin K flora depletion may persist in frail/malnourished patients, requiring monitoring. The contrast proves models must distinguish cephalosporin safety (no CYP PK interaction) from sulfonamide danger (CYP + protein binding)."
       },
       "atomic_probes": 1,
       "neutral_edges": [
@@ -1048,14 +1180,19 @@
 "accepted_alternates": [
         [
           {
-            "source": "VORICONAZOLE",
-            "target": "CYP3A4",
-            "relation": "POTENTLY_INHIBITS"
+            "source": "CODEINE",
+            "target": "CYP2D6",
+            "relation": "REQUIRES_FOR_BIOACTIVATION"
           },
           {
-            "source": "CYP3A4",
-            "target": "TACROLIMUS",
-            "relation": "ELEVATES_TROUGH"
+            "source": "CYP2D6",
+            "target": "MORPHINE",
+            "relation": "ELEVATES_EXPOSURE"
+          },
+          {
+            "source": "MORPHINE",
+            "target": "MU_OPIOID_RECEPTOR",
+            "relation": "ELEVATES_EXPOSURE"
           }
         ]
       ],

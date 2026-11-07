@@ -1,0 +1,32 @@
+{
+  "task_id": "TASK-12",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 10443.65,
+  "tokens": 1076,
+  "cost_usd": 0.00201,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"TPMT*3A/*3A genotype\",\n      \"target\": \"TPMT enzyme\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"CPIC Guideline for Thiopurines\"\n    },\n    {\n      \"source\": \"TPMT enzyme deficiency\",\n      \"target\": \"Azathioprine\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label for Azathioprine\"\n    },\n    {\n      \"source\": \"Azathioprine\",\n      \"target\": \"6-thioguanine nucleotides\",\n      \"relation\": \"PRODUCES_ADDITIVE_BLOCK\",\n      \"evidence_source\": \"Clinical Pharmacology\"\n    },\n    {\n      \"source\": \"6-thioguanine nucleotides\",\n      \"target\": \"DNA synthesis\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"Pharmacology textbooks\"\n    },\n    {\n      \"source\": \"DNA synthesis inhibition\",\n      \"target\": \"Bone marrow suppression\",\n      \"relation\": \"PRODUCES_ADDITIVE_BLOCK\",\n      \"evidence_source\": \"Clinical experience\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"TPMT*3A/*3A genotype\",\n    \"clinical_consequence\": \"Complete TPMT enzyme deficiency leads to markedly increased azathioprine exposure and severe myelosuppression risk\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Avoid azathioprine use in TPMT homozygous deficient patients; consider alternative immunosuppressants\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Methotrexate 15 mg weekly\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Methotrexate carries its own myelosuppression risk through different mechanisms (dihydrofolate reductase inhibition), requiring careful monitoring\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-12",
+    "passed": false,
+    "total_score": 10.0,
+    "edge_accuracy_pct": 0.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "0/3",
+    "cpcs_score": 0.0,
+    "cpcs_continuity": "DISCONNECTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: AZATHIOPRINE -> COMPETITIVELY_BLOCKS -> TPMT",
+      "Missing mandatory causal edge: TPMT -> INCREASES_EXPOSURE -> 6_THIOGUANINE_NUCLEOTIDES",
+      "Missing mandatory causal edge: 6_THIOGUANINE_NUCLEOTIDES -> INCREASES_EXPOSURE -> BONE_MARROW",
+      "Spurious/hallucinated edges (5): TPMT*3A/*3A GENOTYPE -> INHIBITS -> TPMT, TPMT ENZYME DEFICIENCY -> INCREASES_EXPOSURE -> AZATHIOPRINE, AZATHIOPRINE -> PRODUCES_ADDITIVE_BLOCK -> 6-THIOGUANINE NUCLEOTIDES, 6-THIOGUANINE NUCLEOTIDES -> INHIBITS -> DNA SYNTHESIS, DNA SYNTHESIS INHIBITION -> PRODUCES_ADDITIVE_BLOCK -> BONE MARROW SUPPRESSION",
+      "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'CONTRAINDICATED'",
+      "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"TPMT*3A/*3A genotype\",\n      \"target\": \"TPMT enzyme\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"CPIC Guideline for Thiopu...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 6
+  }
+}

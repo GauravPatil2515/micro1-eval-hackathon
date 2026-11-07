@@ -68,7 +68,7 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# 3. Verify Deterministic Grader (26 adversarial tests passing)
+# 3. Verify Deterministic Grader (31 adversarial tests passing)
 python3 -m pytest tests/test_causal_grader.py -v
 
 # 4. Run the benchmark in fixture mode (0-cost, 100% offline, deterministic demos)

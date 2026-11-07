@@ -1,0 +1,28 @@
+{
+  "task_id": "TASK-06",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 11802.82,
+  "tokens": 1144,
+  "cost_usd": 0.002172,
+  "raw_output": "```json\n{\n  \"causal_graph\": [\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label: Voriconazole is a strong CYP3A4 inhibitor\"\n    },\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"CYP2C19\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label: Voriconazole inhibits CYP2C19\"\n    },\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"CYP2C9\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label: Voriconazole inhibits CYP2C9\"\n    },\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"Tacrolimus\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label: Voriconazole increases tacrolimus concentrations\"\n    },\n    {\n      \"source\": \"CYP3A5*3/*3 genotype\",\n      \"target\": \"Tacrolimus metabolism\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"CPIC guideline: CYP3A5 non-expressors have higher tacrolimus exposure\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"CYP3A5*3/*3 genotype\",\n    \"clinical_consequence\": \"Homozygous CYP3A5 non-expressor status results in exclusive CYP3A4-mediated tacrolimus metabolism, amplifying voriconazole inhibition effects\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Reduce tacrolimus dose by 66% and obtain trough level within 48 hours\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Isavuconazole\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Isavuconazole is a moderate CYP3A4 inhibitor, still requiring tacrolimus dose reduction (typically 33-50%)\"\n  }\n}\n```",
+  "eval_grade": {
+    "task_id": "TASK-06",
+    "passed": false,
+    "total_score": 65.75,
+    "edge_accuracy_pct": 50.0,
+    "edge_precision_pct": 25.0,
+    "matched_edges": "1/2",
+    "cpcs_score": 0.383,
+    "cpcs_continuity": "PARTIAL",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> TACROLIMUS",
+      "Spurious/hallucinated edges (3): VORICONAZOLE -> INHIBITS -> CYP2C9, VORICONAZOLE -> INCREASES_EXPOSURE -> TACROLIMUS, CYP3A5*3/*3 GENOTYPE -> DECREASES_EXPOSURE -> TACROLIMUS METABOLISM"
+    ],
+    "response_preview": "```json\n{\n  \"causal_graph\": [\n    {\n      \"source\": \"Voriconazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label: Voriconazole is a s...",
+    "atomic_accuracy": 0.167,
+    "atomic_matched": 1,
+    "atomic_total": 6
+  }
+}

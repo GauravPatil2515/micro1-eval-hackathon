@@ -1,0 +1,30 @@
+{
+  "task_id": "TASK-05",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 9550.43,
+  "tokens": 1001,
+  "cost_usd": 0.001819,
+  "raw_output": "```json\n{\n  \"causal_graph\": [\n    {\n      \"source\": \"Amlodipine\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label for Amlodipine\"\n    },\n    {\n      \"source\": \"Simvastatin\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"COMPETITIVELY_BLOCKS\",\n      \"evidence_source\": \"FDA label for Simvastatin\"\n    },\n    {\n      \"source\": \"Amlodipine\",\n      \"target\": \"Simvastatin\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"Drug Interaction Studies, FDA label\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": false,\n    \"parameter\": \"Normal renal function (CrCl > 90 mL/min), baseline CK 110 U/L\",\n    \"clinical_consequence\": \"No physiological contraindication to the combination, but pharmacokinetic interaction risk remains due to CYP3A4 inhibition.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Reduce Simvastatin dose to maximum 20 mg daily when co-administered with Amlodipine, per FDA labeling.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Atorvastatin\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": false,\n    \"residual_risk_explanation\": \"Atorvastatin is primarily metabolized by CYP3A4 but is less susceptible to interactions with CYP3A4 inhibitors like amlodipine. It does not require dose adjustment with amlodipine and bypasses the competitive inhibition risk.\"\n  }\n}\n```",
+  "eval_grade": {
+    "task_id": "TASK-05",
+    "passed": false,
+    "total_score": 54.44,
+    "edge_accuracy_pct": 33.3,
+    "edge_precision_pct": 33.3,
+    "matched_edges": "1/3",
+    "cpcs_score": 0.333,
+    "cpcs_continuity": "FRAGMENTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> SIMVASTATIN_LACTONE",
+      "Missing mandatory causal edge: SIMVASTATIN_LACTONE -> INCREASES_EXPOSURE -> SIMVASTATIN_ACID",
+      "Spurious/hallucinated edges (2): SIMVASTATIN -> COMPETITIVELY_BLOCKS -> CYP3A4, AMLODIPINE -> INCREASES_EXPOSURE -> SIMVASTATIN",
+      "Failed to identify active physiological modifier (e.g. CrCl, electrolytes, genotype)."
+    ],
+    "response_preview": "```json\n{\n  \"causal_graph\": [\n    {\n      \"source\": \"Amlodipine\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label for Amlodipine\"\n    },...",
+    "atomic_accuracy": 0.2,
+    "atomic_matched": 1,
+    "atomic_total": 5
+  }
+}

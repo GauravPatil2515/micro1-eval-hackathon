@@ -89,7 +89,8 @@ ATOMIC_PROBES = {
     ],
     "TASK-10": [
         {"question": "Does ceftriaxone inhibit CYP2C9?", "expected_answer": "NO", "expected_edge": ("CEFTRIAXONE", "CYP2C9", "NO_INHIBITION")},
-        {"question": "Does ceftriaxone decrease vitamin K flora?", "expected_answer": "YES", "expected_edge": ("CEFTRIAXONE", "VITAMIN_K_FLORA", "MINIMAL_DECREASE")},
+        {"question": "Does ceftriaxone decrease vitamin K synthesis by gut flora?", "expected_answer": "YES", "expected_edge": ("CEFTRIAXONE", "VITAMIN_K_FLORA", "DECREASES_SYNTHESIS")},
+        {"question": "Does decreased vitamin K flora increase warfarin exposure/INR?", "expected_answer": "YES", "expected_edge": ("VITAMIN_K_FLORA", "WARFARIN", "INCREASES_EXPOSURE")},
         {"question": "Does TMP-SMX inhibit CYP2C9?", "expected_answer": "YES", "expected_edge": None},
         {"question": "Does ceftriaxone displace warfarin from albumin?", "expected_answer": "NO", "expected_edge": None},
         {"question": "Does ceftriaxone induce CYP2C9?", "expected_answer": "NO", "expected_edge": None},

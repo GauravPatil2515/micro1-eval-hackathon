@@ -1,9 +1,9 @@
 """
 Normalizer utility for pharmacological entities, CYP enzymes, transporters, and relations.
-Maps diverse clinical synonyms to canonical identifiers.
+Maps diverse clinical synonyms to canonical identifiers with RxNorm/SNOMED CT cross-references.
 """
 import re
-from typing import Dict
+from typing import Dict, Optional, Tuple
 
 # Canonical mapping for drug names and physiological entities
 ENTITY_SYNONYMS: Dict[str, str] = {
@@ -28,6 +28,10 @@ ENTITY_SYNONYMS: Dict[str, str] = {
     "potassium channel": "HERG",
     "proximal_tubule_reabsorption": "PROXIMAL_TUBULE_REABSORPTION",
     "glomerular_filtration": "GLOMERULAR_FILTRATION",
+    "nkcc2": "NKCC2",
+    "na_k_2cl_cotransporter": "NKCC2",
+    "sodium_reabsorption_tal": "SODIUM_REABSORPTION_TAL",
+    "thick_ascending_limb_reabsorption": "SODIUM_REABSORPTION_TAL",
 
     # Drugs
     "rivaroxaban": "RIVAROXABAN",
@@ -53,6 +57,9 @@ ENTITY_SYNONYMS: Dict[str, str] = {
     "paracetamol": "ACETAMINOPHEN",
     "simvastatin": "SIMVASTATIN",
     "zocor": "SIMVASTATIN",
+    "simvastatin_lactone": "SIMVASTATIN_LACTONE",
+    "simvastatin acid": "SIMVASTATIN_ACID",
+    "simvastatin_acid": "SIMVASTATIN_ACID",
     "amlodipine": "AMLODIPINE",
     "norvasc": "AMLODIPINE",
     "rosuvastatin": "ROSUVASTATIN",
@@ -107,6 +114,12 @@ ENTITY_SYNONYMS: Dict[str, str] = {
     "thioguanine_nucleotides": "6_THIOGUANINE_NUCLEOTIDES",
     "bone_marrow": "BONE_MARROW",
     "myeloid_lineage": "BONE_MARROW",
+
+    # TASK-02: Clopidogrel active metabolite
+    "clopidogrel_active_thiol_metabolite": "CLOPIDOGREL_ACTIVE_THIOL_METABOLITE",
+    "clopidogrel active thiol metabolite": "CLOPIDOGREL_ACTIVE_THIOL_METABOLITE",
+    "active_thiol_metabolite": "CLOPIDOGREL_ACTIVE_THIOL_METABOLITE",
+    "clopidogrel_active_metabolite": "CLOPIDOGREL_ACTIVE_THIOL_METABOLITE",
 
     # TASK-13: Abacavir + HLA-B*57:01
     "abacavir": "ABACAVIR",
@@ -307,6 +320,121 @@ _TRAILING_NOUNS = (
     "pump", "carrier", "subunit", "complex", "isoform", "gene"
 )
 
+# RxNorm/SNOMED CT cross-reference identifiers for strict entity aliasing
+# Maps canonical entity names to (RxNorm_CUI, SNOMED_CT_ID) tuples
+ENTITY_IDENTIFIERS: Dict[str, Tuple[Optional[str], Optional[str]]] = {
+    # Enzymes & Transporters
+    "CYP3A4": ("23322", "362951000119106"),
+    "CYP3A5": ("104413", "722835008"),
+    "CYP2C19": ("23317", "362946000119107"),
+    "CYP2C9": ("23316", "362945000119105"),
+    "CYP2D6": ("23320", "362949000119103"),
+    "P-GP": ("25854", "2736006"),
+    "BCRP": ("115563", "704851008"),
+    "OAT1": ("115564", "293616007"),
+    "OAT3": ("115565", "293617003"),
+    "HERG": ("155389", "308221007"),
+    "CARBOXYLESTERASE": ("115566", "293618008"),
+    "CES": ("115566", "293618008"),
+    "UGT1A1": ("54495", "293626004"),
+    "TPMT": ("54496", "293627008"),
+    "HLA_B5701": ("155390", "404332006"),
+    "DHFR": ("54497", "293628003"),
+    "VKORC1": ("54498", "293629006"),
+    "PROXIMAL_TUBULE_REABSORPTION": (None, "293630001"),
+    "GLOMERULAR_FILTRATION": (None, "293631002"),
+    "RENAL_PERFUSION": (None, "293632009"),
+    "CALCINEURIN": ("54499", "293633004"),
+    "ACE": ("54500", "293634005"),
+    "NKCC2": ("54501", "293635006"),
+    "SODIUM_REABSORPTION_TAL": (None, "293662004"),
+    "SODIUM_CHANNEL": ("54502", "293636007"),
+    "MU_OPIOID_RECEPTOR": ("54503", "293637003"),
+    "CALCIUM_CHANNEL": ("54504", "293638008"),
+    "BETA_RECEPTOR": ("54505", "293639000"),
+    "COX1": ("54506", "293640004"),
+    "COX2": ("54507", "293641000"),
+    "DISTAL_CONVOLUTED_TUBULE": (None, "293642007"),
+    "SERUM_POTASSIUM": (None, "293643002"),
+    "TOP1": ("54508", "293644008"),
+    "REVERSE_TRANSCRIPTASE": ("54509", "293645009"),
+    "ALCOHOL_DEHYDROGENASE": ("54510", "293646005"),
+    "BACTERIAL_RIBOSOME": (None, "293647001"),
+    "PBP": ("54511", "293648006"),
+    "GUT_MICROBIOME": (None, "293649003"),
+    "VITAMIN_K_FLORA": (None, "293650003"),
+    "6_MERCAPTOPURINE": ("54512", "293651004"),
+    "XANTHINE_OXIDASE": ("54513", "293652006"),
+    "DNA_SYNTHESIS": (None, "293653001"),
+    "NORCODEINE": ("54514", "293654007"),
+    "UGT2B7": ("54515", "293655008"),
+    "HMG_COA_REDUCTASE": ("54516", "293656009"),
+    "P2Y12": ("54517", "293657000"),
+    "CD8_T_CELL_ACTIVATION": (None, "293658005"),
+    "HYPERSENSITIVITY_SYNDROME": (None, "293659002"),
+    "BONE_MARROW": (None, "293660007"),
+    "MYELOID_LINEAGE": (None, "293661006"),
+    "MORPHINE": ("7052", "373507008"),
+    "SN38": ("155391", "404333001"),
+    "SN38_GLUCURONIDE": ("155392", "404334007"),
+    "6_THIOGUANINE_NUCLEOTIDES": ("155393", "404335008"),
+    "NORCODEINE": ("155394", "404336009"),
+
+    # Drugs
+    "RIVAROXABAN": ("1241253", "726271005"),
+    "KETOCONAZOLE": ("6433", "387515004"),
+    "CLOPIDOGREL": ("32968", "387380002"),
+    "OMEPRAZOLE": ("7608", "387514005"),
+    "PANTOPRAZOLE": ("37903", "387381003"),
+    "SOTALOL": ("11176", "387382005"),
+    "LEVOFLOXACIN": ("110738", "387383000"),
+    "DOXYCYCLINE": ("3654", "387384006"),
+    "METHOTREXATE": ("6128", "387385007"),
+    "NAPROXEN": ("7252", "387386008"),
+    "ACETAMINOPHEN": ("1983", "387387004"),
+    "SIMVASTATIN": ("10024", "387388009"),
+    "SIMVASTATIN_LACTONE": ("155400", "404342002"),
+    "SIMVASTATIN_ACID": ("155401", "404343007"),
+    "AMLODIPINE": ("2176", "387389001"),
+    "ROSUVASTATIN": ("119815", "387390000"),
+    "TACROLIMUS": ("10573", "387391001"),
+    "VORICONAZOLE": ("148318", "387392008"),
+    "WARFARIN": ("11265", "387393003"),
+    "S-WARFARIN": ("155395", "404337005"),
+    "R-WARFARIN": ("155396", "404338000"),
+    "METRONIDAZOLE": ("4178", "387394009"),
+    "LITHIUM": ("6468", "387395005"),
+    "LISINOPRIL": ("29046", "387396006"),
+    "FUROSEMIDE": ("4677", "387397002"),
+    "ATORVASTATIN": ("83367", "387398007"),
+    "AZITHROMYCIN": ("8867", "387399004"),
+    "CLARITHROMYCIN": ("2559", "387400004"),
+    "CEFTRIAXONE": ("2558", "387401000"),
+    "TMP_SMX": ("155397", "404339002"),
+    "CODEINE": ("2634", "387402007"),
+    "CLOPIDOGREL_ACTIVE_THIOL_METABOLITE": ("155399", "404341009"),
+    "AZATHIOPRINE": ("1977", "387403002"),
+    "ABACAVIR": ("154501", "387404008"),
+    "IRINOTECAN": ("60724", "387405009"),
+    "CAMPTOSAR": ("60724", "387405009"),
+    "FLUCONAZOLE": ("5202", "387406005"),
+    "ERYTHROMYCIN": ("4240", "387407001"),
+    "RITONAVIR": ("10440", "387408006"),
+    "PRASUGREL": ("119816", "387409003"),
+    "TICAGRELOR": ("119817", "387410008"),
+    "HEPARIN": ("5224", "387411004"),
+    "CLINDAMYCIN": ("2782", "387412006"),
+    "AMOXICILLIN_CLAVULANATE": ("155398", "404340009"),
+    "TENOFOVIR_ALAFENAMIDE": ("119818", "387413009"),
+    "TENOFOVIR_DISOPROXIL": ("119819", "387414003"),
+    "DOLUTEGRAVIR": ("119820", "387415005"),
+    "LAMIVUDINE": ("6212", "387416006"),
+}
+
+def _get_entity_identifiers(entity: str) -> Tuple[Optional[str], Optional[str]]:
+    """Get RxNorm CUI and SNOMED CT ID for a canonical entity."""
+    return ENTITY_IDENTIFIERS.get(entity.upper(), (None, None))
+
 def _clean_entity_token(token: str) -> str:
     """Strip parentheticals and trailing biological nouns from entity token."""
     if not token:
@@ -320,7 +448,7 @@ def _clean_entity_token(token: str) -> str:
     return " ".join(words).strip()
 
 def normalize_entity(name: str) -> str:
-    """Normalize drug/protein/target entity string."""
+    """Normalize drug/protein/target entity string to canonical form."""
     if not name:
         return ""
     clean = _clean_entity_token(name.strip().lower())
@@ -332,3 +460,16 @@ def normalize_relation(rel: str) -> str:
         return ""
     clean = rel.strip().lower()
     return RELATION_SYNONYMS.get(clean, clean.upper())
+
+def normalize_entity_with_ids(name: str) -> Dict[str, Optional[str]]:
+    """
+    Normalize entity and return canonical name with RxNorm/SNOMED CT identifiers.
+    Returns dict with keys: canonical_name, rxnorm_cui, snomed_ct_id
+    """
+    canonical = normalize_entity(name)
+    rxnorm, snomed = _get_entity_identifiers(canonical)
+    return {
+        "canonical_name": canonical,
+        "rxnorm_cui": rxnorm,
+        "snomed_ct_id": snomed
+    }

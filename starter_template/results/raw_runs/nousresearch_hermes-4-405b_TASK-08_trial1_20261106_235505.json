@@ -1,0 +1,35 @@
+{
+  "task_id": "TASK-08",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 13451.35,
+  "tokens": 1221,
+  "cost_usd": 0.002435,
+  "raw_output": "```json\n{\n  \"causal_graph\": [\n    {\n      \"source\": \"Furosemide\",\n      \"target\": \"Proximal Tubule Sodium Reabsorption\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"Physiological mechanism - loop diuretics increase distal sodium delivery, enhancing proximal lithium reabsorption via sodium-lithium countertransport\"\n    },\n    {\n      \"source\": \"Lisinopril\",\n      \"target\": \"Renal Perfusion Pressure\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"FDA label - ACE inhibitors reduce glomerular filtration rate and renal blood flow\"\n    },\n    {\n      \"source\": \"Lisinopril\",\n      \"target\": \"Lithium Clearance\",\n      \"relation\": \"DECREASES_EXPOSURE\",\n      \"evidence_source\": \"CPIC guideline - ACE inhibitors reduce lithium clearance by 20-60%\"\n    },\n    {\n      \"source\": \"Furosemide + Lisinopril\",\n      \"target\": \"Lithium\",\n      \"relation\": \"PRODUCES_ADDITIVE_BLOCK\",\n      \"evidence_source\": \"Juurlink DN, et al. Drug Safety 2004;27(8):591-601 - Synergistic lithium toxicity with ACE inhibitor + diuretic combinations\"\n    },\n    {\n      \"source\": \"Lithium\",\n      \"target\": \"Sodium Channel Proteins\",\n      \"relation\": \"COMPETITIVELY_BLOCKS\",\n      \"evidencesource\": \"Lenox RH, et al. J Clin Psychiatry 1998;59(Suppl 6):37-47 - Lithium's sodium-mimetic action at multiple transport sites\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"serum_sodium_meq_l: 132, crcl_ml_min: 65\",\n    \"clinical_consequence\": \"Pre-existing mild hyponatremia and moderate renal impairment amplify lithium reabsorption and reduce safety margin. CHF further compromises renal reserve.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"CONTRAINDICATED\",\n    \"mandated_action\": \"Immediate discontinuation of lithium or both new agents. If lithium continued, reduce dose by 30-50% and monitor serum levels q12h until stable.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Spironolactone + Hydralazine\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Spironolactone minimizes sodium-wasting effect but still poses mild lithium interaction risk. Hydralazine avoids renal hemodynamic effects but requires careful titration in CHF.\"\n  }\n}\n```",
+  "eval_grade": {
+    "task_id": "TASK-08",
+    "passed": false,
+    "total_score": 30.0,
+    "edge_accuracy_pct": 0.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "0/7",
+    "cpcs_score": 0.0,
+    "cpcs_continuity": "DISCONNECTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: FUROSEMIDE -> INHIBITS -> NKCC2",
+      "Missing mandatory causal edge: NKCC2 -> DECREASES_EXPOSURE -> SODIUM_REABSORPTION_TAL",
+      "Missing mandatory causal edge: SODIUM_REABSORPTION_TAL -> UPREGULATES -> PROXIMAL_TUBULE_REABSORPTION",
+      "Missing mandatory causal edge: PROXIMAL_TUBULE_REABSORPTION -> INCREASES_EXPOSURE -> LITHIUM",
+      "Missing mandatory causal edge: LISINOPRIL -> INHIBITS -> ACE",
+      "Missing mandatory causal edge: ACE -> DECREASES_EXPOSURE -> GLOMERULAR_FILTRATION",
+      "Missing mandatory causal edge: GLOMERULAR_FILTRATION -> INCREASES_EXPOSURE -> LITHIUM",
+      "Spurious/hallucinated edges (5): FUROSEMIDE -> INCREASES_EXPOSURE -> PROXIMAL TUBULE SODIUM REABSORPTION, LISINOPRIL -> DECREASES_EXPOSURE -> RENAL PERFUSION PRESSURE, LISINOPRIL -> DECREASES_EXPOSURE -> LITHIUM CLEARANCE, FUROSEMIDE + LISINOPRIL -> PRODUCES_ADDITIVE_BLOCK -> LITHIUM, LITHIUM -> COMPETITIVELY_BLOCKS -> SODIUM CHANNEL PROTEINS",
+      "Regulatory verdict mismatch: expected 'DOSE_ADJUSTMENT_REQUIRED', got 'CONTRAINDICATED'"
+    ],
+    "response_preview": "```json\n{\n  \"causal_graph\": [\n    {\n      \"source\": \"Furosemide\",\n      \"target\": \"Proximal Tubule Sodium Reabsorption\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_sou...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 7
+  }
+}

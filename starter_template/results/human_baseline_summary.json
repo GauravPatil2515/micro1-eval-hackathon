@@ -2,7 +2,7 @@
   "evaluator_type": "SIMULATED Templates (NOT VALID EVIDENCE)",
   "tasks_evaluated": 8,
   "pass_rate_pct": 75.0,
-  "mean_score": 92.5,
+  "mean_score": 91.1,
   "task_breakdown": [
     {
       "task_id": "TASK-01",
@@ -38,11 +38,13 @@
     {
       "task_id": "TASK-06",
       "title": "CYP3A4/5 Multi-Enzyme Collapse: Tacrolimus + Voriconazole with CYP3A5*3/*3 Genotype",
-      "score": 100.0,
+      "score": 88.67,
       "passed": true,
       "edge_accuracy_pct": 100.0,
-      "cpcs_score": 1.0,
-      "reasons": []
+      "cpcs_score": 0.86,
+      "reasons": [
+        "Spurious/hallucinated edges (1): VORICONAZOLE -> INHIBITS -> CYP3A5"
+      ]
     },
     {
       "task_id": "TASK-07",

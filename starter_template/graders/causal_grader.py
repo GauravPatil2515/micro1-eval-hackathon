@@ -9,6 +9,13 @@ import logging
 from typing import Dict, Any, List, Set, Tuple
 from graders.normalizer import normalize_entity, normalize_relation
 
+try:
+    from json_repair import repair_json
+    JSON_REPAIR_AVAILABLE = True
+except ImportError:
+    JSON_REPAIR_AVAILABLE = False
+    repair_json = None
+
 logger = logging.getLogger("evaluator.causal_grader")
 
 # Negation patterns for fatal trap detection - hardened with token-window approach
@@ -29,12 +36,41 @@ _NEGATION_PATTERNS = [
 ]
 
 # Token window for negation detection (number of tokens before target)
-_NEGATION_WINDOW_TOKENS = 10
+# Expanded to 25 tokens with sentence boundary detection
+_NEGATION_WINDOW_TOKENS = 25
 
+# Sentence boundary punctuation for bounding negation scope
+_SENTENCE_BOUNDARIES = r'[.!?;]'
 
 def _tokenize(text: str) -> List[str]:
     """Simple tokenization for negation window."""
     return re.findall(r"\b\w+(?:'\w+)?\b", text.lower())
+
+def _get_sentence_bounded_context(text: str, target_idx: int, max_tokens: int = 25) -> str:
+    """
+    Get text before target_idx bounded by sentence boundaries.
+    Returns text within the same sentence/segment as the target phrase,
+    up to max_tokens tokens before the target.
+    """
+    text_before = text[:target_idx]
+    
+    # Find the last sentence boundary before the target
+    # Search backwards from target_idx for sentence boundaries
+    last_boundary = -1
+    for match in re.finditer(_SENTENCE_BOUNDARIES, text_before):
+        last_boundary = match.end()
+    
+    # If we found a boundary within reasonable distance, use it
+    # Otherwise, fall back to token window
+    context_start = max(0, last_boundary) if last_boundary > 0 else max(0, target_idx - 500)
+    context_text = text_before[context_start:target_idx]
+    
+    # Tokenize and limit to max_tokens
+    tokens = _tokenize(context_text)
+    if len(tokens) > max_tokens:
+        tokens = tokens[-max_tokens:]
+    
+    return " ".join(tokens)
 
 
 def _contains_negation(text: str, target_phrase: str) -> bool:
@@ -43,7 +79,8 @@ def _contains_negation(text: str, target_phrase: str) -> bool:
     Returns True if the phrase appears in a positive/affirmative context.
     Returns False if the phrase appears within a negated context.
     
-    Uses token-window approach: checks up to NEGATION_WINDOW_TOKENS tokens before target.
+    Uses sentence-bounded token-window approach: checks up to NEGATION_WINDOW_TOKENS 
+    tokens before target, bounded by sentence boundaries (., !, ?, ;).
     """
     text_lower = text.lower()
     target_lower = target_phrase.lower()
@@ -55,16 +92,11 @@ def _contains_negation(text: str, target_phrase: str) -> bool:
         if idx == -1:
             break
         
-        # Get text before the phrase
-        context_before = text_lower[:idx]
-        tokens_before = _tokenize(context_before)
+        # Get sentence-bounded context before the phrase
+        context_text = _get_sentence_bounded_context(text_lower, idx, _NEGATION_WINDOW_TOKENS)
         
-        # Check last N tokens for negation patterns
-        window_tokens = tokens_before[-_NEGATION_WINDOW_TOKENS:]
-        window_text = " ".join(window_tokens)
-        
-        # Check if any negation pattern appears in the token window
-        negated = any(re.search(pattern, window_text) for pattern in _NEGATION_PATTERNS)
+        # Check if any negation pattern appears in the context
+        negated = any(re.search(pattern, context_text) for pattern in _NEGATION_PATTERNS)
         
         if not negated:
             return True  # Found affirmative occurrence
@@ -162,22 +194,78 @@ def _has_cycle(edges: List[Dict[str, Any]]) -> bool:
     for root in pred_adj:
         if color.get(root, 0) != 0:  # WHITE = 0
             continue
-        stack = [(root, iter(pred_adj.get(root, [])))]
+        # Extract just the target nodes from (target, relation) tuples
+        neighbors = [t for t, _ in pred_adj.get(root, [])]
+        stack = [(root, neighbors)]
         color[root] = 1  # GRAY
         while stack:
-            node, it = stack[-1]
-            for nxt in it:
+            node, neighbors = stack[-1]
+            if neighbors:
+                nxt = neighbors.pop(0)
                 c = color.get(nxt, 0)
                 if c == 1:  # GRAY - back edge found
                     return True
                 if c == 0:  # WHITE
                     color[nxt] = 1  # GRAY
-                    stack.append((nxt, iter(pred_adj.get(nxt, []))))
-                    break
+                    # Extract neighbors for next node
+                    nxt_neighbors = [t for t, _ in pred_adj.get(nxt, [])]
+                    stack.append((nxt, nxt_neighbors))
             else:
                 color[node] = 2  # BLACK
                 stack.pop()
     return False
+
+
+def _get_cycle_nodes(edges: List[Dict[str, Any]]) -> Set[str]:
+    """Return set of nodes that are part of cycles in the predicted graph."""
+    pred_adj = _build_adjacency(edges)
+    cycle_nodes = set()
+    
+    # Use Tarjan's algorithm to find strongly connected components with size > 1
+    index = 0
+    indices = {}
+    lowlink = {}
+    on_stack = set()
+    stack = []
+    
+    def strongconnect(v):
+        nonlocal index
+        indices[v] = index
+        lowlink[v] = index
+        index += 1
+        stack.append(v)
+        on_stack.add(v)
+        
+        for w, _ in pred_adj.get(v, []):
+            if w not in indices:
+                strongconnect(w)
+                lowlink[v] = min(lowlink[v], lowlink[w])
+            elif w in on_stack:
+                lowlink[v] = min(lowlink[v], indices[w])
+        
+        if lowlink[v] == indices[v]:
+            # Found a strongly connected component
+            scc = []
+            while True:
+                w = stack.pop()
+                on_stack.remove(w)
+                scc.append(w)
+                if w == v:
+                    break
+            if len(scc) > 1:
+                cycle_nodes.update(scc)
+    
+    for v in pred_adj:
+        if v not in indices:
+            strongconnect(v)
+    
+    # Also check for self-loops
+    for v, neighbors in pred_adj.items():
+        for w, _ in neighbors:
+            if v == w:
+                cycle_nodes.add(v)
+    
+    return cycle_nodes
 
 
 def _check_cause_effect_inversion(pred_edges: List[Dict[str, Any]], 
@@ -214,6 +302,15 @@ def _check_cause_effect_inversion(pred_edges: List[Dict[str, Any]],
             return True  # Exact reverse of an expected edge
     
     return False
+
+
+def _find_critical_nodes(expected_edges: List[Dict[str, Any]]) -> Set[str]:
+    """Identify critical intermediate nodes (enzymes, transporters, mediators) that must be traversed."""
+    # Critical nodes are enzymes/transporters that are both targets and sources in the chain
+    targets = {normalize_entity(e["target"]) for e in expected_edges}
+    sources = {normalize_entity(e["source"]) for e in expected_edges}
+    # Critical = nodes that are both source and target (intermediates)
+    return targets & sources
 
 
 def _build_gold_paths(expected_edges: List[Dict[str, Any]]) -> List[List[Tuple[str, str, str]]]:
@@ -255,10 +352,8 @@ def _compute_graded_continuity(pred_edges: List[Dict[str, Any]],
                                 expected_edges: List[Dict[str, Any]]) -> float:
     """
     Compute graded path continuity (0.0 to 1.0) based on longest matched run
-    along each gold perpetrator->victim path.
-    
-    For each gold path, find the longest contiguous run of matched edges.
-    Score = max_run_length / path_length for each path, averaged over all paths.
+    along each gold perpetrator->victim path, weighted by path length.
+    CPCS_v2: No critical node gate; continuity weighted by path length.
     """
     gold_paths = _build_gold_paths(expected_edges)
     
@@ -272,12 +367,14 @@ def _compute_graded_continuity(pred_edges: List[Dict[str, Any]],
         tgt = normalize_entity(e.get("target", ""))
         rel = normalize_relation(e.get("relation", ""))
         if src and tgt:
-            pred_edge_set.add((src, normalize_relation(e.get("relation", "")), tgt))
+            pred_edge_set.add((src, rel, tgt))
     
-    total_score = 0.0
+    total_weighted_run = 0
+    total_weighted_len = 0
     for path in gold_paths:
         if not path:
             continue
+        w = len(path)  # weight by path length
         best_run = 0
         current_run = 0
         for edge in path:
@@ -286,10 +383,10 @@ def _compute_graded_continuity(pred_edges: List[Dict[str, Any]],
             else:
                 current_run = 0
             best_run = max(best_run, current_run)
-        path_score = best_run / len(path) if path else 1.0
-        total_score += path_score
+        total_weighted_run += w * best_run
+        total_weighted_len += w * len(path)
     
-    return total_score / len(gold_paths) if gold_paths else 1.0
+    return total_weighted_run / total_weighted_len if total_weighted_len > 0 else 1.0
 
 
 def _compute_cpcs(pred_edges: List[Dict[str, Any]], 
@@ -336,25 +433,40 @@ def _compute_cpcs(pred_edges: List[Dict[str, Any]],
     if inverted:
         continuity = 0.0
     
-    # CPCS = 0.7 * F1 + 0.3 * Continuity
+    # Cycle penalty (CPCS_v2: only if cycle shares nodes with gold graph)
+    cycle_penalty = 0.0
+    if _has_cycle(pred_edges):
+        cycle_nodes = _get_cycle_nodes(pred_edges)
+        gold_nodes = set()
+        for exp in expected_edges:
+            gold_nodes.add(normalize_entity(exp["source"]))
+            gold_nodes.add(normalize_entity(exp["target"]))
+        shared = cycle_nodes & gold_nodes
+        if shared:
+            cycle_penalty = 0.1 * (len(shared) / len(gold_nodes))
+    
+    # CPCS_v2 = 0.65 * F1 + 0.35 * Continuity - CyclePenalty
     if edge_recall + edge_precision > 0:
         f1 = 2 * edge_recall * edge_precision / (edge_recall + edge_precision)
     else:
         f1 = 0.0
     
-    cpcs = 0.7 * f1 + 0.3 * continuity
+    cpcs = 0.65 * f1 + 0.35 * continuity - cycle_penalty
+    cpcs = max(0.0, cpcs)  # Floor at 0
     
     # Determine description
-    if continuity >= 0.9:
+    if inverted:
+        desc = "INVERTED_CAUSATION"
+    elif continuity >= 0.9:
         desc = "CONTINUOUS"
     elif continuity >= 0.5:
         desc = "PARTIAL"
     elif continuity > 0:
         desc = "FRAGMENTED"
-    elif inverted:
-        desc = "INVERTED_CAUSATION"
     else:
         desc = "DISCONNECTED"
+    if cycle_penalty > 0:
+        desc += "_CYCLE"
     
     return round(cpcs, 3), desc
 
@@ -393,9 +505,14 @@ class DeterministicCausalGrader:
     def parse_candidate_response(cls, raw_response: str) -> Dict[str, Any]:
         """
         Extracts and parses JSON object from model raw output string.
-        Handles markdown code block wrapping.
+        Handles markdown code block wrapping, <scratchpad> tags, and uses json_repair for fault-tolerant parsing.
         """
         text = raw_response.strip()
+        
+        # Strip <scratchpad>...</scratchpad> blocks (System-2 Causal Scaffold)
+        import re
+        text = re.sub(r'<scratchpad>.*?</scratchpad>', '', text, flags=re.DOTALL | re.IGNORECASE)
+        
         if "```json" in text:
             start = text.find("```json") + 7
             end = text.find("```", start)
@@ -411,11 +528,22 @@ class DeterministicCausalGrader:
         if s_idx != -1 and e_idx != -1 and e_idx > s_idx:
             text = text[s_idx:e_idx + 1]
 
+        # Try standard JSON parsing first
         try:
             return json.loads(text)
         except Exception as e:
-            logger.warning(f"Failed to parse JSON from response: {e}")
-            return {}
+            logger.warning(f"Standard JSON parse failed: {e}")
+
+        # Fallback: use json_repair for fault-tolerant parsing
+        if JSON_REPAIR_AVAILABLE and repair_json:
+            try:
+                repaired = repair_json(text)
+                return json.loads(repaired)
+            except Exception as e:
+                logger.warning(f"json_repair also failed: {e}")
+
+        logger.warning(f"Failed to parse JSON from response after all attempts")
+        return {}
 
     @classmethod
     def evaluate_task(cls, task: Dict[str, Any], raw_response: str) -> Dict[str, Any]:
@@ -605,17 +733,21 @@ class DeterministicCausalGrader:
         # Check for cycles in predicted graph
         has_model_cycle = _has_cycle(predicted_edges)
         
+        # Add cycle detection reason if cycle shares nodes with gold (CPCS_v2 conditional penalty)
+        if has_model_cycle:
+            cycle_nodes = _get_cycle_nodes(predicted_edges)
+            gold_nodes = set()
+            for exp in expected_edges:
+                gold_nodes.add(normalize_entity(exp["source"]))
+                gold_nodes.add(normalize_entity(exp["target"]))
+            if cycle_nodes & gold_nodes:
+                reasons.append("Cyclic graph detected in predicted edges sharing gold nodes: CPCS penalty applied")
+        
         # --- CPCS: Causal Path Continuity Score (F1-based) ---
         cpcs_score, cpcs_desc = _compute_cpcs(
             predicted_edges, expected_edges, 
             edge_recall=edge_recall, edge_precision=edge_precision
         )
-        
-        # Cycle penalty: hard reduction if model graph has cycles
-        if has_model_cycle:
-            cpcs_score = max(0.0, cpcs_score - 0.2)
-            cpcs_desc += "_CYCLE"
-            reasons.append("Cyclic graph detected in predicted edges: CPCS penalty applied")
         
         # Tier 1 score: 0.5 * recall + 0.5 * precision * 40, modulated by CPCS (F1-based)
         # CPCS = 0.7 * F1 + 0.3 * Graded_Continuity
@@ -673,19 +805,54 @@ class DeterministicCausalGrader:
         else:
             reasons.append(f"Counterfactual primary resolution error: expected {exp_resolves}, got {pred_resolves}")
 
-        pred_residual = cf_pred.get("residual_risk_remains")
-        exp_residual = exp_cf.get("residual_risk_remains")
-        if pred_residual == exp_residual:
-            score += 20.0
+        # Residual Risk Ledger: Support both boolean (legacy) and ledger format
+        # Ledger format: list of {"risk": "...", "severity": "HIGH|MODERATE|LOW", "explanation": "..."}
+        pred_residual_ledger = cf_pred.get("residual_risk_ledger")
+        exp_residual_ledger = exp_cf.get("residual_risk_ledger")
+        
+        if pred_residual_ledger is not None and exp_residual_ledger is not None:
+            # New ledger-based comparison
+            pred_risks = {r.get("risk", "").lower() for r in pred_residual_ledger if isinstance(r, dict)}
+            exp_risks = {r.get("risk", "").lower() for r in exp_residual_ledger if isinstance(r, dict)}
+            # Score based on overlap of identified risks
+            if pred_risks == exp_risks:
+                score += 20.0
+            elif pred_risks & exp_risks:
+                # Partial credit for identifying some risks
+                overlap = len(pred_risks & exp_risks)
+                total = len(exp_risks)
+                score += 20.0 * (overlap / total)
+                reasons.append(f"Partial residual risk identification: {overlap}/{total} expected risks identified")
+            else:
+                reasons.append(f"Residual risk ledger mismatch: expected risks {exp_risks}, got {pred_risks}")
         else:
-            reasons.append(f"Counterfactual invariant failure: expected residual_risk_remains={exp_residual}, got {pred_residual}")
+            # Legacy boolean comparison (backward compatible)
+            pred_residual = cf_pred.get("residual_risk_remains")
+            exp_residual = exp_cf.get("residual_risk_remains")
+            if pred_residual == exp_residual:
+                score += 20.0
+            else:
+                reasons.append(f"Counterfactual invariant failure: expected residual_risk_remains={exp_residual}, got {pred_residual}")
 
         if fatal_error:
             score = 0.0
 
         final_score = round(score, 2)
         # Passing requires score >= 80.0 AND preserving the counterfactual residual risk invariant (no skipping lethal background risks)
-        passed = (final_score >= 80.0) and (pred_residual == exp_residual) and not fatal_error
+        # For ledger format, check if all expected risks are identified
+        pred_residual_ledger = cf_pred.get("residual_risk_ledger")
+        exp_residual_ledger = exp_cf.get("residual_risk_ledger")
+        
+        if pred_residual_ledger is not None and exp_residual_ledger is not None:
+            pred_risks = {r.get("risk", "").lower() for r in pred_residual_ledger if isinstance(r, dict)}
+            exp_risks = {r.get("risk", "").lower() for r in exp_residual_ledger if isinstance(r, dict)}
+            residual_risk_preserved = (pred_risks == exp_risks)
+        else:
+            pred_residual = cf_pred.get("residual_risk_remains")
+            exp_residual = exp_cf.get("residual_risk_remains")
+            residual_risk_preserved = (pred_residual == exp_residual)
+        
+        passed = (final_score >= 80.0) and residual_risk_preserved and not fatal_error
 
         return {
             "task_id": task["id"],

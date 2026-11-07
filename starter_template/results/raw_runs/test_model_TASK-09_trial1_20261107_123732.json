@@ -1,0 +1,29 @@
+{
+  "task_id": "TASK-09",
+  "model": "test_model",
+  "trial": 1,
+  "latency_ms": 12.0,
+  "tokens": 450,
+  "cost_usd": 0.0,
+  "raw_output": "```json\n{\n  \"causal_graph\": [],\n  \"physiological_modifier\": {\"modifier_present\": false},\n  \"regulatory_action\": {\"verdict\": \"SAFE_WITHOUT_ADJUSTMENT\", \"mandated_action\": \"No precautions necessary.\"},\n  \"counterfactual_analysis\": {\"resolves_primary_interaction\": false, \"residual_risk_remains\": false}\n}\n```",
+  "eval_grade": {
+    "task_id": "TASK-09",
+    "passed": false,
+    "total_score": 40.0,
+    "edge_accuracy_pct": 0.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "0/2",
+    "cpcs_score": 0.0,
+    "cpcs_continuity": "DISCONNECTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: AZITHROMYCIN -> NO_INHIBITION -> CYP3A4",
+      "Missing mandatory causal edge: CYP3A4 -> NO_CHANGE_IN_EXPOSURE -> ATORVASTATIN",
+      "Counterfactual primary resolution error: expected True, got False"
+    ],
+    "response_preview": "```json\n{\n  \"causal_graph\": [],\n  \"physiological_modifier\": {\"modifier_present\": false},\n  \"regulatory_action\": {\"verdict\": \"SAFE_WITHOUT_ADJUSTMENT\", \"mandated_action\": \"No precau...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 4
+  }
+}

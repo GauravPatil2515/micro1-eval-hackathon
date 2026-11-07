@@ -1,0 +1,31 @@
+{
+  "task_id": "TASK-09",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 10057.44,
+  "tokens": 1002,
+  "cost_usd": 0.001808,
+  "raw_output": "```json\n{\n  \"causal_graph\": [\n    {\n      \"source\": \"Azithromycin\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"WEAKLY_INHIBITS\",\n      \"evidence_source\": \"FDA Label: Azithromycin does not significantly inhibit CYP3A4 at therapeutic concentrations\"\n    },\n    {\n      \"source\": \"Atorvastatin\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"SUBSTRATE\",\n      \"evidence_source\": \"FDA Label: Atorvastatin is primarily metabolized by CYP3A4\"\n    },\n    {\n      \"source\": \"Azithromycin\",\n      \"target\": \"Atorvastatin\",\n      \"relation\": \"NO_CLINICALLY_MEANINGFUL_INTERACTION\",\n      \"evidence_source\": \"Clinical studies show no significant increase in atorvastatin exposure with azithromycin co-administration\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": false,\n    \"parameter\": \"Normal renal and hepatic function\",\n    \"clinical_consequence\": \"No dose adjustment required for either drug based on organ function\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"SAFE_WITHOUT_ADJUSTMENT\",\n    \"mandated_action\": \"No dose modification or additional monitoring required for atorvastatin when co-administered with azithromycin\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Clarithromycin\",\n    \"resolves_primary_interaction\": false,\n    \"residual_risk_remains\": true,\n    \"residual_risk_explanation\": \"Clarithromycin is a strong CYP3A4 inhibitor that would significantly increase atorvastatin exposure, requiring atorvastatin dose reduction or alternative statin selection\"\n  }\n}\n```",
+  "eval_grade": {
+    "task_id": "TASK-09",
+    "passed": false,
+    "total_score": 20.0,
+    "edge_accuracy_pct": 0.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "0/2",
+    "cpcs_score": 0.0,
+    "cpcs_continuity": "INVERTED_CAUSATION",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: AZITHROMYCIN -> NO_INHIBITION -> CYP3A4",
+      "Missing mandatory causal edge: CYP3A4 -> NO_CHANGE_IN_EXPOSURE -> ATORVASTATIN",
+      "Spurious/hallucinated edges (3): AZITHROMYCIN -> INHIBITS -> CYP3A4, ATORVASTATIN -> SUBSTRATE -> CYP3A4, AZITHROMYCIN -> NO_CLINICALLY_MEANINGFUL_INTERACTION -> ATORVASTATIN",
+      "Counterfactual primary resolution error: expected True, got False",
+      "Counterfactual invariant failure: expected residual_risk_remains=False, got True"
+    ],
+    "response_preview": "```json\n{\n  \"causal_graph\": [\n    {\n      \"source\": \"Azithromycin\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"WEAKLY_INHIBITS\",\n      \"evidence_source\": \"FDA Label: Azithromycin...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 4
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "task_id": "TASK-07",
+  "model": "nousresearch/hermes-4-405b",
+  "trial": 1,
+  "latency_ms": 16103.03,
+  "tokens": 1241,
+  "cost_usd": 0.002531,
+  "raw_output": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"CYP2C9\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label: Warfarin\"\n    },\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"CYP3A4\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"Literature: Wen X, et al. Drug Metab Dispos. 2002;30(12):1352-1356\"\n    },\n    {\n      \"source\": \"CYP2C9 inhibition\",\n      \"target\": \"S-warfarin\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"CPIC guideline: Johnson JA, et al. Clin Pharmacol Ther. 2017;102(3):397-404\"\n    },\n    {\n      \"source\": \"CYP3A4 inhibition\",\n      \"target\": \"R-warfarin\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"Literature: Kaminsky LS, Zhang ZY. Pharmacol Ther. 1997;73(1):67-74\"\n    },\n    {\n      \"source\": \"Increased S-warfarin exposure\",\n      \"target\": \"INR\",\n      \"relation\": \"INCREASES_EXPOSURE\",\n      \"evidence_source\": \"Clinical pharmacology textbooks\"\n    }\n  ],\n  \"physiological_modifier\": {\n    \"modifier_present\": true,\n    \"parameter\": \"baseline_inr: 2.5\",\n    \"clinical_consequence\": \"Patient has stable anticoagulation at baseline. Metronidazole co-administration will inhibit both CYP2C9 (major pathway for S-warfarin clearance) and CYP3A4 (minor pathway for R-warfarin clearance), leading to increased exposure of both enantiomers but with greater impact on the more potent S-enantiomer. This stereoselective inhibition will disproportionately increase INR.\"\n  },\n  \"regulatory_action\": {\n    \"verdict\": \"DOSE_ADJUSTMENT_REQUIRED\",\n    \"mandated_action\": \"Reduce warfarin dose by 30-50% upon initiation of metronidazole. Monitor INR within 3-5 days of starting metronidazole and adjust warfarin dose accordingly. Continue close INR monitoring throughout metronidazole therapy and for 1 week after discontinuation.\"\n  },\n  \"counterfactual_analysis\": {\n    \"alternative_drug\": \"Clindamycin\",\n    \"resolves_primary_interaction\": true,\n    \"residual_risk_remains\": false,\n    \"residual_risk_explanation\": \"Clindamycin does not inhibit CYP2C9 or CYP3A4, thus avoiding the stereoselective warfarin interaction. However, clindamycin carries its own risks of C. difficile-associated diarrhea that must be weighed against the infection severity.\"\n  }\n}",
+  "eval_grade": {
+    "task_id": "TASK-07",
+    "passed": false,
+    "total_score": 40.38,
+    "edge_accuracy_pct": 25.0,
+    "edge_precision_pct": 0.0,
+    "matched_edges": "1/4",
+    "cpcs_score": 0.075,
+    "cpcs_continuity": "FRAGMENTED",
+    "fatal_error": false,
+    "reasons": [
+      "Missing mandatory causal edge: CYP2C9 -> INCREASES_EXPOSURE -> S-WARFARIN",
+      "Missing mandatory causal edge: METRONIDAZOLE -> INHIBITS -> CYP3A4",
+      "Missing mandatory causal edge: CYP3A4 -> INCREASES_EXPOSURE -> R-WARFARIN",
+      "Spurious/hallucinated edges (4): METRONIDAZOLE -> INHIBITS -> CYP2C9, CYP2C9 INHIBITION -> INCREASES_EXPOSURE -> S-WARFARIN, CYP3A4 INHIBITION -> INCREASES_EXPOSURE -> R-WARFARIN, INCREASED S-WARFARIN EXPOSURE -> INCREASES_EXPOSURE -> INR",
+      "Counterfactual invariant failure: expected residual_risk_remains=True, got False"
+    ],
+    "response_preview": "{\n  \"causal_graph\": [\n    {\n      \"source\": \"Metronidazole\",\n      \"target\": \"CYP2C9\",\n      \"relation\": \"INHIBITS\",\n      \"evidence_source\": \"FDA label: Warfarin\"\n    },\n    {\n   ...",
+    "atomic_accuracy": 0.0,
+    "atomic_matched": 0,
+    "atomic_total": 6
+  }
+}

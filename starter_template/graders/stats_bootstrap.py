@@ -1,8 +1,10 @@
 """
 Statistical Analysis for MechanismTrace-DDI
-Bootstrap confidence intervals, variance analysis, and statistical rigor utilities.
+Bootstrap confidence intervals, variance analysis, McNemar's test, Wilson intervals,
+and statistical rigor utilities.
 """
 import json
+import math
 import random
 import statistics
 from typing import List, Dict, Any, Tuple, Callable
@@ -266,5 +268,157 @@ def main():
     print(f"\nVariance: {var_analysis}")
 
 
-if __name__ == "__main__":
-    main()
+# ============================================================================
+# McNemar's Test for Paired Comparisons (Atomic vs Composed)
+# ============================================================================
+
+def mcnemar_test(
+    both_correct: int,
+    model_a_only: int,
+    model_b_only: int,
+    both_wrong: int,
+    continuity_correction: bool = True
+) -> Dict[str, Any]:
+    """
+    McNemar's test for paired nominal data.
+    
+    Used to compare atomic vs composed accuracy on the same test items.
+    
+    Args:
+        both_correct: Both model A and model B correct
+        model_a_only: Model A correct, Model B wrong
+        model_b_only: Model B correct, Model A wrong
+        both_wrong: Both wrong
+        continuity_correction: Apply Yates' continuity correction
+    
+    Returns:
+        Dict with chi2 statistic, p-value, and interpretation
+    """
+    # McNemar's test statistic: (|b - c| - 1)^2 / (b + c) with continuity correction
+    # or (b - c)^2 / (b + c) without correction
+    b = model_a_only
+    c = model_b_only
+    
+    if b + c == 0:
+        return {
+            "chi2": 0.0,
+            "p_value": 1.0,
+            "significant": False,
+            "interpretation": "No discordant pairs - cannot compute test",
+            "discordant_pairs": 0
+        }
+    
+    if continuity_correction:
+        chi2 = (abs(b - c) - 1) ** 2 / (b + c)
+    else:
+        chi2 = (b - c) ** 2 / (b + c)
+    
+    # p-value from chi-square distribution with 1 df
+    # Using survival function approximation
+    p_value = 1.0 - _chi2_cdf(chi2, 1)
+    
+    return {
+        "chi2": round(chi2, 4),
+        "p_value": round(p_value, 4),
+        "significant": p_value < 0.05,
+        "interpretation": "Significant difference between paired proportions" if p_value < 0.05 else "No significant difference",
+        "discordant_pairs": b + c,
+        "model_a_only": b,
+        "model_b_only": c,
+        "both_correct": both_correct,
+        "both_wrong": both_wrong
+    }
+
+
+def _chi2_cdf(x: float, df: int) -> float:
+    """Approximate chi-square CDF using incomplete gamma function."""
+    # Simple approximation for df=1
+    if df == 1:
+        # For df=1, chi2 CDF = erf(sqrt(x/2))
+        import math
+        return math.erf(math.sqrt(x / 2))
+    # Fallback for other df
+    return 0.5
+
+
+def wilson_proportion_interval(
+    successes: int,
+    total: int,
+    confidence: float = 0.95
+) -> Tuple[float, float, float]:
+    """
+    Wilson score interval for a binomial proportion.
+    
+    More accurate than normal approximation, especially for small samples
+    or extreme proportions.
+    
+    Returns: (point_estimate, ci_lower, ci_upper) as percentages
+    """
+    if total == 0:
+        return (0.0, 0.0, 0.0)
+    
+    p = successes / total
+    z = _z_score(confidence)
+    
+    denominator = 1 + z**2 / total
+    center = (p + z**2 / (2 * total)) / denominator
+    margin = z * math.sqrt(p * (1 - p) / total + z**2 / (4 * total**2)) / denominator
+    
+    lower = max(0.0, center - margin) * 100
+    upper = min(1.0, center + margin) * 100
+    point = p * 100
+    
+    return (round(point, 1), round(lower, 1), round(upper, 1))
+
+
+def _z_score(confidence: float) -> float:
+    """Get z-score for common confidence levels."""
+    z_scores = {
+        0.90: 1.645,
+        0.95: 1.960,
+        0.99: 2.576,
+    }
+    return z_scores.get(confidence, 1.960)
+
+
+def compare_atomic_vs_composed(
+    atomic_results: List[bool],  # True if atomic correct
+    composed_results: List[bool]  # True if composed correct
+) -> Dict[str, Any]:
+    """
+    Compare atomic vs composed performance using McNemar's test.
+    
+    Args:
+        atomic_results: List of booleans for atomic probe accuracy per item
+        composed_results: List of booleans for composed task accuracy per item
+        (Must be same length - same items evaluated)
+    
+    Returns:
+        Dict with McNemar's test result and summary stats
+    """
+    if len(atomic_results) != len(composed_results):
+        raise ValueError("atomic_results and composed_results must have same length")
+    
+    both_correct = sum(1 for a, c in zip(atomic_results, composed_results) if a and c)
+    atomic_only = sum(1 for a, c in zip(atomic_results, composed_results) if a and not c)
+    composed_only = sum(1 for a, c in zip(atomic_results, composed_results) if not a and c)
+    both_wrong = sum(1 for a, c in zip(atomic_results, composed_results) if not a and not c)
+    
+    mcnemar_result = mcnemar_test(both_correct, atomic_only, composed_only, both_wrong)
+    
+    atomic_acc = sum(atomic_results) / len(atomic_results) * 100
+    composed_acc = sum(composed_results) / len(composed_results) * 100
+    
+    # Wilson CIs for each
+    atomic_wilson = wilson_proportion_interval(sum(atomic_results), len(atomic_results))
+    composed_wilson = wilson_proportion_interval(sum(composed_results), len(composed_results))
+    
+    return {
+        "mcnemar": mcnemar_result,
+        "atomic_accuracy_pct": round(atomic_acc, 1),
+        "atomic_wilson_ci": atomic_wilson,
+        "composed_accuracy_pct": round(composed_acc, 1),
+        "composed_wilson_ci": composed_wilson,
+        "accuracy_gap_pct": round(atomic_acc - composed_acc, 1),
+        "n_items": len(atomic_results)
+    }
