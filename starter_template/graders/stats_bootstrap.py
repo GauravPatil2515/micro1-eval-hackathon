@@ -422,3 +422,60 @@ def compare_atomic_vs_composed(
         "accuracy_gap_pct": round(atomic_acc - composed_acc, 1),
         "n_items": len(atomic_results)
     }
+
+
+if __name__ == "__main__":
+    import argparse
+    import sys
+
+    parser = argparse.ArgumentParser(description="Statistical Analysis for MechanismTrace-DDI")
+    parser.add_argument("--summary", type=str, default="", help="Path to benchmark_summary.json")
+    args = parser.parse_args()
+
+    base_dir = Path(__file__).resolve().parent.parent
+    summary_path = Path(args.summary) if args.summary else base_dir / "results" / "benchmark_summary_20261106_235505.json"
+
+    if summary_path.exists():
+        with open(summary_path) as f:
+            data = json.load(f)
+        
+        print("=" * 70)
+        print("📊 MECHANISMTRACE-DDI: STATISTICAL RIGOR & BOOTSTRAP ANALYSIS")
+        print(f"File: {summary_path.name}")
+        print("=" * 70)
+
+        for model_id, model_data in data.get("results", {}).items():
+            print(f"\nModel: {model_id}")
+            task_breakdown = model_data.get("task_breakdown", [])
+            scores = [t.get("avg_score", 0.0) for t in task_breakdown]
+            if not scores:
+                continue
+
+            # Bootstrap Mean CI (10,000 resamples)
+            mean_pt, mean_lo, mean_hi = bootstrap_confidence_interval(scores, n_bootstrap=10000)
+            print(f"  Mean Score: {mean_pt:.2f}/100 (95% Bootstrap CI: [{mean_lo:.2f}, {mean_hi:.2f}])")
+
+            # Wilson Score Interval for Strict Pass Rate (>= 80)
+            strict_passes = sum(1 for s in scores if s >= 80.0)
+            pt_s, lo_s, hi_s = wilson_proportion_interval(strict_passes, len(scores))
+            print(f"  Strict Pass Rate (>=80): {pt_s:.1f}% ({strict_passes}/{len(scores)}) [95% Wilson CI: {lo_s:.1f}% - {hi_s:.1f}%]")
+
+            # Wilson Score Interval for Relaxed Pass Rate (>= 60)
+            relaxed_passes = sum(1 for s in scores if s >= 60.0)
+            pt_r, lo_r, hi_r = wilson_proportion_interval(relaxed_passes, len(scores))
+            print(f"  Relaxed Pass Rate (>=60): {pt_r:.1f}% ({relaxed_passes}/{len(scores)}) [95% Wilson CI: {lo_r:.1f}% - {hi_r:.1f}%]")
+
+            # Edge Accuracy & Atomic Accuracy summary
+            edge_accs = [t.get("edge_accuracy", 0.0) for t in task_breakdown]
+            if edge_accs:
+                e_pt, e_lo, e_hi = bootstrap_confidence_interval(edge_accs, n_bootstrap=10000)
+                print(f"  Mean Causal Edge Accuracy: {e_pt:.1f}% [95% Bootstrap CI: {e_lo:.1f}% - {e_hi:.1f}%]")
+            
+            cpcs_scores = [t.get("cpcs_score", 0.0) for t in task_breakdown]
+            if cpcs_scores:
+                c_pt, c_lo, c_hi = bootstrap_confidence_interval(cpcs_scores, n_bootstrap=10000)
+                print(f"  Mean CPCS_v2 Graph Score: {c_pt:.3f} [95% Bootstrap CI: {c_lo:.3f} - {c_hi:.3f}]")
+
+        print("\n" + "=" * 70)
+    else:
+        main()

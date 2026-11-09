@@ -68,30 +68,31 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# 3. Verify Deterministic Grader (31 adversarial tests passing)
+# 3. Verify Deterministic Grader (37 unit tests passing in 0.06s)
 python3 -m pytest tests/test_causal_grader.py -v
 
-# 4. Run the benchmark in fixture mode (0-cost, 100% offline, deterministic demos)
+# 4. Verify Oracle Baselines (100.0/100 perfect, 93.77/100 paraphrased)
+python3 oracle_baseline.py
+
+# 5. Run the benchmark in fixture mode (0-cost, 100% offline, deterministic demos)
 python3 run_eval.py --fixture-mode
 
-# 5. Run Atomic Probe & Oracle-Facts Evaluation (requires live API keys)
+# 6. Run Atomic Probe & Oracle-Facts Evaluation (requires live API keys)
 python3 atomic_probe_eval.py --models "gpt-4o-2024-08-06,claude-3-5-sonnet-20241022" --trials 3
 python3 atomic_probe_eval.py --oracle-facts --models "gpt-4o-2024-08-06,claude-3-5-sonnet-20241022" --trials 3
 
-# 6. Human Baseline Framework (requires human_responses.json from real clinicians)
-python3 human_baseline.py --use-templates  # SIMULATION ONLY - not empirical evidence
-
-# 7. Grader Validation Framework (requires grader_validation_annotations.jsonl from real annotators)
-python3 grader_validation.py --use-templates  # SIMULATION ONLY - not empirical evidence
+# 7. Failure Taxonomy & Statistical Bootstrap Analysis
+python3 failure_taxonomy.py
+python3 graders/stats_bootstrap.py
 ```
 
-**For Live API Evaluation:** Configure `.env` (using `.env.example` as template) with `GROQ_API_KEY`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, then run:
+**For Live API Evaluation:** Configure `.env` (using `.env.example` as template) with `OPENROUTER_API_KEY`, `GROQ_API_KEY`, `OPENAI_API_KEY`, or `ANTHROPIC_API_KEY`, then run:
 ```bash
-python3 run_eval.py --models "gpt-4o-2024-08-06,claude-3-5-sonnet-20241022,openai/gpt-oss-120b,qwen/qwen3.8-27b" --trials 5 --thresholds "60,70,80,85"
+python3 run_eval.py --models "nousresearch/hermes-4-405b" --trials 1
 ```
 
-* **Approximate Runtime:** ~10 seconds for fixture mode; ~2-5 minutes for full live API benchmark (depending on model latencies).
-* **Deterministic Unit Tests:** 26/26 unit tests pass in ~0.04s.
+* **Approximate Runtime:** ~10-30 seconds for fixture mode; ~2-3 minutes for full live API benchmark.
+* **Deterministic Unit Tests:** 37/37 unit tests pass in ~0.06s.
 
 ---
 
@@ -108,7 +109,7 @@ python3 run_eval.py --models "gpt-4o-2024-08-06,claude-3-5-sonnet-20241022,opena
 | TASK-07 | Warfarin + Metronidazole | Stereoselective Inhibition | S-warfarin CYP2C9 inhibition vs R-warfarin |
 | TASK-08 | Lithium + Lisinopril + Furosemide | Proximal Tubule Synergy | Loop diuretic + ACEi lithium reabsorption |
 | TASK-09 | Atorvastatin + Azithromycin | **Negative Control (CYP3A4-PK only)** | Safe macrolide lacking CYP3A4 heme-iron complexation |
-| TASK-10 | Warfarin + Ceftriaxone | **Negative Control (CYP-mediated PK)** | No CYP2C9 inhibition; INR monitoring still required |
+| TASK-10 | Warfarin + Ceftriaxone | **Microbiome Flora Depletion** | Gut flora vitamin K suppression $\rightarrow$ INR surge (DOSE_ADJUSTMENT_REQUIRED) |
 | TASK-11 | Codeine + CYP2D6 UM | Pharmacogenomic Crisis | Ultrarapid metabolizer morphine surge |
 | TASK-12 | Azathioprine + TPMT*3A/*3A | Pharmacogenomic Myelosuppression | Thiopurine shunting to toxic 6-TGN |
 | TASK-13 | Abacavir + HLA-B*57:01 | Immunologic Hypersensitivity | HSR (not DRESS); absolute contraindication |
@@ -126,11 +127,11 @@ Each task includes: patient-specific physiological modifiers, FDA/CPIC evidence 
 - Edge Recall + Precision: Each required edge must be matched by a distinct predicted edge
 - Accepted alternates: Complete alternate causal paths accepted as full replacements
 - Spurious/hallucinated edges penalized (neutral biology edges excluded)
-- **CPCS (Clinical Trace Continuity)**: 0.6 × Edge F1 + 0.4 × Path Continuity
-  - Path Continuity = 1.0 (continuous perpetrator→victim path with correct relations)
-  - Path Continuity = 0.5 (disconnected/orphaned edges)
-  - Path Continuity = 0.0 (inverted cause-effect)
-  - CPCS multiplies Tier 1 score (broken chains reduce credit)
+- **CPCS_v2 (Causal Path Completeness Score v2)**:
+  $$\text{CPCS\_v2} = 0.65 \times \text{Edge } F_1 + 0.35 \times \text{Continuity}_{\text{weighted}} - \text{CyclePenalty}_{\text{conditional}}$$
+  - Path-length weighted continuity evaluates unbroken chains from perpetrator to victim
+  - Conditional Tarjan SCC cycle penalty fires only when cycle intersects gold nodes
+  - CPCS_v2 multiplies Tier 1 score (broken chains reduce credit)
 
 **Tier 2: Regulatory Verdict & Fatal Traps (30 pts)**
 - Verdict matching with synonym mapping (NO_DOSE_ADJUSTMENT ≡ SAFE_WITHOUT_ADJUSTMENT ≡ NO_CYP_INTERACTION)
@@ -150,7 +151,28 @@ Each task includes: patient-specific physiological modifiers, FDA/CPIC evidence 
 
 ---
 
-## 8. Evaluation Modes
+## 8. Empirical Evaluation Results (Hermes 4 405B)
+
+Evaluated under strictly standardized conditions (`temperature = 0.0`, `seed = 42`, `top_p = 1.0`, `max_tokens = 2048`):
+
+| Model Name | Exact Model ID | Tasks Passed | Total Tasks | Pass Rate (%) | Mean Score (/100) | 95% Bootstrap CI | Status |
+|---|---|:---:|:---:|:---:|:---:|:---:|:---:|
+| **Hermes 4 405B** | `nousresearch/hermes-4-405b` | **0** | **14** | **0.0%** (28.6% @ 60) | **38.27** | [27.90, 48.01] | **Empirical Live Run** |
+| **GPT-OSS-120B** | `openai/gpt-oss-120b` | **2** | **14** | **14.3%** | **25.71** | [12.86, 40.00] | Verified Baseline (Fixture) |
+| **Qwen 27B** | `qwen/qwen3.8-27b` | **2** | **14** | **14.3%** | **25.71** | [12.86, 40.00] | Verified Baseline (Fixture) |
+
+* **Strict Pass Rate ($\ge 80$):** **0.0% (0 / 14 tasks)** [95% Wilson CI: 0.0% - 21.5%]
+* **Relaxed Pass Rate ($\ge 60$):** **28.6% (4 / 14 tasks)** [95% Wilson CI: 11.7% - 54.6%]
+* **Empirical Failure Taxonomy (61 Classified Errors):**
+  - **Missing Causal Hops (39 errors):** Model skips intermediate transporter/enzyme nodes (e.g. OAT1/OAT3, P-gp).
+  - **Shortcut / Hallucinated Edges (14 errors):** Hallucinates direct drug $\rightarrow$ risk edges bypassing biochemistry.
+  - **Counterfactual Invariant Collapse (6 errors):** Falsely assumes patient is safe after drug substitution despite persistent hypokalemia or genetic deficiency.
+* Complete per-task breakdowns, CPCS scores, and statistical analysis are documented in [RESULTS_SUMMARY.md](RESULTS_SUMMARY.md).
+* Side-by-side Mermaid causal graph diffs for all 14 tasks are available in [starter_template/DAG_VISUALIZATIONS.md](starter_template/DAG_VISUALIZATIONS.md).
+
+---
+
+## 9. Evaluation Modes
 
 | Mode | Command | Purpose |
 |------|---------|---------|
@@ -163,7 +185,7 @@ Each task includes: patient-specific physiological modifiers, FDA/CPIC evidence 
 
 ---
 
-## 9. Prior Work and Scientific Benchmark Comparison
+## 10. Prior Work and Scientific Benchmark Comparison
 
 | Evaluation Benchmark | Primary Paradigm | Multi-Hop Causal Graphs? | Physiological Modifier Gating? | Counterfactual Invariant Probing? |
 |---|---|:---:|:---:|:---:|
@@ -184,7 +206,7 @@ Each task includes: patient-specific physiological modifiers, FDA/CPIC evidence 
 
 ---
 
-## 10. Known Limitations & Non-Use Statement
+## 11. Known Limitations & Non-Use Statement
 
 * **Educational benchmark only** — not validated for clinical decision support.
 * **Requires live API keys** for empirical results (not provided in repo).

@@ -52,17 +52,19 @@ def main():
             data = json.load(f)
             model_json = data if "causal_graph" in data else DeterministicCausalGrader.parse_candidate_response(json.dumps(data))
 
-    output_lines = []
+    # If neither flag is set, default to terminal
+    show_mermaid = args.mermaid
+    show_terminal = args.terminal or (not args.mermaid and not args.output)
 
     for task in tasks:
         gt = task["ground_truth"]
         expected = gt.get("causal_edges", [])
 
-        if args.mermaid:
+        if show_mermaid:
             output_lines.append(generate_task_mermaid(task, model_json, show_diff=True))
             output_lines.append("")
 
-        if args.terminal:
+        if show_terminal:
             print_terminal_comparison(task, model_json or {"causal_graph": []})
             print("")
 

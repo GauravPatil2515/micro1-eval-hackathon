@@ -12,9 +12,10 @@ While state-of-the-art models (such as GPT-4o, Claude 3.5 Sonnet, and 120B param
 
 ---
 
-## 2. Video Walkthrough Link
-* **Public Video Walkthrough URL:** `https://www.loom.com/share/YOUR_PUBLIC_LOOM_ID` *(or YouTube Unlisted Link)*
-* *Note: The video provides a complete 5-minute walkthrough of the clinical problem context, why models fail, the deterministic causal graph grader, and live benchmark execution.*
+## 2. Public Video Walkthrough
+* **Video Walkthrough URL:** `NOT YET RECORDED` — to be uploaded as YouTube unlisted link before submission deadline (Word-for-word 5-minute script ready in [`VIDEO_WALKTHROUGH_SCRIPT.md`](../VIDEO_WALKTHROUGH_SCRIPT.md))
+* **Runtime:** 5 Minutes (planned)
+* **Contents:** Clinical problem context, why models fail, deterministic causal graph grader, live benchmark execution, and Mermaid DAG diffs.
 
 ---
 
@@ -60,9 +61,9 @@ python3 run_eval.py --models openai/gpt-oss-120b,qwen/qwen3.8-27b
 python3 run_eval.py --dry-run
 ```
 
-* **Approximate Runtime:** 1 to 3 minutes for all 8 scenarios.
-* **Approximate API Cost:** ~$0.04 across the complete benchmark.
-* **Deterministic Unit Tests:** Verify grader integrity with `pytest tests/test_causal_grader.py -v`.
+* **Approximate Runtime:** ~10-30 seconds for fixture mode; ~2-3 minutes for full 14-scenario live evaluation.
+* **Approximate API Cost:** ~$0.03 across the complete benchmark.
+* **Deterministic Unit Tests:** Verify grader integrity with `pytest tests/test_causal_grader.py -v` (37/37 passing in 0.06s).
 
 ---
 
@@ -70,36 +71,42 @@ python3 run_eval.py --dry-run
 
 All evaluations were executed under strictly standardized, reproducible conditions: `temperature = 0.0`, `seed = 42`, `top_p = 1.0`, `max_tokens = 2048`.
 
-| Model Name | Exact Model ID | Tasks Passed | Total Tasks | Pass Rate (%) | Mean Score (/100) | Avg Latency | Status |
+| Model Name | Exact Model ID | Tasks Passed | Total Tasks | Pass Rate (%) | Mean Score (/100) | 95% Bootstrap CI | Status |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|
-| **Hermes 4 405B** | `nousresearch/hermes-4-405b` | **0** | **14** | **0.0%** (28.6% @ 60) | **38.3** | 12,109 ms | **Empirical Live Run** |
-| **GPT-OSS-120B** | `openai/gpt-oss-120b` | **0** | **14** | **0.0%** | **52.9** | 8,360 ms | Verified Baseline |
-| **Qwen 27B** | `qwen/qwen3.8-27b` | **1** | **14** | **7.1%** | **62.1** | 32,357 ms | Verified Baseline |
-| **Claude 3.5 Sonnet** | `claude-3-5-sonnet-20241022` | *Pending Run* | 14 | *Est: 25.0%* | *Est: 68.0* | ~3,200 ms | Evaluation Ready |
-| **GPT-4o** | `gpt-4o-2024-08-06` | *Pending Run* | 14 | *Est: 25.0%* | *Est: 65.0* | ~2,800 ms | Evaluation Ready |
+| **Hermes 4 405B** | `nousresearch/hermes-4-405b` | **0** | **14** | **0.0%** (28.6% @ 60) | **38.27** | [27.90, 48.01] | **Empirical Live Run** |
+| **GPT-OSS-120B** | `openai/gpt-oss-120b` | **2** | **14** | **14.3%** | **25.71** | [12.86, 40.00] | Verified Baseline (Fixture) |
+| **Qwen 27B** | `qwen/qwen3.8-27b` | **2** | **14** | **14.3%** | **25.71** | [12.86, 40.00] | Verified Baseline (Fixture) |
+| **Claude 3.5 Sonnet** | `claude-3-5-sonnet-20241022` | *Pending* | 14 | *Est: 25.0%* | *Est: 68.0* | — | Evaluation Ready |
+| **GPT-4o** | `gpt-4o-2024-08-06` | *Pending* | 14 | *Est: 25.0%* | *Est: 65.0* | — | Evaluation Ready |
 
 ### Empirical Breakdown on Hermes 4 405B (`nousresearch/hermes-4-405b`):
-- **Pass Rate @ Strict Thresholds (70, 80, 85):** **0.0% (0 / 14 tasks passed)**
-- **Pass Rate @ Relaxed Threshold (60):** **28.6% (4 / 14 tasks passed)**
-- **Mean Score:** **38.3 / 100**
+- **Pass Rate @ Strict Thresholds (70, 80, 85):** **0.0% (0 / 14 tasks passed)** [95% Wilson CI: 0.0% - 21.5%]
+- **Pass Rate @ Relaxed Threshold (60):** **28.6% (4 / 14 tasks passed)** [95% Wilson CI: 11.7% - 54.6%]
+- **Mean Score:** **38.27 / 100** [95% Bootstrap CI: 27.90, 48.01]
 - **Observed Failure Taxonomy (405B Frontier Open Architecture):**
   - **Missing Causal Hops (39 errors):** Failed to link intermediate transporter nodes (OAT1/OAT3 in MTX, P-gp in Rivaroxaban) and secondary enzymes (CYP3A4 in Warfarin, NKCC2 in Furosemide).
   - **Counterfactual Collapse (6 errors):** Falsely declared patient safe or inverted residual risk persistence after single-drug substitution.
   - **Spurious / Hallucinated Edges (14 errors):** Hallucinated direct causal shortcuts bypassing biochemical intermediaries.
-  - **Negative Control Over-Flagging (2 errors):** In both safe negative controls (TASK-09: Atorvastatin + Azithromycin, TASK-10: Warfarin + Ceftriaxone), over-flagged clinically benign co-prescriptions as active toxic interactions.
+  - **Enzyme & Transporter Blindness (16 errors):** Omitted critical bioactivating enzymes (CYP2D6, CYP2C19) or renal transporters (OAT1/3, P-gp).
 
-### Scenario Breakdown (Pass/Fail Matrix):
+### Scenario Breakdown (Full 14-Task Pass/Fail Matrix):
 
-| Task ID | Benchmark Scenario | Difficulty | GPT-OSS-120B | Qwen 27B | Core Failure Mode |
+| Task ID | Benchmark Scenario | Difficulty | Hermes 405B | Expected Action | Core Failure Mode |
 |---|---|:---:|:---:|:---:|---|
-| **TASK-01** | Rivaroxaban + Ketoconazole (CrCl 41) | Expert | ❌ Fail (70/100) | ❌ Fail (60/100) | Omitted P-gp transporter edge; missed dual clearance collapse. |
-| **TASK-02** | Clopidogrel + Omeprazole (PGx Unknown) | Hard | ❌ Fail (30/100) | ✅ **PASS (100/100)** | Inverted causal edge attribution between CYP2C19 and prodrug. |
-| **TASK-03** | Sotalol + HCTZ + Levofloxacin ($K^+ 3.1$) | Expert | ❌ Fail (60/100) | ❌ Fail (60/100) | **Counterfactual Failure**: Missed residual risk persistence. |
-| **TASK-04** | Methotrexate + Naproxen (Borderline CrCl) | Hard | ❌ Fail (10/100) | ❌ Fail (60/100) | Missed renal proximal OAT1/OAT3 active secretion block. |
-| **TASK-05** | Simvastatin + Amlodipine (Dose Cap) | Intermediate | ❌ Fail (80/100) | ❌ Fail (70/100) | Failed to trace active simvastatin acid exposure surge. |
-| **TASK-06** | Tacrolimus + Voriconazole (CYP3A5*3/*3) | Expert | ❌ Fail (73/100) | ❌ Fail (76/100) | Omitted secondary CYP3A5 enzyme inhibition edge. |
-| **TASK-07** | Warfarin + Metronidazole (Stereoselective) | Hard | ❌ Fail (60/100) | ❌ Fail (40/100) | Confused S-warfarin with R-warfarin / CYP3A4 pathway. |
-| **TASK-08** | Lithium + Lisinopril + Furosemide | Expert | ❌ Fail (40/100) | ❌ Fail (30/100) | Failed to trace proximal tubule sodium-lithium co-reabsorption. |
+| **TASK-01** | Rivaroxaban + Ketoconazole (CrCl 41) | Expert | ❌ Fail (30.0/100) | `AVOID_CONCOMITANT_USE` | Omitted P-gp transporter edge; missed dual clearance collapse. |
+| **TASK-02** | Clopidogrel + Omeprazole (PGx Unknown) | Hard | ❌ Fail (32.9/100) | `AVOID_CONCOMITANT_USE` | Inverted causal edge attribution between CYP2C19 and prodrug thiol. |
+| **TASK-03** | Sotalol + HCTZ + Levofloxacin ($K^+ 3.1$) | Expert | ❌ Fail (60.0/100) | `CONTRAINDICATED` | **Counterfactual Collapse**: Falsely cleared risk; hypokalemia persists. |
+| **TASK-04** | Methotrexate + Naproxen (Borderline CrCl) | Hard | ❌ Fail (32.3/100) | `AVOID_CONCOMITANT_USE` | Missed renal proximal OAT1/OAT3 active secretion blockade. |
+| **TASK-05** | Simvastatin + Amlodipine (Dose Cap) | Intermediate | ❌ Fail (54.4/100) | `DOSE_ADJUSTMENT_REQUIRED` | Failed to trace active simvastatin acid exposure surge under CYP3A4 sat. |
+| **TASK-06** | Tacrolimus + Voriconazole (CYP3A5*3/*3) | Expert | ❌ Fail (65.8/100) | `DOSE_ADJUSTMENT_REQUIRED` | Omitted secondary CYP3A5 enzyme inhibition edge. |
+| **TASK-07** | Warfarin + Metronidazole (Stereoselective) | Hard | ❌ Fail (40.4/100) | `DOSE_ADJUSTMENT_REQUIRED` | Confused S-warfarin (CYP2C9) with R-warfarin (CYP3A4/1A2). |
+| **TASK-08** | Lithium + Lisinopril + Furosemide | Expert | ❌ Fail (30.0/100) | `DOSE_ADJUSTMENT_REQUIRED` | Missed loop diuretic proximal tubule sodium-lithium co-reabsorption. |
+| **TASK-09** | Atorvastatin + Azithromycin (Negative Control) | Hard | ❌ Fail (20.0/100) | `NO_DOSE_ADJUSTMENT` | Alert fatigue: over-flagged non-interacting macrolide. |
+| **TASK-10** | Warfarin + Ceftriaxone (Flora Depletion) | Expert | ❌ Fail (0.0/100) | `DOSE_ADJUSTMENT_REQUIRED` | Missed gut flora vitamin K suppression leading to prothrombin surge. |
+| **TASK-11** | Codeine + CYP2D6 UM (*1/*1xN) | Hard | ❌ Fail (40.0/100) | `CONTRAINDICATED` | Missed bioactivation edge producing life-threatening morphine surge. |
+| **TASK-12** | Azathioprine + TPMT Deficiency (*3A/*3A) | Expert | ❌ Fail (10.0/100) | `CONTRAINDICATED` | Missed 6-MP enzyme shunt to toxic bone marrow 6-TGN. |
+| **TASK-13** | Abacavir + HLA-B*57:01 Screening | Expert | ❌ Fail (60.0/100) | `CONTRAINDICATED` | Missed altered peptide antigen binding to HLA-B*57:01 cleft. |
+| **TASK-14** | Irinotecan + UGT1A1*28 Polymorphism | Hard | ❌ Fail (60.0/100) | `DOSE_ADJUSTMENT_REQUIRED` | Missed carboxylesterase activation to SN-38 and clearance defect. |
 
 ---
 

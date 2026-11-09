@@ -240,7 +240,7 @@ def main():
     
     # Configuration
     model = "nousresearch/hermes-4-405b"
-    task_ids = ["TASK-01", "TASK-02", "TASK-03"]
+    task_ids = [f"TASK-{i:02d}" for i in range(1, 15)]
     
     # Load tasks for titles
     tasks_path = BASE_DIR / "dataset" / "tasks.json"
