@@ -1,7 +1,8 @@
 # MechanismTrace-DDI: Frontier AI Evaluation Benchmark
 > **Evaluating Multi-Hop Pharmacological Causal Reasoning, Physiological Modifiers & Counterfactual Invariants in Complex Polypharmacy**
 
-Built for the **micro1 Eval Hackathon (Organized by micro1 & HackerRank)**.
+Built for the **micro1 Eval Hackathon (Organized by micro1 & HackerRank)**.  
+**Public Repository:** [https://github.com/GauravPatil2515/micro1-eval-hackathon](https://github.com/GauravPatil2515/micro1-eval-hackathon)
 
 ---
 
